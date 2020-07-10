@@ -1,7 +1,9 @@
 package per.dqq.design.pattern.behavioral.interpreter;
 
 /**
+ * create by dqq
  */
+ 
 public class NumberInterpreter implements Interpreter {
     private int num;
 

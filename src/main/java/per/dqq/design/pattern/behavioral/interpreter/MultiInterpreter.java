@@ -2,7 +2,9 @@ package per.dqq.design.pattern.behavioral.interpreter;
 
 
 /**
+ * create by dqq
  */
+ 
 public class MultiInterpreter implements Interpreter {
     private Interpreter firstInterpreter;
     private Interpreter secondInterpreter;
