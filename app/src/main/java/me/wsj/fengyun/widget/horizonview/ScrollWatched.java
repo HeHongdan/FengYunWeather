@@ -1,4 +1,4 @@
-package me.wsj.fengyun.view.horizonview;
+package me.wsj.fengyun.widget.horizonview;
 
 /**
  * Created by dongua on 17-9-11.

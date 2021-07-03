@@ -32,8 +32,8 @@ import me.wsj.fengyun.utils.ContentUtil;
 import me.wsj.fengyun.utils.IconUtils;
 import me.wsj.fengyun.utils.TransUnitUtil;
 import me.wsj.fengyun.view.base.BaseFragment;
-import me.wsj.fengyun.view.horizonview.ScrollWatched;
-import me.wsj.fengyun.view.horizonview.ScrollWatcher;
+import me.wsj.fengyun.widget.horizonview.ScrollWatched;
+import me.wsj.fengyun.widget.horizonview.ScrollWatcher;
 import per.wsj.commonlib.utils.LogUtil;
 
 public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> implements WeatherInterface {
@@ -77,8 +77,6 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> implem
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mCityId = getArguments().getString(PARAM_CITY_ID);
-
-            initData(mCityId);
         }
     }
 
@@ -136,6 +134,8 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> implem
 
     @Override
     public void loadData() {
+        initData(mCityId);
+
         if (!hasAni && !TextUtils.isEmpty(sunrise) && !TextUtils.isEmpty(sunset) && !TextUtils.isEmpty(moonRise) && !TextUtils.isEmpty(moonSet)) {
             setViewTime();
         }

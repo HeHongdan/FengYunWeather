@@ -40,8 +40,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -67,7 +65,7 @@
         <activity android:name=".view.activity.SettingsActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".view.activity.CityControlActivity"
+        <activity android:name=".view.activity.CityManagerActivity"
             android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="me.wsj.fengyun.CITY_CONTROL" />

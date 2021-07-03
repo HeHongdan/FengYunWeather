@@ -1,5 +1,6 @@
 package me.wsj.fengyun.view.base;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -36,7 +37,7 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
 
     protected Context context;
 
-//    private LoadingDialog loadingDialog;
+    private ProgressDialog loadingDialog;
 
     protected T mBinding;
 
@@ -117,6 +118,18 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void showLoading(boolean show) {
+        if (loadingDialog == null) {
+            loadingDialog = new ProgressDialog(this);
+            loadingDialog.setTitle("请稍后...");
+        }
+        if (show) {
+            loadingDialog.show();
+        } else {
+            loadingDialog.dismiss();
+        }
     }
 
     /*@Override

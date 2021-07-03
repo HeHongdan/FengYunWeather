@@ -12,8 +12,10 @@ import me.wsj.fengyun.bean.CityBean
 import me.wsj.fengyun.bean.Location
 import me.wsj.fengyun.databinding.ActivitySearchBinding
 import me.wsj.fengyun.extension.startActivity
+import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.view.activity.vm.SearchViewModel
 import me.wsj.fengyun.view.base.BaseActivity
+import me.wsj.fengyun.view.base.LoadState
 import java.util.*
 
 class SearchActivity : BaseActivity<ActivitySearchBinding>() {
@@ -64,10 +66,30 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
 
         adapter?.setOnCityCheckedListener {
             viewModel.addCity(it)
-            if (fromSplash) {
-                startActivity<HomeActivity>()
+        }
+
+        viewModel.loadState.observe(this) {
+            when (it) {
+                is LoadState.Start -> {
+                    showLoading(true)
+                }
+                is LoadState.Error -> {
+                    
+                }
+                is LoadState.Finish -> {
+                    showLoading(false)
+                }
             }
-            finish()
+        }
+
+        viewModel.addFinish.observe(this) {
+            if (it) {
+                if (fromSplash) {
+                    startActivity<HomeActivity>()
+                }
+                ContentUtil.CITY_CHANGE = true
+                finish()
+            }
         }
 
         viewModel.searchResult.observe(this) {

@@ -12,7 +12,7 @@ interface CityDao {
     @Query("select * from city")
     fun getCities(): List<CityEntity>
 
-    @Delete
-    fun deleteCache(city: CityEntity): Int
+    @Query("delete from city where cityId=:id")
+    fun removeCity(id: String)
 
 }

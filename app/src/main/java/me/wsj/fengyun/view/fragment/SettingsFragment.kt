@@ -9,7 +9,7 @@ import androidx.preference.PreferenceManager
 import me.wsj.fengyun.R
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.view.activity.AboutActivity
-import me.wsj.fengyun.view.activity.CityControlActivity
+import me.wsj.fengyun.view.activity.CityManagerActivity
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -22,7 +22,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         val cityManager = findPreference<Preference>("key_city_manager")
         cityManager?.setOnPreferenceClickListener {
-            startActivity(Intent(context, CityControlActivity::class.java))
+            startActivity(Intent(context, CityManagerActivity::class.java))
             true
         }
 

@@ -11,6 +11,7 @@ import me.wsj.fengyun.adapter.ViewPagerAdapter
 import me.wsj.fengyun.databinding.ActivityMainBinding
 import me.wsj.fengyun.db.entity.CityEntity
 import me.wsj.fengyun.extension.startActivity
+import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
 import me.wsj.fengyun.view.base.BaseActivity
 import me.wsj.fengyun.view.fragment.WeatherFragment
@@ -22,7 +23,7 @@ import java.util.*
 class HomeActivity : BaseActivity<ActivityMainBinding>() {
 
     private val fragments: MutableList<Fragment> by lazy { ArrayList() }
-
+    private val cityList = ArrayList<CityEntity>()
     private var mCurIndex = 0
 
     private val viewModel: WeatherViewModel by viewModels()
@@ -37,6 +38,23 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
         hideTitleBar()
         //透明状态栏
         transparentStatusBar()
+
+        mBinding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager, fragments)
+
+        mBinding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(i: Int, v: Float, i1: Int) {}
+            override fun onPageSelected(i: Int) {
+                mBinding.ivLoc.visibility =
+                    if (cityList[i].isLocal) View.VISIBLE else View.INVISIBLE
+
+                mBinding.llRound.getChildAt(mCurIndex).isEnabled = false
+                mBinding.llRound.getChildAt(i).isEnabled = true
+                mCurIndex = i
+                mBinding.tvLocation.text = cityList[i].cityName
+            }
+
+            override fun onPageScrollStateChanged(i: Int) {}
+        })
     }
 
     override fun initEvent() {
@@ -51,7 +69,9 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
             if (it.isEmpty()) {
                 startActivity<SearchActivity>()
             } else {
-                showCity(it)
+                cityList.clear()
+                cityList.addAll(it)
+                showCity()
             }
         }
 
@@ -68,10 +88,12 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
     /**
      * 显示城市
      */
-    private fun showCity(cityList: List<CityEntity>) {
+    private fun showCity() {
         if (mCurIndex > cityList.size - 1) {
             mCurIndex = cityList.size - 1
         }
+
+        mBinding.tvLocation.text = cityList[mCurIndex].cityName
 
         mBinding.llRound.removeAllViews()
         // 宽高参数
@@ -93,6 +115,7 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
         }
         // 小白点
         mBinding.llRound.getChildAt(mCurIndex).isEnabled = true
+        mBinding.llRound.visibility = if (cityList.size <= 1) View.GONE else View.VISIBLE
 
         fragments.clear()
         for (city in cityList) {
@@ -101,32 +124,17 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
             fragments.add(weatherFragment)
         }
 
-        mBinding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager, fragments)
-
-
-        mBinding.llRound.visibility = if (fragments.size == 1) View.GONE else View.VISIBLE
-        mBinding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(i: Int, v: Float, i1: Int) {}
-            override fun onPageSelected(i: Int) {
-                mBinding.ivLoc.visibility =
-                    if (cityList[i].isLocal) View.VISIBLE else View.INVISIBLE
-
-                mBinding.llRound.getChildAt(mCurIndex).isEnabled = false
-                mBinding.llRound.getChildAt(i).isEnabled = true
-                mCurIndex = i
-                mBinding.tvLocation.text = cityList[i].cityName
-            }
-
-            override fun onPageScrollStateChanged(i: Int) {}
-        })
+        mBinding.viewPager.adapter?.notifyDataSetChanged()
         mBinding.viewPager.currentItem = mCurIndex
-        mBinding.tvLocation.text = cityList[mCurIndex].cityName
     }
 
 
     override fun onResume() {
         super.onResume()
-
+        if (ContentUtil.CITY_CHANGE) {
+            viewModel.getCities()
+            ContentUtil.CITY_CHANGE = false
+        }
     }
 
     fun changeBg(condCode: String) {

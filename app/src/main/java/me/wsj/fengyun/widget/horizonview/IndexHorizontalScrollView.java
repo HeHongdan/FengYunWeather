@@ -1,4 +1,4 @@
-package me.wsj.fengyun.view.horizonview;
+package me.wsj.fengyun.widget.horizonview;
 
 import android.content.Context;
 import android.graphics.Canvas;

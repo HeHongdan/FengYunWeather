@@ -16,9 +16,11 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
 
     val searchResult = MutableLiveData<List<Location>>()
     val topCity = MutableLiveData<List<Location>>()
+    val addFinish = MutableLiveData<Boolean>()
+
 
     fun searchCity(keywords: String) {
-        launch {
+        launchSilent {
             val url = "https://geoapi.qweather.com/v2/city/lookup"
             val param = HashMap<String, Any>()
             param["location"] = keywords
@@ -45,6 +47,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
     fun addCity(it: CityBean) {
         launch {
             AppRepo.getInstance().addCity(CityEntity(it.cityId, it.cityName))
+            addFinish.postValue(true)
         }
     }
 }

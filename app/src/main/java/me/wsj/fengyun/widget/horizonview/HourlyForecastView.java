@@ -1,4 +1,4 @@
-package me.wsj.fengyun.view.horizonview;
+package me.wsj.fengyun.widget.horizonview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,7 +26,6 @@ import me.wsj.fengyun.utils.ContentUtil;
 import me.wsj.fengyun.utils.IconUtils;
 import me.wsj.fengyun.utils.TransUnitUtil;
 import me.wsj.fengyun.utils.WeatherUtil;
-import per.wsj.commonlib.utils.BitmapUtil;
 import per.wsj.commonlib.utils.DisplayUtil;
 
 import com.qweather.sdk.bean.weather.WeatherHourlyBean;

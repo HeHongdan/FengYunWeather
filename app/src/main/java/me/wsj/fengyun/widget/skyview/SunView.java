@@ -1,4 +1,4 @@
-package me.wsj.fengyun.view.skyview;
+package me.wsj.fengyun.widget.skyview;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
