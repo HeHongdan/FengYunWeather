@@ -13,3 +13,14 @@
   - Multilingual, Chinese and English
   - Unit switch
   - Different font sizes
+
+
+## TODO
+
+- [ ] Widget
+- [ ] Notification
+- [ ] Prettier Weather Icons
+- [ ] Multi-City Selection
+- [x] ~~Automatic Positioning~~
+- [ ] DIY Items Interface
+

@@ -62,12 +62,12 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
             startActivity<SettingsActivity>()
         }
         mBinding.ivAddCity.setOnClickListener { v ->
-            startActivity<SearchActivity>()
+            startActivity<AddCityActivity>()
         }
 
         viewModel.mCities.observe(this) {
             if (it.isEmpty()) {
-                startActivity<SearchActivity>()
+                startActivity<AddCityActivity>()
             } else {
                 cityList.clear()
                 cityList.addAll(it)

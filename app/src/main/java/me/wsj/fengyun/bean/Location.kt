@@ -1,5 +1,9 @@
 package me.wsj.fengyun.bean
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
+
 /*
     {
     "name": "上海",
@@ -17,6 +21,7 @@ package me.wsj.fengyun.bean
     "fxLink": "http://hfx.link/2bc1"
     }
  */
+//@Parcelize
 data class Location(
         val adm1: String,
         val adm2: String,
@@ -31,4 +36,4 @@ data class Location(
         val type: String,
         val tz: String,
         val utcOffset: String
-)
+) : Serializable

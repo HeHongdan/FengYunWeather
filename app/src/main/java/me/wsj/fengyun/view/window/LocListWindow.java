@@ -12,7 +12,7 @@ import me.wsj.fengyun.R;
 import me.wsj.fengyun.adapter.LocLIstAdapter;
 import me.wsj.fengyun.bean.CityBean;
 import me.wsj.fengyun.view.activity.MainActivity;
-import me.wsj.fengyun.view.activity.SearchActivity;
+import me.wsj.fengyun.view.activity.AddCityActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class LocListWindow extends PopupWindow {
         rcSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, SearchActivity.class);
+                Intent intent = new Intent(context, AddCityActivity.class);
                 context.startActivity(intent);
                 LocListWindow.this.dismiss();
             }

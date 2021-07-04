@@ -12,6 +12,7 @@ import me.wsj.fengyun.R
 import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.extension.startActivity
 import per.wsj.commonlib.permission.PermissionUtil
+import per.wsj.commonlib.utils.LogUtil
 
 class SplashActivity : AppCompatActivity() {
 
@@ -36,12 +37,14 @@ class SplashActivity : AppCompatActivity() {
         lifecycleScope.launch {
             var citySize = 0
             withContext(Dispatchers.IO) {
+                val start = System.currentTimeMillis()
                 val cities = AppRepo.getInstance().getCities()
+                LogUtil.LOGE("time use: " + (System.currentTimeMillis() - start))
                 citySize = cities.size
                 delay(1000L)
             }
             if (citySize == 0) {
-                SearchActivity.startActivity(this@SplashActivity,true)
+                AddCityActivity.startActivity(this@SplashActivity, true)
             } else {
                 startActivity<HomeActivity>()
             }

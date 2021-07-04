@@ -102,7 +102,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), DataInterface {
             startActivity(
                 Intent(
                     this,
-                    SearchActivity::class.java
+                    AddCityActivity::class.java
                 )
             )
         }

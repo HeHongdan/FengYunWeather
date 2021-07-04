@@ -15,7 +15,9 @@ import me.wsj.lib.net.HttpUtils
 class SearchViewModel(private val app: Application) : BaseViewModel(app) {
 
     val searchResult = MutableLiveData<List<Location>>()
+
     val topCity = MutableLiveData<List<Location>>()
+
     val addFinish = MutableLiveData<Boolean>()
 
 
@@ -32,14 +34,24 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         }
     }
 
-    fun getHostCity() {
+    fun getTopCity() {
         launch {
+            var topCityCache = AppRepo.getInstance().getCache<ArrayList<Location>>("top_city")
+            if (topCityCache != null && topCityCache.isNotEmpty()) {
+                topCity.postValue(topCityCache)
+                return@launch
+            }
+
             val url = "https://geoapi.qweather.com/v2/city/top"
             val param = HashMap<String, Any>()
             param["key"] = Constants.APK_KEY
+            param["number"] = 20
 
             HttpUtils.get<TopCity>(url, param) {
                 topCity.value = it.topCityList
+                launch {
+                    AppRepo.getInstance().saveCache("top_city", it.topCityList)
+                }
             }
         }
     }

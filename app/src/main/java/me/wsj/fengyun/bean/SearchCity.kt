@@ -7,5 +7,5 @@ data class SearchCity(
 
 data class TopCity(
     val code: String,
-    val topCityList: List<Location>
+    val topCityList: ArrayList<Location>
 )

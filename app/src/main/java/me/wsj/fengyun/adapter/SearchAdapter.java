@@ -6,7 +6,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import me.wsj.fengyun.R;
 import me.wsj.fengyun.bean.CityBean;
-import me.wsj.fengyun.bean.CityBeanList;
-import me.wsj.fengyun.dataInterface.DataUtil;
-import me.wsj.fengyun.utils.ContentUtil;
-import me.wsj.fengyun.utils.SpUtils;
-import me.wsj.fengyun.view.activity.SearchActivity;
 
-import com.qweather.sdk.bean.base.Code;
-import com.qweather.sdk.bean.base.Lang;
-import com.qweather.sdk.bean.base.Range;
-import com.qweather.sdk.bean.geo.GeoBean;
-import com.qweather.sdk.view.QWeather;
-
-import java.util.ArrayList;
 import java.util.List;
 
 

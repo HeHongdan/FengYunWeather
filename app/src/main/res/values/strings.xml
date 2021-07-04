@@ -37,6 +37,8 @@
     <string name="now_version">当前版本</string>
     <string name="add_city">请输入城市</string>
     <string name="nearly_search">最近搜索</string>
+    <string name="top_city">热门城市</string>
+    <string name="current_location">当前位置</string>
     <string name="forecast">预报</string>
     <string name="now">.  现在</string>
     <string name="beijing">北京</string>

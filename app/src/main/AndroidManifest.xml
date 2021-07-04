@@ -77,7 +77,7 @@
         <activity android:name=".view.activity.AboutActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".view.activity.SearchActivity"
+        <activity android:name=".view.activity.AddCityActivity"
             android:launchMode="singleTask" />
     </application>
 
