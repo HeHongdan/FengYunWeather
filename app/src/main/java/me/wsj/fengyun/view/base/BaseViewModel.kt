@@ -55,14 +55,14 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
                     // handle error
                     val error = ExceptionUtils.parseException(throwable)
                     if (BuildConfig.DEBUG) {
-                        LogUtil.LOGE("异常：$throwable")
+                        LogUtil.e("异常：$throwable")
                     }
                     if (loadingType == 0) {
                         loadState.value = LoadState.Error(error)
                         if (runningCount.get() > 0) {
                             runningCount.getAndDecrement()
                         }
-                        LogUtil.LOGE("runningCount - : $runningCount")
+                        LogUtil.e("runningCount - : $runningCount")
                         loadState.value = LoadState.Finish
                     }
                 }

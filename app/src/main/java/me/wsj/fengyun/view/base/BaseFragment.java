@@ -84,4 +84,10 @@ public abstract class BaseFragment<T extends ViewBinding> extends Fragment {
      * 数据初始化，只会执行一次
      */
     public abstract void loadData();
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isLoaded = false;
+    }
 }

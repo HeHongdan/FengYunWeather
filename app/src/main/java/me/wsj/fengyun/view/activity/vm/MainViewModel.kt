@@ -29,7 +29,7 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
     val obtainLocation = MutableLiveData<Boolean>()
 
     fun initLocation() {
-        LogUtil.LOGE("initLoacation")
+        LogUtil.e("initLoacation")
         //初始化定位
         val mLocationClient = AMapLocationClient(app)
         //设置定位回调监听
@@ -69,15 +69,13 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
         mLocationClient.setLocationOption(mLocationOption)
         //启动定位
         mLocationClient.startLocation()
-
-
     }
 
     /**
      * 根据经纬度获取城市信息
      */
     fun getNow(location: String, nowCity: Boolean) {
-//        LogUtil.LOGE("getNow() -> " + location)
+//        LogUtil.e("getNow() -> " + location)
         QWeather.getGeoCityLookup(
                 app,
                 location,

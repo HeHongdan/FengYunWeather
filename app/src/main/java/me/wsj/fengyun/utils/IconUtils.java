@@ -44,7 +44,7 @@ public class IconUtils {
             }
             return id;
         } catch (Exception e) {
-            LogUtil.LOGE("获取资源失败：" + weather);
+            LogUtil.e("获取资源失败：" + weather);
             return def;
         }
     }

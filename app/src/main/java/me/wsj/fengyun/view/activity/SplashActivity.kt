@@ -39,7 +39,7 @@ class SplashActivity : AppCompatActivity() {
             withContext(Dispatchers.IO) {
                 val start = System.currentTimeMillis()
                 val cities = AppRepo.getInstance().getCities()
-                LogUtil.LOGE("time use: " + (System.currentTimeMillis() - start))
+                LogUtil.e("time use: " + (System.currentTimeMillis() - start))
                 citySize = cities.size
                 delay(1000L)
             }

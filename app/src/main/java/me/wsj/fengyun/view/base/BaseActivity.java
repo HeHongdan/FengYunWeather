@@ -121,11 +121,19 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
     }
 
     protected void showLoading(boolean show) {
+        showLoading(show, null);
+    }
+
+    protected void showLoading(boolean show, String tip) {
         if (loadingDialog == null) {
             loadingDialog = new ProgressDialog(this);
-            loadingDialog.setTitle("请稍后...");
         }
         if (show) {
+            if (tip != null && !tip.isEmpty()) {
+                loadingDialog.setTitle(tip);
+            } else {
+                loadingDialog.setTitle("请稍后...");
+            }
             loadingDialog.show();
         } else {
             loadingDialog.dismiss();

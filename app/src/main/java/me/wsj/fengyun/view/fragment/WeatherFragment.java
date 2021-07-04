@@ -38,7 +38,7 @@ import per.wsj.commonlib.utils.LogUtil;
 
 public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> implements WeatherInterface {
     private static final String PARAM_CITY_ID = "param_city_id";
-    List<ScrollWatcher> watcherList = new ArrayList<>(); ;
+    List<ScrollWatcher> watcherList = new ArrayList<>();
 
     private ScrollWatched watched;
 
@@ -162,9 +162,10 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> implem
     public void onResume() {
         super.onResume();
 
-        LogUtil.LOGE("-----------------onResume------------------" + mCityId);
+        LogUtil.e("-----------------onResume------------------" + mCityId);
         if (condCode != null) {
             viewModel.setCondCode(condCode);
+            LogUtil.e("-----------------ch bg------------------ ch bg" + mCityId);
         }
 
         if (!hasAni && !TextUtils.isEmpty(sunrise) && !TextUtils.isEmpty(sunset) && !TextUtils.isEmpty(moonRise) && !TextUtils.isEmpty(moonSet)) {
@@ -172,16 +173,28 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> implem
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LogUtil.e("-----------------onDetach------------------" + mCityId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtil.e("-----------------onDestroy------------------" + mCityId);
+    }
+
     @SuppressLint("SetTextI18n")
     public void changeUnit() {
         if (todayDetailBinding.tvMaxTmp != null) {
             if (ContentUtil.APP_SETTING_UNIT.equals("hua")) {
-                LogUtil.LOGE("当前城市1：" + condCode);
+                LogUtil.e("当前城市1：" + condCode);
                 todayDetailBinding.tvMaxTmp.setText(TransUnitUtil.getF(todayMaxTmp) + "°F");
                 todayDetailBinding.tvMinTmp.setText(TransUnitUtil.getF(todayMinTmp) + "°F");
                 mBinding.tvTodayTmp.setText(TransUnitUtil.getF(nowTmp) + "°F");
             } else {
-                LogUtil.LOGE("当前城市2：" + condCode);
+                LogUtil.e("当前城市2：" + condCode);
                 todayDetailBinding.tvMaxTmp.setText(todayMaxTmp + "°C");
                 todayDetailBinding.tvMinTmp.setText(todayMinTmp + "°C");
                 mBinding.tvTodayTmp.setText(nowTmp + "°C");

@@ -241,7 +241,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), DataInterface {
         if (!first && fragments.size > 1) {
             mBinding.viewPager.currentItem = 1
             // 根据城市id获取信息
-            LogUtil.LOGE("what the fuck it will run? cityId: " + cityIds[1])
+            LogUtil.e("what the fuck it will run? cityId: " + cityIds[1])
             viewModel.getNow(cityIds[1], false)
         } else {
             mBinding.viewPager.currentItem = 0

@@ -40,6 +40,7 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
         transparentStatusBar()
 
         mBinding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager, fragments)
+        mBinding.viewPager.offscreenPageLimit = 5
 
         mBinding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(i: Int, v: Float, i1: Int) {}
@@ -93,6 +94,8 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
             mCurIndex = cityList.size - 1
         }
 
+        mBinding.ivLoc.visibility =
+            if (cityList[mCurIndex].isLocal) View.VISIBLE else View.INVISIBLE
         mBinding.tvLocation.text = cityList[mCurIndex].cityName
 
         mBinding.llRound.removeAllViews()
