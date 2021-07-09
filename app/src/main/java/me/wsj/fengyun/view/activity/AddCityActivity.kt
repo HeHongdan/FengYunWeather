@@ -24,16 +24,14 @@ import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.expand
 import me.wsj.fengyun.view.activity.vm.SearchViewModel
 import me.wsj.fengyun.view.base.BaseActivity
+import me.wsj.fengyun.view.base.BaseVmActivity
 import me.wsj.fengyun.view.base.LoadState
 import me.wsj.fengyun.view.fragment.PermissionFragment
 import per.wsj.commonlib.permission.PermissionUtil
 import per.wsj.commonlib.utils.LogUtil
 import java.util.*
 
-class AddCityActivity : BaseActivity<ActivityAddCityBinding>() {
-
-
-    private val viewModel: SearchViewModel by viewModels()
+class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>() {
 
     private var searchAdapter: SearchAdapter? = null
 
@@ -101,6 +99,11 @@ class AddCityActivity : BaseActivity<ActivityAddCityBinding>() {
             viewModel.addCity(it)
         }
 
+        viewModel.cacheLocation.observe(this) {
+            mBinding.tvCurLocation.visibility = View.VISIBLE
+            mBinding.tvCurLocation.text = it
+        }
+
         // 定位获取的数据
         viewModel.curLocation.observe(this) {
             mBinding.tvCurLocation.visibility = View.VISIBLE
@@ -162,12 +165,18 @@ class AddCityActivity : BaseActivity<ActivityAddCityBinding>() {
         }
     }
 
+    /**
+     * 检查GPS权限
+     */
     fun checkGPSPermission(): Boolean {
         val pm1 = PermissionUtil.hasPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
         val pm2 = PermissionUtil.hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
         return (pm1 || pm2)
     }
 
+    /**
+     * 检查GPS状态
+     */
     fun checkGPSOpen(): Boolean {
         val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         val pr1 = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -175,12 +184,18 @@ class AddCityActivity : BaseActivity<ActivityAddCityBinding>() {
         return (pr1 || pr2)
     }
 
+    /**
+     * 启动GPS
+     */
     private fun openGPS() {
         val beginTransaction = supportFragmentManager.beginTransaction()
         beginTransaction.add(PermissionFragment.newInstance(), "permission_fragment")
         beginTransaction.commitAllowingStateLoss()
     }
 
+    /**
+     * 展示热门城市
+     */
     private fun showTopCity(locations: List<Location>) {
         topCities.clear()
         locations.forEach { item ->
@@ -203,6 +218,9 @@ class AddCityActivity : BaseActivity<ActivityAddCityBinding>() {
         topCityAdapter?.notifyDataSetChanged()
     }
 
+    /**
+     * 展示搜索结果
+     */
     private fun showSearchResult(basic: List<Location>) {
         mBinding.rvSearch.visibility = View.VISIBLE
 
@@ -237,6 +255,7 @@ class AddCityActivity : BaseActivity<ActivityAddCityBinding>() {
 
     override fun initData() {
         viewModel.getTopCity()
+        viewModel.getCacheLocation()
     }
 
     override fun onResume() {

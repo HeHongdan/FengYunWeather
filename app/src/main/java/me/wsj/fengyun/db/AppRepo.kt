@@ -29,6 +29,10 @@ class AppRepo {
         cityDao.removeCity(cityId)
     }
 
+    suspend fun removeAllCity(){
+        cityDao.removeAllCity()
+    }
+
     suspend fun getCities(): List<CityEntity> {
         return cityDao.getCities()
     }

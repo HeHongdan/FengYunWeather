@@ -15,4 +15,7 @@ interface CityDao {
     @Query("delete from city where cityId=:id")
     fun removeCity(id: String)
 
+    @Query("delete from city")
+    fun removeAllCity()
+
 }

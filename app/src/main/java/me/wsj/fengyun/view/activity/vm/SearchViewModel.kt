@@ -28,6 +28,9 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
     val addFinish = MutableLiveData<Boolean>()
 
 
+    /**
+     * 搜索城市
+     */
     fun searchCity(keywords: String) {
         launchSilent {
             val url = "https://geoapi.qweather.com/v2/city/lookup"
@@ -42,6 +45,9 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         }
     }
 
+    /**
+     * 获取城市数据
+     */
     fun getCityInfo(cityName: String) {
         launch {
             val url = "https://geoapi.qweather.com/v2/city/lookup"
@@ -55,6 +61,9 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         }
     }
 
+    /**
+     * 获取热门城市
+     */
     fun getTopCity() {
         launch {
             var topCityCache = AppRepo.getInstance().getCache<ArrayList<Location>>("top_city")
@@ -77,10 +86,15 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         }
     }
 
+    /**
+     * 添加城市
+     */
     fun addCity(it: CityBean, isLocal: Boolean = false) {
         launch {
             AppRepo.getInstance().addCity(CityEntity(it.cityId, it.cityName, isLocal))
             addFinish.postValue(true)
+            // 缓存定位城市
+            AppRepo.getInstance().saveCache(Constants.LAST_LOCATION, it.cityName)
         }
     }
 
@@ -102,7 +116,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         mLocationOption.httpTimeOut = 20000
         mLocationClient.setLocationListener { aMapLocation ->
             if (aMapLocation.errorCode == 0) {
-                curLocation.postValue(aMapLocation.city)
+                curLocation.postValue(aMapLocation.district)
             } else {
                 loadState.postValue(LoadState.Error("获取定位失败,请重试"))
             }
@@ -113,5 +127,15 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         mLocationClient.setLocationOption(mLocationOption)
         //启动定位
         mLocationClient.startLocation()
+    }
+
+    val cacheLocation = MutableLiveData<String>()
+
+    fun getCacheLocation() {
+        launch {
+            (AppRepo.getInstance().getCache<String>(Constants.LAST_LOCATION))?.let {
+                cacheLocation.postValue(it)
+            }
+        }
     }
 }

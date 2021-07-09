@@ -12,14 +12,13 @@ import me.wsj.fengyun.db.entity.CityEntity
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.view.activity.vm.CityManagerViewModel
 import me.wsj.fengyun.view.base.BaseActivity
+import me.wsj.fengyun.view.base.BaseVmActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CityManagerActivity : BaseActivity<ActivityCityManagerBinding>() {
+class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding,CityManagerViewModel>() {
 
     private val datas by lazy { ArrayList<CityEntity>() }
-
-    private val viewModel by viewModels<CityManagerViewModel>()
 
     private var adapter: CityManagerAdapter? = null
 
@@ -36,6 +35,7 @@ class CityManagerActivity : BaseActivity<ActivityCityManagerBinding>() {
 
         adapter = CityManagerAdapter(datas) {
             // todo 更新城市排序
+            viewModel.updateCities(it)
         }
 
         mBinding.recycleControl.adapter = adapter
