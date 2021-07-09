@@ -41,32 +41,7 @@
     <string name="current_location">当前位置</string>
     <string name="forecast">预报</string>
     <string name="now">.  现在</string>
-    <string name="beijing">北京</string>
-    <string name="shanghai">上海</string>
-    <string name="guangzhou">广州</string>
-    <string name="shenzhen">深圳</string>
-    <string name="hangzhou">杭州</string>
-    <string name="chongqing">重庆</string>
-    <string name="wuhan">武汉</string>
-    <string name="xian">西安</string>
-    <string name="Ner_York">纽约</string>
-    <string name="Paris">巴黎</string>
-    <string name="Moscow">莫斯科</string>
-    <string name="London">伦敦</string>
-    <string name="HongKong">香港</string>
-    <string name="Singapore">新加坡</string>
-    <string name="Sydney">悉尼</string>
-    <string name="Tokyo">东京</string>
-    <string name="Dubai">迪拜</string>
-    <string name="Berlin">柏林</string>
-    <string name="Amsterdam">阿姆斯特丹</string>
-    <string name="Seoul">首尔</string>
-    <string name="Zurich">苏黎世</string>
-    <string name="Toronto">多伦多</string>
-    <string name="Cape_Town">开普敦</string>
-    <string name="Bangkok">曼谷</string>
-    <string name="Madrid">马德里</string>
-    <string name="Popular_Location">热门城市</string>
+
     <string name="powered">Powered By wangsj</string>
 
 </resources>

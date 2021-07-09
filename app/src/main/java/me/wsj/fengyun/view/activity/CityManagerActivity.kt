@@ -16,7 +16,7 @@ import me.wsj.fengyun.view.base.BaseVmActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding,CityManagerViewModel>() {
+class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManagerViewModel>() {
 
     private val datas by lazy { ArrayList<CityEntity>() }
 
@@ -34,8 +34,8 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding,CityManage
         setTitle(getString(R.string.control_city))
 
         adapter = CityManagerAdapter(datas) {
-            // todo 更新城市排序
             viewModel.updateCities(it)
+            ContentUtil.CITY_CHANGE = true
         }
 
         mBinding.recycleControl.adapter = adapter
