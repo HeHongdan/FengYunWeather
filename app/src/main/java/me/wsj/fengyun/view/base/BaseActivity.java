@@ -4,32 +4,21 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewbinding.ViewBinding;
 
 import me.wsj.fengyun.R;
-import me.wsj.fengyun.utils.ContentUtil;
-import me.wsj.fengyun.view.base.CreateInit;
-import per.wsj.commonlib.utils.ActivityQueueManager;
-
-import java.util.List;
-import java.util.Locale;
 
 public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActivity implements CreateInit<T> {
 
@@ -41,6 +30,7 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
 
     protected T mBinding;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +41,7 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
         init();
     }
 
-    private void init() {
+    protected void init() {
         Toolbar toolbar = super.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

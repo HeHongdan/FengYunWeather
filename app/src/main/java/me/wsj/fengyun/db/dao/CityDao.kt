@@ -6,7 +6,7 @@ import me.wsj.fengyun.db.entity.CityEntity
 @Dao
 interface CityDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addCity(city: CityEntity): Long
 
     @Query("select * from city")

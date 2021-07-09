@@ -95,9 +95,9 @@ object HttpUtils {
     }*/
 
     suspend inline fun <reified T> get(
-            url: String,
-            param: HashMap<String, Any>? = null,
-            headers: HashMap<String, String>? = null, crossinline getResult: (T) -> Unit
+        url: String,
+        param: HashMap<String, Any>? = null,
+        headers: HashMap<String, String>? = null, crossinline getResult: (String, T) -> Unit
     ) {
         val newUrl = if (url.startsWith("http")) url else BASE_URL + url
 
@@ -123,11 +123,49 @@ object HttpUtils {
                 "200" -> {
                     withContext(Dispatchers.Main) {
                         val result: T = Gson().fromJson(body, T::class.java)
-                        getResult(result)
+                        getResult(code, result)
                     }
                 }
                 else -> {
                     throw RequestException("请求异常异常：code=$code")
+                }
+            }
+        }
+    }
+
+    suspend inline fun <reified T> get(
+        url: String,
+        param: HashMap<String, Any>? = null,
+        headers: HashMap<String, String>? = null
+    ): T? {
+        val newUrl = if (url.startsWith("http")) url else BASE_URL + url
+
+        val urlBuilder = HttpUrl.parse(newUrl)?.newBuilder()
+
+        param?.let {
+            it.keys.forEach { key ->
+                urlBuilder?.addQueryParameter(key, it[key].toString())
+            }
+        }
+
+        val request = Request.Builder().url(urlBuilder?.build())
+
+        headers?.keys?.forEach {
+            request.addHeader(it, headers[it])
+        }
+
+        OkHttpUtils.getClient("").newCall(request.build()).execute().use { response ->
+            val body = response.body()?.string() ?: throw RequestException("数据为空")
+            val jsonObject = JSONObject(body)
+            val code = jsonObject.get("code").toString()
+            when (code) {
+                "200" -> {
+                    val result: T = Gson().fromJson(body, T::class.java)
+                    return result
+                }
+                else -> {
+                    throw RequestException("请求异常异常：code=$code")
+                    return null
                 }
             }
         }

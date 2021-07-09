@@ -14,19 +14,18 @@ import me.wsj.fengyun.extension.startActivity
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
 import me.wsj.fengyun.view.base.BaseActivity
+import me.wsj.fengyun.view.base.BaseVmActivity
 import me.wsj.fengyun.view.fragment.WeatherFragment
 import me.wsj.fengyun.view.fragment.WeatherViewModel
 import org.joda.time.DateTime
 import per.wsj.commonlib.utils.DisplayUtil
 import java.util.*
 
-class HomeActivity : BaseActivity<ActivityMainBinding>() {
+class HomeActivity : BaseVmActivity<ActivityMainBinding, WeatherViewModel>() {
 
     private val fragments: MutableList<Fragment> by lazy { ArrayList() }
     private val cityList = ArrayList<CityEntity>()
     private var mCurIndex = 0
-
-    private val viewModel: WeatherViewModel by viewModels()
 
     override fun bindView() = ActivityMainBinding.inflate(layoutInflater)
 

@@ -3,6 +3,7 @@ package me.wsj.fengyun;
 import android.app.Application;
 import android.content.Context;
 
+import dagger.hilt.android.HiltAndroidApp;
 import me.wsj.fengyun.utils.ContentUtil;
 import com.qweather.sdk.view.HeConfig;
 
@@ -10,7 +11,7 @@ import com.qweather.sdk.view.HeConfig;
 import java.util.logging.Logger;
 
 
-
+@HiltAndroidApp
 public class MyApplication extends Application {
     //获取屏幕的高，宽
     private static MyApplication instance = null;

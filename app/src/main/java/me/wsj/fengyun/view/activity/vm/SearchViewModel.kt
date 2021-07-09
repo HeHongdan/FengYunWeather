@@ -35,9 +35,10 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
             param["location"] = keywords
             param["key"] = Constants.APK_KEY
 
-            HttpUtils.get<SearchCity>(url, param) {
-                searchResult.value = it.location
+            HttpUtils.get<SearchCity>(url, param) { code, result ->
+                searchResult.value = result.location
             }
+//            val result = HttpUtils.get<SearchCity>(url, param)
         }
     }
 
@@ -48,8 +49,8 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
             param["location"] = cityName
             param["key"] = Constants.APK_KEY
 
-            HttpUtils.get<SearchCity>(url, param) {
-                curCity.value = it.location[0]
+            HttpUtils.get<SearchCity>(url, param) { code, result ->
+                curCity.value = result.location[0]
             }
         }
     }
@@ -67,10 +68,10 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
             param["key"] = Constants.APK_KEY
             param["number"] = 20
 
-            HttpUtils.get<TopCity>(url, param) {
-                topCity.value = it.topCityList
+            HttpUtils.get<TopCity>(url, param) { code, result ->
+                topCity.value = result.topCityList
                 launch {
-                    AppRepo.getInstance().saveCache("top_city", it.topCityList)
+                    AppRepo.getInstance().saveCache("top_city", result.topCityList)
                 }
             }
         }

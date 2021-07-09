@@ -8,9 +8,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
 import me.wsj.fengyun.db.entity.CityEntity
+import java.util.*
 
-class CityManagerAdapter(val mData: List<CityEntity>) :
-    RecyclerView.Adapter<CityManagerAdapter.ViewHolder>() {
+class CityManagerAdapter(val mData: List<CityEntity>,
+                         var onSort: ((List<CityEntity>) -> Unit)? = null) :
+    RecyclerView.Adapter<CityManagerAdapter.ViewHolder>(), IDragSort {
 
     var listener: OnCityRemoveListener? = null
 
@@ -41,5 +43,22 @@ class CityManagerAdapter(val mData: List<CityEntity>) :
 
     public interface OnCityRemoveListener {
         fun onCityRemove(pos: Int)
+    }
+
+    override fun move(fromPosition: Int, toPosition: Int) {
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                Collections.swap(mData, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(mData, i, i - 1)
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun dragFinish() {
+        onSort?.let { it(mData) }
     }
 }

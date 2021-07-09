@@ -23,6 +23,7 @@
     <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MyApplication"
@@ -62,11 +63,13 @@
             android:exported="true"
             android:permission="android.permission.ACCESS_FINE_LOCATION" />
 
-        <activity android:name=".view.activity.SettingsActivity"
+        <activity
+            android:name=".view.activity.SettingsActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".view.activity.CityManagerActivity"
-            android:launchMode="singleTask" >
+        <activity
+            android:name=".view.activity.CityManagerActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="me.wsj.fengyun.CITY_CONTROL" />
 
@@ -74,10 +77,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.activity.AboutActivity"
+        <activity
+            android:name=".view.activity.AboutActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".view.activity.AddCityActivity"
+        <activity
+            android:name=".view.activity.AddCityActivity"
             android:launchMode="singleTask" />
     </application>
 
