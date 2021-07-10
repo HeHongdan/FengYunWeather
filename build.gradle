@@ -4,6 +4,9 @@ buildscript {
         kotlin_version = "1.5.0"
         room_version = '2.2.6'
     }
+    ext.localProperties = new Properties()
+    ext.localProperties.load(project.rootProject.file('local.properties').newReader("UTF-8"))
+
     repositories {
         google()
         mavenCentral()

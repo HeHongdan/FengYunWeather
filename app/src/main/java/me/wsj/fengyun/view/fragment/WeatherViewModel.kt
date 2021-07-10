@@ -11,6 +11,8 @@ import me.wsj.fengyun.view.base.BaseViewModel
 
 class WeatherViewModel(val app: Application) : BaseViewModel(app) {
 
+    /******************************HomeActivity******************************/
+
     val mCities = MutableLiveData<List<CityEntity>>()
 
     val mCurCondCode = MutableLiveData<String>()
@@ -25,6 +27,10 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
             mCities.postValue(cities)
         }
     }
+
+    /******************************HomeActivity******************************/
+
+
 
     fun getAirBackground(aqi: String): Drawable? {
         val num = aqi.toInt()
