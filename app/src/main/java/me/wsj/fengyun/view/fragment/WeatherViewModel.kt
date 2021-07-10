@@ -4,10 +4,16 @@ import android.app.Application
 import android.graphics.drawable.Drawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
+import com.qweather.sdk.bean.weather.WeatherNowBean
 import me.wsj.fengyun.R
+import me.wsj.fengyun.bean.Now
+import me.wsj.fengyun.bean.WeatherNow
 import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.db.entity.CityEntity
 import me.wsj.fengyun.view.base.BaseViewModel
+import me.wsj.lib.Constants
+import me.wsj.lib.net.HttpUtils
+import per.wsj.commonlib.utils.LogUtil
 
 class WeatherViewModel(val app: Application) : BaseViewModel(app) {
 
@@ -29,7 +35,6 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
     }
 
     /******************************HomeActivity******************************/
-
 
 
     fun getAirBackground(aqi: String): Drawable? {
@@ -55,6 +60,21 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
             }
         }
     }
+
+    val weatherNow = MutableLiveData<Now>()
+
+    fun loadData(cityId: String) {
+        launch {
+            val url = "https://devapi.qweather.com/v7/weather/now"
+            val param = HashMap<String, Any>()
+            param["location"] = cityId
+            param["key"] = Constants.APK_KEY
+            HttpUtils.get<WeatherNow>(url, param) { code, result ->
+                weatherNow.value = result.now
+            }
+        }
+    }
+
 
     /**
      * 获取星期

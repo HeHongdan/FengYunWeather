@@ -15,6 +15,7 @@ import com.qweather.sdk.bean.weather.WeatherHourlyBean
 import com.qweather.sdk.bean.weather.WeatherNowBean
 import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ForecastAdapter
+import me.wsj.fengyun.bean.Now
 import me.wsj.fengyun.databinding.FragmentWeatherBinding
 import me.wsj.fengyun.databinding.LayoutTodayDetailBinding
 import me.wsj.fengyun.extension.notEmpty
@@ -70,9 +71,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
         }
     }
 
-
     companion object {
-
         @JvmStatic
         fun newInstance(param1: String) =
             WeatherFragment().apply {
@@ -85,22 +84,23 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
     override fun bindView() = FragmentWeatherBinding.inflate(layoutInflater)
 
     override fun initView(view: View?) {
+        // must use activity
         viewModel = ViewModelProvider(requireActivity()).get(WeatherViewModel::class.java)
 
-        todayDetailBinding = LayoutTodayDetailBinding.bind(mBinding.root)
-
         getCurrentTime()
+
+        todayDetailBinding = LayoutTodayDetailBinding.bind(mBinding.root)
 
         mBinding.horizontalScrollView.setToday24HourView(mBinding.hourly)
 
         //横向滚动监听
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mBinding.horizontalScrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            mBinding.horizontalScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
                 watched.notifyWatcher(scrollX)
             }
         }
 
-        mBinding.swipeLayout.setOnRefreshListener { initData(mCityId) }
+        mBinding.swipeLayout.setOnRefreshListener { loadData() }
     }
 
     override fun initEvent() {
@@ -121,25 +121,22 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
         }
 
         watched.addWatcher(mBinding.hourly)
+
+        viewModel.weatherNow.observe(this) {
+            showWeatherNow(it)
+        }
     }
 
     override fun loadData() {
-        initData(mCityId)
-
-
-        setViewTime()
-
-        getWeatherForecast(weatherForecastBean)
-    }
-
-    private fun initData(cityId: String) {
         val weatherImpl = WeatherImpl(this.activity, this)
-        weatherImpl.getWeatherHourly(cityId)
-        weatherImpl.getAirForecast(cityId)
-        weatherImpl.getAirNow(cityId)
-        weatherImpl.getWarning(cityId)
-        weatherImpl.getWeatherForecast(cityId)
-        weatherImpl.getWeatherNow(cityId)
+        weatherImpl.getWeatherHourly(mCityId)
+        weatherImpl.getAirForecast(mCityId)
+        weatherImpl.getAirNow(mCityId)
+        weatherImpl.getWarning(mCityId)
+        weatherImpl.getWeatherForecast(mCityId)
+        weatherImpl.getWeatherNow(mCityId)
+
+//        viewModel.loadData(mCityId)
     }
 
     override fun onResume() {
@@ -150,6 +147,33 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
         }
 
         setViewTime()
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun showWeatherNow(now: Now) {
+        condCode = now.icon
+        nowTmp = now.temp
+
+        viewModel.setCondCode(now.icon)
+        mBinding.tvTodayCond.text = now.text
+        mBinding.tvTodayTmp.text = "${nowTmp}°C"
+        if (ContentUtil.APP_SETTING_UNIT == "hua") {
+            mBinding.tvTodayTmp.text = TransUnitUtil.getF(nowTmp).toString() + "°F"
+        }
+        todayDetailBinding!!.tvTodayRain.text = now.precip + "mm"
+        todayDetailBinding!!.tvTodayPressure.text = now.pressure + "HPA"
+        todayDetailBinding!!.tvTodayHum.text = "${now.humidity}%"
+        todayDetailBinding!!.tvTodayVisible.text = now.vis + "KM"
+        todayDetailBinding!!.tvWindDir.text = now.windDir
+        todayDetailBinding!!.tvWindSc.text = now.windScale + "级"
+        val nowTime = DateTime.now()
+        val hourOfDay = nowTime.hourOfDay
+        if (hourOfDay in 7..18) {
+            mBinding.ivBack.setImageResource(IconUtils.getDayBack(context, condCode))
+        } else {
+            mBinding.ivBack.setImageResource(IconUtils.getNightBack(context, condCode))
+        }
+        mBinding.swipeLayout.isRefreshing = false
     }
 
     @SuppressLint("SetTextI18n")
