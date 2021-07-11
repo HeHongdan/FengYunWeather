@@ -4,18 +4,18 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
+import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.CityBean
 import me.wsj.fengyun.bean.Location
 import me.wsj.fengyun.bean.SearchCity
-import me.wsj.fengyun.bean.TopCity
 import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.db.entity.CityEntity
-import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.view.base.BaseViewModel
 import me.wsj.fengyun.view.base.LoadState
 import me.wsj.lib.Constants
 import me.wsj.lib.net.HttpUtils
-import per.wsj.commonlib.utils.LogUtil
+import java.util.*
+import kotlin.collections.HashMap
 
 class SearchViewModel(private val app: Application) : BaseViewModel(app) {
 
@@ -23,7 +23,9 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
 
     val curCity = MutableLiveData<Location>()
 
-    val topCity = MutableLiveData<List<Location>>()
+    val choosedCity = MutableLiveData<Location>()
+
+    val topCity = MutableLiveData<List<String>>()
 
     val addFinish = MutableLiveData<Boolean>()
 
@@ -48,15 +50,24 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
     /**
      * 获取城市数据
      */
-    fun getCityInfo(cityName: String) {
+    fun getCityInfo(cityName: String, save: Boolean = false) {
         launch {
+            if (save) {
+                // 缓存定位城市
+                AppRepo.getInstance().saveCache(Constants.LAST_LOCATION, cityName)
+            }
+
             val url = "https://geoapi.qweather.com/v2/city/lookup"
             val param = HashMap<String, Any>()
             param["location"] = cityName
             param["key"] = Constants.APK_KEY
 
             HttpUtils.get<SearchCity>(url, param) { code, result ->
-                curCity.value = result.location[0]
+                if (save) {
+                    curCity.value = result.location[0]
+                } else {
+                    choosedCity.value = result.location[0]
+                }
             }
         }
     }
@@ -66,7 +77,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
      */
     fun getTopCity() {
         launch {
-            var topCityCache = AppRepo.getInstance().getCache<ArrayList<Location>>("top_city")
+            /*var topCityCache = AppRepo.getInstance().getCache<ArrayList<Location>>("top_city")
             if (topCityCache != null && topCityCache.isNotEmpty()) {
                 topCity.postValue(topCityCache!!)
                 return@launch
@@ -82,7 +93,10 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
                 launch {
                     AppRepo.getInstance().saveCache("top_city", result.topCityList)
                 }
-            }
+            }*/
+            val stringArray = app.resources.getStringArray(R.array.top_city)
+            val cityList = stringArray.toList() as ArrayList<String>
+            topCity.postValue(cityList)
         }
     }
 
@@ -93,8 +107,6 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         launch {
             AppRepo.getInstance().addCity(CityEntity(it.cityId, it.cityName, isLocal))
             addFinish.postValue(true)
-            // 缓存定位城市
-            AppRepo.getInstance().saveCache(Constants.LAST_LOCATION, it.cityName)
         }
     }
 

@@ -14,6 +14,16 @@
 - 单位转换
 - 可设置不同字体大小
 
+## 预览
+
+![add_city](/img/add_city.png)
+
+![weather_info](/img/weather_info.png)
+
+![forecast](/img/forecast.png)
+
+![sun_moon](/img/sun_moon.png)
+
 ## TODO
 
 - [ ] 桌面小部件
@@ -27,13 +37,13 @@
 ## License
 
     Copyright 2021 wsj1024 Inc.
-
+    
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-
+    
        http://www.apache.org/licenses/LICENSE-2.0
-
+    
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.

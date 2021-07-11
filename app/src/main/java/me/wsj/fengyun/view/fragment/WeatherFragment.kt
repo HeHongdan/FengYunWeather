@@ -17,6 +17,7 @@ import me.wsj.fengyun.utils.IconUtils
 import me.wsj.fengyun.utils.WeatherUtil
 import me.wsj.fengyun.view.activity.vm.MainViewModel
 import me.wsj.fengyun.view.base.BaseVmFragment
+import me.wsj.fengyun.view.base.LoadState
 import me.wsj.fengyun.widget.horizonview.ScrollWatched
 import me.wsj.fengyun.widget.horizonview.ScrollWatcher
 import org.joda.time.DateTime
@@ -88,23 +89,10 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         // must use activity
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
-        getCurrentTime()
-
         todayDetailBinding = LayoutTodayDetailBinding.bind(mBinding.root)
 
         mBinding.horizontalScrollView.setToday24HourView(mBinding.hourly)
 
-        //横向滚动监听
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mBinding.horizontalScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
-                watched.notifyWatcher(scrollX)
-            }
-        }
-
-        mBinding.swipeLayout.setOnRefreshListener { loadData() }
-    }
-
-    override fun initEvent() {
         watched = object : ScrollWatched {
             override fun addWatcher(watcher: ScrollWatcher) {
                 watcherList.add(watcher)
@@ -123,6 +111,17 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         watched.addWatcher(mBinding.hourly)
 
+        //横向滚动监听
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mBinding.horizontalScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
+                watched.notifyWatcher(scrollX)
+            }
+        }
+    }
+
+    override fun initEvent() {
+        mBinding.swipeLayout.setOnRefreshListener { loadData() }
+
         viewModel.weatherNow.observe(this) {
             showWeatherNow(it)
         }
@@ -138,8 +137,24 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         viewModel.forecast.observe(this) {
             showForecast(it)
         }
-        viewModel.hourly.observe(this){
+        viewModel.hourly.observe(this) {
             showHourly(it)
+        }
+
+        viewModel.loadState.observe(this) {
+            when (it) {
+                is LoadState.Start -> {
+
+                }
+                is LoadState.Error -> {
+
+                }
+                is LoadState.Finish -> {
+                    if (viewModel.isStopped()) {
+                        mBinding.swipeLayout.isRefreshing = false
+                    }
+                }
+            }
         }
     }
 
@@ -171,7 +186,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         } else {
             mBinding.ivBack.setImageResource(IconUtils.getNightBack(context, condCode))
         }
-        mBinding.swipeLayout.isRefreshing = false
     }
 
     /**

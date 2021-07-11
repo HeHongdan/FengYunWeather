@@ -6,12 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
-import me.wsj.fengyun.bean.CityBean
 
-class TopCityAdapter(val mData: List<CityBean>) :
+class TopCityAdapter(val mData: List<String>, val onChecked: (String) -> Unit) :
     RecyclerView.Adapter<TopCityAdapter.ViewHolder>() {
-
-    var listener: SearchAdapter.OnCityCheckedListener? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -24,10 +21,10 @@ class TopCityAdapter(val mData: List<CityBean>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData[position]
-        holder.tvCityName.text = item.cityName
+        holder.tvCityName.text = item
 
         holder.itemView.setOnClickListener {
-            listener?.onChecked(item)
+            onChecked(item)
         }
     }
 

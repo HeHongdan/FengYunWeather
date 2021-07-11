@@ -4,26 +4,22 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import me.wsj.fengyun.adapter.SearchAdapter
 import me.wsj.fengyun.adapter.TopCityAdapter
 import me.wsj.fengyun.bean.CityBean
 import me.wsj.fengyun.bean.Location
 import me.wsj.fengyun.databinding.ActivityAddCityBinding
-import me.wsj.fengyun.extension.toast
 import me.wsj.fengyun.extension.startActivity
+import me.wsj.fengyun.extension.toast
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.expand
 import me.wsj.fengyun.view.activity.vm.SearchViewModel
-import me.wsj.fengyun.view.base.BaseActivity
 import me.wsj.fengyun.view.base.BaseVmActivity
 import me.wsj.fengyun.view.base.LoadState
 import me.wsj.fengyun.view.fragment.PermissionFragment
@@ -39,7 +35,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
 
     private val searchCities by lazy { ArrayList<CityBean>() }
 
-    private val topCities by lazy { ArrayList<CityBean>() }
+    private val topCities by lazy { ArrayList<String>() }
 
     private var fromSplash = false
 
@@ -62,14 +58,13 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         )
         mBinding.rvSearch.adapter = searchAdapter
 
-        topCityAdapter = TopCityAdapter(topCities)
+        topCityAdapter = TopCityAdapter(topCities) {
+            viewModel.getCityInfo(it)
+        }
         val layoutManager = GridLayoutManager(context, 3)
         mBinding.rvTopCity.adapter = topCityAdapter
         mBinding.rvTopCity.layoutManager = layoutManager
 
-        topCityAdapter?.listener = SearchAdapter.OnCityCheckedListener {
-            viewModel.addCity(it)
-        }
 
         mBinding.tvGetPos.expand(10, 10)
     }
@@ -108,7 +103,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         viewModel.curLocation.observe(this) {
             mBinding.tvCurLocation.visibility = View.VISIBLE
             mBinding.tvCurLocation.text = it
-            viewModel.getCityInfo(it)
+            viewModel.getCityInfo(it, true)
         }
 
         // 根据定位城市后去详细信息
@@ -116,6 +111,12 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
             val curCity = location2CityBean(item)
             // 显示城市详细位置
             mBinding.tvCurLocation.text = curCity.cityName
+            viewModel.addCity(curCity, true)
+        }
+
+        // 选中的热门城市的信息
+        viewModel.choosedCity.observe(this) { item ->
+            val curCity = location2CityBean(item)
             viewModel.addCity(curCity, true)
         }
 
@@ -196,25 +197,26 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
     /**
      * 展示热门城市
      */
-    private fun showTopCity(locations: List<Location>) {
+    private fun showTopCity(locations: List<String>) {
         topCities.clear()
-        locations.forEach { item ->
-            var parentCity = item.adm2
-            val adminArea = item.adm1
-            val city = item.country
-            if (TextUtils.isEmpty(parentCity)) {
-                parentCity = adminArea
-            }
-            if (TextUtils.isEmpty(adminArea)) {
-                parentCity = city
-            }
-            val cityBean = CityBean()
-            cityBean.cityName = parentCity + " - " + item.name
-            cityBean.cityId = item.id
-            cityBean.cnty = city
-            cityBean.adminArea = adminArea
-            topCities.add(cityBean)
-        }
+//        locations.forEach { item ->
+//            var parentCity = item.adm2
+//            val adminArea = item.adm1
+//            val city = item.country
+//            if (TextUtils.isEmpty(parentCity)) {
+//                parentCity = adminArea
+//            }
+//            if (TextUtils.isEmpty(adminArea)) {
+//                parentCity = city
+//            }
+//            val cityBean = CityBean()
+//            cityBean.cityName = parentCity + " - " + item.name
+//            cityBean.cityId = item.id
+//            cityBean.cnty = city
+//            cityBean.adminArea = adminArea
+//            topCities.add(cityBean)
+//        }
+        topCities.addAll(locations)
         topCityAdapter?.notifyDataSetChanged()
     }
 
