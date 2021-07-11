@@ -24,7 +24,9 @@ import me.wsj.fengyun.presenters.impl.WeatherImpl
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
 import me.wsj.fengyun.utils.TransUnitUtil
+import me.wsj.fengyun.view.activity.vm.MainViewModel
 import me.wsj.fengyun.view.base.BaseFragment
+import me.wsj.fengyun.view.base.BaseVmFragment
 import me.wsj.fengyun.widget.horizonview.ScrollWatched
 import me.wsj.fengyun.widget.horizonview.ScrollWatcher
 import org.joda.time.DateTime
@@ -35,7 +37,8 @@ import java.util.*
 private const val PARAM_CITY_ID = "param_city_id"
 
 
-class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface {
+class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>(),
+    WeatherInterface {
 
     private lateinit var mCityId: String
 
@@ -62,7 +65,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
 
     private var todayDetailBinding: LayoutTodayDetailBinding? = null
 
-    private lateinit var viewModel: WeatherViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +88,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
 
     override fun initView(view: View?) {
         // must use activity
-        viewModel = ViewModelProvider(requireActivity()).get(WeatherViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         getCurrentTime()
 
@@ -134,15 +137,15 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
         weatherImpl.getAirNow(mCityId)
         weatherImpl.getWarning(mCityId)
         weatherImpl.getWeatherForecast(mCityId)
-        weatherImpl.getWeatherNow(mCityId)
 
-//        viewModel.loadData(mCityId)
+
+        viewModel.loadData(mCityId)
     }
 
     override fun onResume() {
         super.onResume()
         condCode?.let {
-            viewModel.setCondCode(it)
+            mainViewModel.setCondCode(it)
             LogUtil.e("-----------------ch bg------------------ ch bg$it")
         }
 
@@ -154,7 +157,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
         condCode = now.icon
         nowTmp = now.temp
 
-        viewModel.setCondCode(now.icon)
+        mainViewModel.setCondCode(now.icon)
         mBinding.tvTodayCond.text = now.text
         mBinding.tvTodayTmp.text = "${nowTmp}°C"
         if (ContentUtil.APP_SETTING_UNIT == "hua") {
@@ -188,7 +191,7 @@ class WeatherFragment : BaseFragment<FragmentWeatherBinding>(), WeatherInterface
             val windSc = now.windScale
             val condTxt = now.text
             condCode = now.icon
-            viewModel.setCondCode(condCode!!)
+            mainViewModel.setCondCode(condCode!!)
             nowTmp = now.temp
             mBinding.tvTodayCond.text = condTxt
             mBinding.tvTodayTmp.text = "$nowTmp°C"

@@ -4,38 +4,14 @@ import android.app.Application
 import android.graphics.drawable.Drawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
-import com.qweather.sdk.bean.weather.WeatherNowBean
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Now
 import me.wsj.fengyun.bean.WeatherNow
-import me.wsj.fengyun.db.AppRepo
-import me.wsj.fengyun.db.entity.CityEntity
 import me.wsj.fengyun.view.base.BaseViewModel
 import me.wsj.lib.Constants
 import me.wsj.lib.net.HttpUtils
-import per.wsj.commonlib.utils.LogUtil
 
 class WeatherViewModel(val app: Application) : BaseViewModel(app) {
-
-    /******************************HomeActivity******************************/
-
-    val mCities = MutableLiveData<List<CityEntity>>()
-
-    val mCurCondCode = MutableLiveData<String>()
-
-    fun setCondCode(condCode: String) {
-        mCurCondCode.postValue(condCode)
-    }
-
-    fun getCities() {
-        launchSilent {
-            val cities = AppRepo.getInstance().getCities()
-            mCities.postValue(cities)
-        }
-    }
-
-    /******************************HomeActivity******************************/
-
 
     fun getAirBackground(aqi: String): Drawable? {
         val num = aqi.toInt()

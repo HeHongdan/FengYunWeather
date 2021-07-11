@@ -3,7 +3,6 @@ package me.wsj.fengyun.view.activity
 import android.content.Intent
 import android.view.View
 import android.widget.LinearLayout
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import me.wsj.fengyun.R
@@ -13,15 +12,14 @@ import me.wsj.fengyun.db.entity.CityEntity
 import me.wsj.fengyun.extension.startActivity
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
-import me.wsj.fengyun.view.base.BaseActivity
+import me.wsj.fengyun.view.activity.vm.MainViewModel
 import me.wsj.fengyun.view.base.BaseVmActivity
 import me.wsj.fengyun.view.fragment.WeatherFragment
-import me.wsj.fengyun.view.fragment.WeatherViewModel
 import org.joda.time.DateTime
 import per.wsj.commonlib.utils.DisplayUtil
 import java.util.*
 
-class HomeActivity : BaseVmActivity<ActivityMainBinding, WeatherViewModel>() {
+class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     private val fragments: MutableList<Fragment> by lazy { ArrayList() }
     private val cityList = ArrayList<CityEntity>()
