@@ -3,17 +3,13 @@ package me.wsj.fengyun.view.fragment
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.qweather.sdk.bean.WarningBean
 import com.qweather.sdk.bean.air.AirNowBean
 import com.qweather.sdk.bean.weather.WeatherDailyBean
 import com.qweather.sdk.bean.weather.WeatherHourlyBean
-import com.qweather.sdk.bean.weather.WeatherNowBean
-import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ForecastAdapter
 import me.wsj.fengyun.bean.Now
 import me.wsj.fengyun.bean.Warning
@@ -24,10 +20,8 @@ import me.wsj.fengyun.presenters.WeatherInterface
 import me.wsj.fengyun.presenters.impl.WeatherImpl
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
-import me.wsj.fengyun.utils.TransUnitUtil
 import me.wsj.fengyun.utils.WeatherUtil
 import me.wsj.fengyun.view.activity.vm.MainViewModel
-import me.wsj.fengyun.view.base.BaseFragment
 import me.wsj.fengyun.view.base.BaseVmFragment
 import me.wsj.fengyun.widget.horizonview.ScrollWatched
 import me.wsj.fengyun.widget.horizonview.ScrollWatcher
@@ -143,35 +137,9 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         mBinding.tvTodayAlarm.visibility = View.VISIBLE
         val level: String = alarmBase.level
         mBinding.tvTodayAlarm.text = alarmBase.typeName + level + "预警"
-        if (!TextUtils.isEmpty(level)) {
-            when (level) {
-                "蓝色", "Blue" -> {
-                    mBinding.tvTodayAlarm.background =
-                        resources.getDrawable(R.drawable.shape_blue_alarm)
-                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
-                }
-                "黄色", "Yellow" -> {
-                    mBinding.tvTodayAlarm.background =
-                        resources.getDrawable(R.drawable.shape_yellow_alarm)
-                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
-                }
-                "橙色", "Orange" -> {
-                    mBinding.tvTodayAlarm.background =
-                        resources.getDrawable(R.drawable.shape_orange_alarm)
-                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
-                }
-                "红色", "Red" -> {
-                    mBinding.tvTodayAlarm.background =
-                        resources.getDrawable(R.drawable.shape_red_alarm)
-                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
-                }
-                "白色", "White" -> {
-                    mBinding.tvTodayAlarm.background =
-                        resources.getDrawable(R.drawable.shape_white_alarm)
-                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.black))
-                }
-            }
-        }
+        val warningRes = WeatherUtil.getWarningRes(requireContext(), level)
+        mBinding.tvTodayAlarm.background = warningRes.first
+        mBinding.tvTodayAlarm.setTextColor(warningRes.second)
     }
 
     override fun loadData() {
@@ -179,7 +147,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         weatherImpl.getWeatherHourly(mCityId)
         weatherImpl.getAirForecast(mCityId)
         weatherImpl.getAirNow(mCityId)
-//        weatherImpl.getWarning(mCityId)
+
         weatherImpl.getWeatherForecast(mCityId)
 
         viewModel.loadData(mCityId)
@@ -202,9 +170,9 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         mainViewModel.setCondCode(now.icon)
         mBinding.tvTodayCond.text = now.text
-        mBinding.tvTodayTmp.text = "${nowTmp}°C"
+        mBinding.tvTodayTmp.text = "${now.temp}°C"
         if (ContentUtil.APP_SETTING_UNIT == "hua") {
-            mBinding.tvTodayTmp.text = TransUnitUtil.getF(nowTmp).toString() + "°F"
+            mBinding.tvTodayTmp.text = WeatherUtil.getF(now.temp).toString() + "°F"
         }
         todayDetailBinding!!.tvTodayRain.text = now.precip + "mm"
         todayDetailBinding!!.tvTodayPressure.text = now.pressure + "HPA"
@@ -350,8 +318,8 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             mBinding.tvLineMaxTmp.text = "$maxTmp°"
             mBinding.tvLineMinTmp.text = "$minTmp°"
             if (ContentUtil.APP_SETTING_UNIT == "hua") {
-                mBinding.tvLineMaxTmp.text = TransUnitUtil.getF(maxTmp.toString()).toString() + "°"
-                mBinding.tvLineMinTmp.text = TransUnitUtil.getF(minTmp.toString()).toString() + "°"
+                mBinding.tvLineMaxTmp.text = WeatherUtil.getF(maxTmp.toString()).toString() + "°"
+                mBinding.tvLineMinTmp.text = WeatherUtil.getF(minTmp.toString()).toString() + "°"
             }
         }
     }
@@ -388,10 +356,10 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             if (ContentUtil.APP_SETTING_UNIT == "hua") {
                 LogUtil.e("当前城市1：$condCode")
                 todayDetailBinding!!.tvMaxTmp.text =
-                    TransUnitUtil.getF(todayMaxTmp).toString() + "°F"
+                    WeatherUtil.getF(todayMaxTmp!!).toString() + "°F"
                 todayDetailBinding!!.tvMinTmp.text =
-                    TransUnitUtil.getF(todayMinTmp).toString() + "°F"
-                mBinding.tvTodayTmp.text = TransUnitUtil.getF(nowTmp).toString() + "°F"
+                    WeatherUtil.getF(todayMinTmp!!).toString() + "°F"
+                mBinding.tvTodayTmp.text = WeatherUtil.getF(nowTmp!!).toString() + "°F"
             } else {
                 LogUtil.e("当前城市2：$condCode")
                 todayDetailBinding!!.tvMaxTmp.text = "$todayMaxTmp°C"

@@ -24,7 +24,6 @@ import androidx.annotation.RequiresApi;
 import me.wsj.fengyun.R;
 import me.wsj.fengyun.utils.ContentUtil;
 import me.wsj.fengyun.utils.IconUtils;
-import me.wsj.fengyun.utils.TransUnitUtil;
 import me.wsj.fengyun.utils.WeatherUtil;
 import per.wsj.commonlib.utils.DisplayUtil;
 
@@ -306,7 +305,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
                 int baseline = (targetRect.bottom + targetRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
                 textLinePaint.setTextAlign(Paint.Align.LEFT);
                 if (ContentUtil.APP_SETTING_UNIT.equals("hua")) {
-                    tmp = String.valueOf(TransUnitUtil.getF(tmp));
+                    tmp = String.valueOf(WeatherUtil.getF(tmp));
                 }
                 canvas.drawText(tmp + "°", targetRect.centerX(), baseline, textLinePaint);
             }
