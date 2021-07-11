@@ -14,6 +14,7 @@ import me.wsj.fengyun.databinding.LayoutTodayDetailBinding
 import me.wsj.fengyun.extension.notEmpty
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
+import me.wsj.fengyun.utils.Lunar
 import me.wsj.fengyun.utils.WeatherUtil
 import me.wsj.fengyun.view.activity.vm.MainViewModel
 import me.wsj.fengyun.view.base.BaseVmFragment
@@ -23,6 +24,7 @@ import me.wsj.fengyun.widget.horizonview.ScrollWatcher
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import per.wsj.commonlib.utils.LogUtil
+import per.wsj.commonlib.utils.TimeUtil
 import java.util.*
 
 private const val PARAM_CITY_ID = "param_city_id"
@@ -78,6 +80,13 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         condCode?.let {
             mainViewModel.setCondCode(it)
 //            LogUtil.e("-----------------ch bg------------------ ch bg$it")
+        }
+
+        Calendar.getInstance().apply {
+            val day = get(Calendar.DAY_OF_MONTH)
+            mBinding.tvDate.text =
+                (get(Calendar.MONTH) + 1).toString() + "月" + day + "日 农历" +
+                        Lunar(this).toString()
         }
 
         setViewTime()
@@ -169,7 +178,8 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         mainViewModel.setCondCode(now.icon)
         mBinding.tvTodayCond.text = now.text
-        mBinding.tvTodayTmp.text = "${now.temp}°C"
+        mBinding.tvTodayTmp.text = now.temp
+
         if (ContentUtil.APP_SETTING_UNIT == "hua") {
             mBinding.tvTodayTmp.text = WeatherUtil.getF(now.temp).toString() + "°F"
         }
@@ -258,6 +268,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      * 预警
      */
     private fun showWarning(alarmBase: Warning) {
+        // todo 多个切换： https://www.jianshu.com/p/a9c14ee77f1e
         mBinding.tvTodayAlarm.visibility = View.VISIBLE
         val level: String = alarmBase.level
         mBinding.tvTodayAlarm.text = alarmBase.typeName + level + "预警"
