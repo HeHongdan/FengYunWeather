@@ -46,22 +46,22 @@ public class WeatherImpl implements WeatherPresenters {
 
     @Override
     public void getWeatherNow(String location) {
-        QWeather.getWeatherNow(context, location, lang, unit, new QWeather.OnResultWeatherNowListener() {
-            @Override
-            public void onError(Throwable throwable) {
-                WeatherNowBean weatherNow = SpUtils.getBean(context, "weatherNow", WeatherNowBean.class);
-                weatherInterface.getWeatherNow(weatherNow);
-            }
-
-            @Override
-            public void onSuccess(WeatherNowBean weatherNowBean) {
-                if (Code.OK.getCode().equalsIgnoreCase(weatherNowBean.getCode().getCode())) {
-                    weatherInterface.getWeatherNow(weatherNowBean);
-                    SpUtils.saveBean(context, "weatherNow", weatherNowBean);
-                }
-            }
-
-        });
+//        QWeather.getWeatherNow(context, location, lang, unit, new QWeather.OnResultWeatherNowListener() {
+//            @Override
+//            public void onError(Throwable throwable) {
+//                WeatherNowBean weatherNow = SpUtils.getBean(context, "weatherNow", WeatherNowBean.class);
+//                weatherInterface.getWeatherNow(weatherNow);
+//            }
+//
+//            @Override
+//            public void onSuccess(WeatherNowBean weatherNowBean) {
+//                if (Code.OK.getCode().equalsIgnoreCase(weatherNowBean.getCode().getCode())) {
+//                    weatherInterface.getWeatherNow(weatherNowBean);
+//                    SpUtils.saveBean(context, "weatherNow", weatherNowBean);
+//                }
+//            }
+//
+//        });
 
     }
 
@@ -92,24 +92,24 @@ public class WeatherImpl implements WeatherPresenters {
 
     @Override
     public void getWarning(String location) {
-        QWeather.getWarning(context, location, lang, new QWeather.OnResultWarningListener() {
-            @Override
-            public void onError(Throwable throwable) {
-                weatherInterface.getWarning(null);
-                Log.i("sky", "getWarning onError: " + throwable);
-            }
-
-            @Override
-            public void onSuccess(WarningBean warningBean) {
-                if (Code.OK.getCode().equalsIgnoreCase(warningBean.getCode().getCode())) {
-                    if (warningBean.getWarningList() != null && warningBean.getWarningList().size() > 0) {
-                        weatherInterface.getWarning(warningBean.getWarningList().get(0));
-                        SpUtils.saveBean(context, "alarm", warningBean);
-                    }
-                }
-            }
-
-        });
+//        QWeather.getWarning(context, location, lang, new QWeather.OnResultWarningListener() {
+//            @Override
+//            public void onError(Throwable throwable) {
+//                weatherInterface.getWarning(null);
+//                Log.i("sky", "getWarning onError: " + throwable);
+//            }
+//
+//            @Override
+//            public void onSuccess(WarningBean warningBean) {
+//                if (Code.OK.getCode().equalsIgnoreCase(warningBean.getCode().getCode())) {
+//                    if (warningBean.getWarningList() != null && warningBean.getWarningList().size() > 0) {
+//                        weatherInterface.getWarning(warningBean.getWarningList().get(0));
+//                        SpUtils.saveBean(context, "alarm", warningBean);
+//                    }
+//                }
+//            }
+//
+//        });
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.qweather.sdk.bean.weather.WeatherNowBean
 import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ForecastAdapter
 import me.wsj.fengyun.bean.Now
+import me.wsj.fengyun.bean.Warning
 import me.wsj.fengyun.databinding.FragmentWeatherBinding
 import me.wsj.fengyun.databinding.LayoutTodayDetailBinding
 import me.wsj.fengyun.extension.notEmpty
@@ -24,6 +25,7 @@ import me.wsj.fengyun.presenters.impl.WeatherImpl
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
 import me.wsj.fengyun.utils.TransUnitUtil
+import me.wsj.fengyun.utils.WeatherUtil
 import me.wsj.fengyun.view.activity.vm.MainViewModel
 import me.wsj.fengyun.view.base.BaseFragment
 import me.wsj.fengyun.view.base.BaseVmFragment
@@ -128,6 +130,48 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         viewModel.weatherNow.observe(this) {
             showWeatherNow(it)
         }
+
+        viewModel.warning.observe(this) {
+            showWarning(it)
+        }
+    }
+
+    /**
+     * 预警
+     */
+    private fun showWarning(alarmBase: Warning) {
+        mBinding.tvTodayAlarm.visibility = View.VISIBLE
+        val level: String = alarmBase.level
+        mBinding.tvTodayAlarm.text = alarmBase.typeName + level + "预警"
+        if (!TextUtils.isEmpty(level)) {
+            when (level) {
+                "蓝色", "Blue" -> {
+                    mBinding.tvTodayAlarm.background =
+                        resources.getDrawable(R.drawable.shape_blue_alarm)
+                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
+                }
+                "黄色", "Yellow" -> {
+                    mBinding.tvTodayAlarm.background =
+                        resources.getDrawable(R.drawable.shape_yellow_alarm)
+                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
+                }
+                "橙色", "Orange" -> {
+                    mBinding.tvTodayAlarm.background =
+                        resources.getDrawable(R.drawable.shape_orange_alarm)
+                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
+                }
+                "红色", "Red" -> {
+                    mBinding.tvTodayAlarm.background =
+                        resources.getDrawable(R.drawable.shape_red_alarm)
+                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
+                }
+                "白色", "White" -> {
+                    mBinding.tvTodayAlarm.background =
+                        resources.getDrawable(R.drawable.shape_white_alarm)
+                    mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.black))
+                }
+            }
+        }
     }
 
     override fun loadData() {
@@ -135,9 +179,8 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         weatherImpl.getWeatherHourly(mCityId)
         weatherImpl.getAirForecast(mCityId)
         weatherImpl.getAirNow(mCityId)
-        weatherImpl.getWarning(mCityId)
+//        weatherImpl.getWarning(mCityId)
         weatherImpl.getWeatherForecast(mCityId)
-
 
         viewModel.loadData(mCityId)
     }
@@ -177,42 +220,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             mBinding.ivBack.setImageResource(IconUtils.getNightBack(context, condCode))
         }
         mBinding.swipeLayout.isRefreshing = false
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun getWeatherNow(bean: WeatherNowBean?) {
-        if (bean != null && bean.now != null) {
-            val now = bean.now
-            val rain = now.precip
-            val hum = now.humidity
-            val pres = now.pressure
-            val vis = now.vis
-            val windDir = now.windDir
-            val windSc = now.windScale
-            val condTxt = now.text
-            condCode = now.icon
-            mainViewModel.setCondCode(condCode!!)
-            nowTmp = now.temp
-            mBinding.tvTodayCond.text = condTxt
-            mBinding.tvTodayTmp.text = "$nowTmp°C"
-            if (ContentUtil.APP_SETTING_UNIT == "hua") {
-                mBinding.tvTodayTmp.text = TransUnitUtil.getF(nowTmp).toString() + "°F"
-            }
-            todayDetailBinding!!.tvTodayRain.text = rain + "mm"
-            todayDetailBinding!!.tvTodayPressure.text = pres + "HPA"
-            todayDetailBinding!!.tvTodayHum.text = "$hum%"
-            todayDetailBinding!!.tvTodayVisible.text = vis + "KM"
-            todayDetailBinding!!.tvWindDir.text = windDir
-            todayDetailBinding!!.tvWindSc.text = windSc + "级"
-            val nowTime = DateTime.now()
-            val hourOfDay = nowTime.hourOfDay
-            if (hourOfDay in 7..18) {
-                mBinding.ivBack.setImageResource(IconUtils.getDayBack(context, condCode))
-            } else {
-                mBinding.ivBack.setImageResource(IconUtils.getNightBack(context, condCode))
-            }
-            mBinding.swipeLayout.isRefreshing = false
-        }
     }
 
     override fun getWeatherForecast(bean: WeatherDailyBean?) {
@@ -261,46 +268,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         }
     }
 
-    override fun getWarning(alarmBase: WarningBean.WarningBeanBase?) {
-        if (alarmBase != null) {
-            mBinding.tvTodayAlarm.visibility = View.VISIBLE
-            val level: String = alarmBase.level
-            val type: String = alarmBase.type
-            mBinding.tvTodayAlarm.text = type + "预警"
-            if (!TextUtils.isEmpty(level)) {
-                when (level) {
-                    "蓝色", "Blue" -> {
-                        mBinding.tvTodayAlarm.background =
-                            resources.getDrawable(R.drawable.shape_blue_alarm)
-                        mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
-                    }
-                    "黄色", "Yellow" -> {
-                        mBinding.tvTodayAlarm.background =
-                            resources.getDrawable(R.drawable.shape_yellow_alarm)
-                        mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
-                    }
-                    "橙色", "Orange" -> {
-                        mBinding.tvTodayAlarm.background =
-                            resources.getDrawable(R.drawable.shape_orange_alarm)
-                        mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
-                    }
-                    "红色", "Red" -> {
-                        mBinding.tvTodayAlarm.background =
-                            resources.getDrawable(R.drawable.shape_red_alarm)
-                        mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.white))
-                    }
-                    "白色", "White" -> {
-                        mBinding.tvTodayAlarm.background =
-                            resources.getDrawable(R.drawable.shape_white_alarm)
-                        mBinding.tvTodayAlarm.setTextColor(resources.getColor(R.color.black))
-                    }
-                }
-            }
-        } else {
-            mBinding.tvTodayAlarm.visibility = View.GONE
-        }
-    }
-
     override fun getAirNow(bean: AirNowBean?) {
         if (bean != null && bean.now != null) {
             todayDetailBinding!!.ivLine2.visibility = View.VISIBLE
@@ -324,7 +291,8 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             todayDetailBinding!!.tvTodayNo2.text = no2
             todayDetailBinding!!.tvTodayCo.text = co
             todayDetailBinding!!.tvTodayO3.text = o3
-            todayDetailBinding!!.rvAir.background = viewModel.getAirBackground(aqi)
+            todayDetailBinding!!.rvAir.background =
+                WeatherUtil.getAirBackground(requireContext(), aqi)
         } else {
             todayDetailBinding!!.ivLine2.visibility = View.GONE
             todayDetailBinding!!.gridAir.visibility = View.GONE

@@ -2,15 +2,6 @@ package me.wsj.fengyun.utils;
 
 public class TransUnitUtil {
 
-    public static int getInt(String value) {
-        try {
-            int i = Integer.parseInt(value);
-            return i;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
     public static long getF(String value) {
         try {
             long i = Integer.parseInt(value);
@@ -18,15 +9,6 @@ public class TransUnitUtil {
             return i;
         } catch (Exception e) {
             return 0;
-        }
-    }
-
-    public static double getDouble(String value) {
-        try {
-            double i = Double.parseDouble(value);
-            return i;
-        } catch (Exception e) {
-            return 0.00;
         }
     }
 

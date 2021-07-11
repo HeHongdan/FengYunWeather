@@ -12,20 +12,11 @@ import com.qweather.sdk.bean.weather.WeatherNowBean;
  */
 
 public interface WeatherInterface {
-    /**
-     * 实况天气
-     */
-    void getWeatherNow(WeatherNowBean bean);
 
     /**
      * 3-7天天气预报
      */
     void getWeatherForecast(WeatherDailyBean bean);
-
-    /**
-     * 灾害天气预警
-     */
-    void getWarning(WarningBean.WarningBeanBase bean);
 
     /**
      * 空气实况

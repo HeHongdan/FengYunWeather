@@ -6,6 +6,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Now
+import me.wsj.fengyun.bean.Warning
+import me.wsj.fengyun.bean.WarningBean
 import me.wsj.fengyun.bean.WeatherNow
 import me.wsj.fengyun.view.base.BaseViewModel
 import me.wsj.lib.Constants
@@ -13,40 +15,29 @@ import me.wsj.lib.net.HttpUtils
 
 class WeatherViewModel(val app: Application) : BaseViewModel(app) {
 
-    fun getAirBackground(aqi: String): Drawable? {
-        val num = aqi.toInt()
-        return when {
-            num <= 50 -> {
-                ResourcesCompat.getDrawable(app.resources, R.drawable.shape_aqi_excellent, null)
-            }
-            num <= 100 -> {
-                ResourcesCompat.getDrawable(app.resources, R.drawable.shape_aqi_good, null)
-            }
-            num <= 150 -> {
-                ResourcesCompat.getDrawable(app.resources, R.drawable.shape_aqi_low, null)
-            }
-            num <= 200 -> {
-                ResourcesCompat.getDrawable(app.resources, R.drawable.shape_aqi_mid, null)
-            }
-            num <= 300 -> {
-                ResourcesCompat.getDrawable(app.resources, R.drawable.shape_aqi_bad, null)
-            }
-            else -> {
-                ResourcesCompat.getDrawable(app.resources, R.drawable.shape_aqi_serious, null)
-            }
-        }
-    }
-
     val weatherNow = MutableLiveData<Now>()
+    val warning = MutableLiveData<Warning>()
 
     fun loadData(cityId: String) {
+        val param = HashMap<String, Any>()
+        param["location"] = cityId
+        param["key"] = Constants.APK_KEY
+
+        // 实时天气
         launch {
             val url = "https://devapi.qweather.com/v7/weather/now"
-            val param = HashMap<String, Any>()
-            param["location"] = cityId
-            param["key"] = Constants.APK_KEY
             HttpUtils.get<WeatherNow>(url, param) { code, result ->
                 weatherNow.value = result.now
+            }
+        }
+
+        // 预警
+        launch {
+            val url = "https://devapi.qweather.com/v7/warning/now"
+            HttpUtils.get<WarningBean>(url, param) { code, result ->
+                if (result.warning.isNotEmpty()) {
+                    warning.value = result.warning[0]
+                }
             }
         }
     }
