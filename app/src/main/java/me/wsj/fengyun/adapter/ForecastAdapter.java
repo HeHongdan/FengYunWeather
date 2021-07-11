@@ -11,17 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import me.wsj.fengyun.R;
-import me.wsj.fengyun.bean.Daily;
-import me.wsj.fengyun.utils.ContentUtil;
-import me.wsj.fengyun.utils.IconUtils;
-import me.wsj.fengyun.utils.WeatherUtil;
-
-import com.qweather.sdk.bean.weather.WeatherDailyBean;
-
 import org.joda.time.DateTime;
 
 import java.util.List;
+
+import me.wsj.fengyun.R;
+import me.wsj.fengyun.bean.Daily;
+import me.wsj.fengyun.utils.IconUtils;
+import me.wsj.fengyun.utils.WeatherUtil;
 
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.MyViewHolder> {

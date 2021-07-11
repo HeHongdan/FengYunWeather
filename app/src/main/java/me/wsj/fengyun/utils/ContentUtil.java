@@ -12,9 +12,9 @@ import me.wsj.fengyun.MyApplication;
 public class ContentUtil {
 
     //用户id
-    public static final String PUBLIC_ID = "HE2106221833431392";
-    //用户key
-    public static final String APK_KEY = "24caabf195034fe6a8cfeb65fdd78bf0";
+//    public static final String PUBLIC_ID = "HE2106221833431392";
+//    //用户key
+//    public static final String APK_KEY = "24caabf195034fe6a8cfeb65fdd78bf0";
     //当前所在位置
     public static Double NOW_LON = 116.40;
     public static Double NOW_LAT = 39.9;

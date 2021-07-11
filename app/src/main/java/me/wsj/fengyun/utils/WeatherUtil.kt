@@ -103,7 +103,7 @@ class WeatherUtil {
          * @return 星期
          */
         @JvmStatic
-        public fun getWeek(num: Int): String {
+        fun getWeek(num: Int): String {
             var week = " "
             when (num) {
                 1 -> week = "周一"

@@ -16,6 +16,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
     val warning = MutableLiveData<Warning>()
     val airNow = MutableLiveData<Air>()
     val forecast = MutableLiveData<List<Daily>>()
+    val hourly = MutableLiveData<List<Hourly>>()
 
     fun loadData(cityId: String) {
         val param = HashMap<String, Any>()
@@ -55,6 +56,15 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
                 forecast.value = result.daily
             }
         }
+
+        // 逐小时天气预报
+        launch {
+            val url = "https://devapi.qweather.com/v7/weather/24h"
+            HttpUtils.get<WeatherHourly>(url, param) { code, result ->
+                hourly.value = result.hourly
+            }
+        }
+
     }
 
 }

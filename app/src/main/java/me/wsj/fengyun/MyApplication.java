@@ -3,12 +3,9 @@ package me.wsj.fengyun;
 import android.app.Application;
 import android.content.Context;
 
-import dagger.hilt.android.HiltAndroidApp;
-import me.wsj.fengyun.utils.ContentUtil;
-import com.qweather.sdk.view.HeConfig;
-
-
 import java.util.logging.Logger;
+
+import dagger.hilt.android.HiltAndroidApp;
 
 
 @HiltAndroidApp
@@ -24,8 +21,8 @@ public class MyApplication extends Application {
         instance = this;
         //在主线程中new的handler就是主线程的handler
         //初始化Handler
-        HeConfig.init(ContentUtil.PUBLIC_ID, ContentUtil.APK_KEY);
-        HeConfig.switchToDevService();
+//        HeConfig.init(ContentUtil.PUBLIC_ID, ContentUtil.APK_KEY);
+//        HeConfig.switchToDevService();
 
     }
 

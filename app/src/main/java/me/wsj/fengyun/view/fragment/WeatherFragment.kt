@@ -7,19 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.qweather.sdk.bean.air.AirNowBean
-import com.qweather.sdk.bean.weather.WeatherDailyBean
-import com.qweather.sdk.bean.weather.WeatherHourlyBean
 import me.wsj.fengyun.adapter.ForecastAdapter
-import me.wsj.fengyun.bean.Air
-import me.wsj.fengyun.bean.Daily
-import me.wsj.fengyun.bean.Now
-import me.wsj.fengyun.bean.Warning
+import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.databinding.FragmentWeatherBinding
 import me.wsj.fengyun.databinding.LayoutTodayDetailBinding
 import me.wsj.fengyun.extension.notEmpty
-import me.wsj.fengyun.presenters.WeatherInterface
-import me.wsj.fengyun.presenters.impl.WeatherImpl
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
 import me.wsj.fengyun.utils.WeatherUtil
@@ -35,8 +27,7 @@ import java.util.*
 private const val PARAM_CITY_ID = "param_city_id"
 
 
-class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>(),
-    WeatherInterface {
+class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>() {
 
     private lateinit var mCityId: String
 
@@ -53,8 +44,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     private var todayMaxTmp: String? = null
     private var todayMinTmp: String? = null
-    private var weatherForecastBean: WeatherDailyBean? = null
-    private var weatherHourlyBean: WeatherHourlyBean? = null
+
     private var nowTmp: String? = null
 
     private var condCode: String? = null
@@ -80,6 +70,16 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
                     putString(PARAM_CITY_ID, param1)
                 }
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        condCode?.let {
+            mainViewModel.setCondCode(it)
+//            LogUtil.e("-----------------ch bg------------------ ch bg$it")
+        }
+
+        setViewTime()
     }
 
     override fun bindView() = FragmentWeatherBinding.inflate(layoutInflater)
@@ -138,10 +138,44 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         viewModel.forecast.observe(this) {
             showForecast(it)
         }
+        viewModel.hourly.observe(this){
+            showHourly(it)
+        }
+    }
+
+    override fun loadData() {
+        viewModel.loadData(mCityId)
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun showWeatherNow(now: Now) {
+        condCode = now.icon
+        nowTmp = now.temp
+
+        mainViewModel.setCondCode(now.icon)
+        mBinding.tvTodayCond.text = now.text
+        mBinding.tvTodayTmp.text = "${now.temp}°C"
+        if (ContentUtil.APP_SETTING_UNIT == "hua") {
+            mBinding.tvTodayTmp.text = WeatherUtil.getF(now.temp).toString() + "°F"
+        }
+        todayDetailBinding!!.tvTodayRain.text = now.precip + "mm"
+        todayDetailBinding!!.tvTodayPressure.text = now.pressure + "HPA"
+        todayDetailBinding!!.tvTodayHum.text = "${now.humidity}%"
+        todayDetailBinding!!.tvTodayVisible.text = now.vis + "KM"
+        todayDetailBinding!!.tvWindDir.text = now.windDir
+        todayDetailBinding!!.tvWindSc.text = now.windScale + "级"
+        val nowTime = DateTime.now()
+        val hourOfDay = nowTime.hourOfDay
+        if (hourOfDay in 7..18) {
+            mBinding.ivBack.setImageResource(IconUtils.getDayBack(context, condCode))
+        } else {
+            mBinding.ivBack.setImageResource(IconUtils.getNightBack(context, condCode))
+        }
+        mBinding.swipeLayout.isRefreshing = false
     }
 
     /**
-     *
+     * 三天预报
      */
     private fun showForecast(dailyForecast: List<Daily>) {
         getCurrentTime()
@@ -218,104 +252,57 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         mBinding.tvTodayAlarm.setTextColor(warningRes.second)
     }
 
-    override fun loadData() {
-        val weatherImpl = WeatherImpl(this.activity, this)
-        weatherImpl.getWeatherHourly(mCityId)
-
-//        weatherImpl.getWeatherForecast(mCityId)
-
-        viewModel.loadData(mCityId)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        condCode?.let {
-            mainViewModel.setCondCode(it)
-//            LogUtil.e("-----------------ch bg------------------ ch bg$it")
-        }
-
-        setViewTime()
-    }
-
-    @SuppressLint("SetTextI18n")
-    fun showWeatherNow(now: Now) {
-        condCode = now.icon
-        nowTmp = now.temp
-
-        mainViewModel.setCondCode(now.icon)
-        mBinding.tvTodayCond.text = now.text
-        mBinding.tvTodayTmp.text = "${now.temp}°C"
-        if (ContentUtil.APP_SETTING_UNIT == "hua") {
-            mBinding.tvTodayTmp.text = WeatherUtil.getF(now.temp).toString() + "°F"
-        }
-        todayDetailBinding!!.tvTodayRain.text = now.precip + "mm"
-        todayDetailBinding!!.tvTodayPressure.text = now.pressure + "HPA"
-        todayDetailBinding!!.tvTodayHum.text = "${now.humidity}%"
-        todayDetailBinding!!.tvTodayVisible.text = now.vis + "KM"
-        todayDetailBinding!!.tvWindDir.text = now.windDir
-        todayDetailBinding!!.tvWindSc.text = now.windScale + "级"
-        val nowTime = DateTime.now()
-        val hourOfDay = nowTime.hourOfDay
-        if (hourOfDay in 7..18) {
-            mBinding.ivBack.setImageResource(IconUtils.getDayBack(context, condCode))
+    /**
+     * 逐小时天气
+     */
+    private fun showHourly(hourlyWeatherList: List<Hourly>) {
+        val data: MutableList<Hourly> = ArrayList()
+        if (hourlyWeatherList.size > 23) {
+            for (i in 0..23) {
+                data.add(hourlyWeatherList[i])
+                val condCode = data[i].icon
+                var time = data[i].fxTime
+                time = time.substring(time.length - 11, time.length - 9)
+                val hourNow = time.toInt()
+                if (hourNow in 6..19) {
+                    data[i].icon = condCode + "d"
+                } else {
+                    data[i].icon = condCode + "n"
+                }
+            }
         } else {
-            mBinding.ivBack.setImageResource(IconUtils.getNightBack(context, condCode))
+            for (i in hourlyWeatherList.indices) {
+                data.add(hourlyWeatherList[i])
+                val condCode = data[i].icon
+                var time = data[i].fxTime
+                time = time.substring(time.length - 11, time.length - 9)
+                val hourNow = time.toInt()
+                if (hourNow in 6..19) {
+                    data[i].icon = condCode + "d"
+                } else {
+                    data[i].icon = condCode + "n"
+                }
+            }
         }
-        mBinding.swipeLayout.isRefreshing = false
-    }
-
-    override fun getWeatherHourly(bean: WeatherHourlyBean?) {
-        if (bean != null && bean.hourly != null) {
-            weatherHourlyBean = bean
-            val hourlyWeatherList = bean.hourly
-            val data: MutableList<WeatherHourlyBean.HourlyBean> = ArrayList()
-            if (hourlyWeatherList.size > 23) {
-                for (i in 0..23) {
-                    data.add(hourlyWeatherList[i])
-                    val condCode = data[i].icon
-                    var time = data[i].fxTime
-                    time = time.substring(time.length - 11, time.length - 9)
-                    val hourNow = time.toInt()
-                    if (hourNow in 6..19) {
-                        data[i].icon = condCode + "d"
-                    } else {
-                        data[i].icon = condCode + "n"
-                    }
-                }
-            } else {
-                for (i in hourlyWeatherList.indices) {
-                    data.add(hourlyWeatherList[i])
-                    val condCode = data[i].icon
-                    var time = data[i].fxTime
-                    time = time.substring(time.length - 11, time.length - 9)
-                    val hourNow = time.toInt()
-                    if (hourNow in 6..19) {
-                        data[i].icon = condCode + "d"
-                    } else {
-                        data[i].icon = condCode + "n"
-                    }
-                }
-            }
-            var minTmp = data[0].temp.toInt()
-            var maxTmp = minTmp
-            for (i in data.indices) {
-                val tmp = data[i].temp.toInt()
-                minTmp = Math.min(tmp, minTmp)
-                maxTmp = Math.max(tmp, maxTmp)
-            }
-            //设置当天的最高最低温度
-            mBinding.hourly.setHighestTemp(maxTmp)
-            mBinding.hourly.setLowestTemp(minTmp)
-            if (maxTmp == minTmp) {
-                mBinding.hourly.setLowestTemp(minTmp - 1)
-            }
-            mBinding.hourly.initData(data)
-            mBinding.tvLineMaxTmp.text = "$maxTmp°"
-            mBinding.tvLineMinTmp.text = "$minTmp°"
-            if (ContentUtil.APP_SETTING_UNIT == "hua") {
-                mBinding.tvLineMaxTmp.text = WeatherUtil.getF(maxTmp.toString()).toString() + "°"
-                mBinding.tvLineMinTmp.text = WeatherUtil.getF(minTmp.toString()).toString() + "°"
-            }
+        var minTmp = data[0].temp.toInt()
+        var maxTmp = minTmp
+        for (i in data.indices) {
+            val tmp = data[i].temp.toInt()
+            minTmp = Math.min(tmp, minTmp)
+            maxTmp = Math.max(tmp, maxTmp)
+        }
+        //设置当天的最高最低温度
+        mBinding.hourly.setHighestTemp(maxTmp)
+        mBinding.hourly.setLowestTemp(minTmp)
+        if (maxTmp == minTmp) {
+            mBinding.hourly.setLowestTemp(minTmp - 1)
+        }
+        mBinding.hourly.initData(data)
+        mBinding.tvLineMaxTmp.text = "$maxTmp°"
+        mBinding.tvLineMinTmp.text = "$minTmp°"
+        if (ContentUtil.APP_SETTING_UNIT == "hua") {
+            mBinding.tvLineMaxTmp.text = WeatherUtil.getF(maxTmp.toString()).toString() + "°"
+            mBinding.tvLineMinTmp.text = WeatherUtil.getF(minTmp.toString()).toString() + "°"
         }
     }
 
@@ -362,7 +349,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
                 mBinding.tvTodayTmp.text = "$nowTmp°C"
             }
         }
-        getWeatherHourly(weatherHourlyBean)
+//        getWeatherHourly(weatherHourlyBean)
 //        getWeatherForecast(weatherForecastBean)
     }
 }

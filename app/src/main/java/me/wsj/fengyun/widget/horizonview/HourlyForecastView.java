@@ -22,12 +22,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import me.wsj.fengyun.R;
+import me.wsj.fengyun.bean.Hourly;
 import me.wsj.fengyun.utils.ContentUtil;
 import me.wsj.fengyun.utils.IconUtils;
 import me.wsj.fengyun.utils.WeatherUtil;
 import per.wsj.commonlib.utils.DisplayUtil;
-
-import com.qweather.sdk.bean.weather.WeatherHourlyBean;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,7 +57,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     private int textSize;
 
     //数据
-    private List<WeatherHourlyBean.HourlyBean> hourlyWeatherList;
+    private List<Hourly> hourlyWeatherList;
 
     //画虚线的点的index
     private List<Integer> dashLineList;
@@ -137,7 +136,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     private static int ITEM_SIZE = 24;
 
 
-    public void initData(List<WeatherHourlyBean.HourlyBean> weatherData) {
+    public void initData(List<Hourly> weatherData) {
 
         hourlyWeatherList = weatherData;
         int size = weatherData.size();
@@ -146,13 +145,13 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         dashLineList = new ArrayList<>();
 
         Iterator iterator = weatherData.iterator();
-        WeatherHourlyBean.HourlyBean hourlyBase;
+        Hourly hourlyBase;
         String lastText = "";
 
 
         int idx = 0;
         while (iterator.hasNext()) {
-            hourlyBase = (WeatherHourlyBean.HourlyBean) iterator.next();
+            hourlyBase = (Hourly) iterator.next();
             if (!hourlyBase.getIcon().equals(lastText)) {
                 if (idx != size - 1) {
                     dashLineList.add(idx);//从0开始添加虚线位置的索引值idx
