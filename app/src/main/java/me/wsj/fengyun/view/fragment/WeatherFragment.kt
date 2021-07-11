@@ -11,6 +11,8 @@ import com.qweather.sdk.bean.air.AirNowBean
 import com.qweather.sdk.bean.weather.WeatherDailyBean
 import com.qweather.sdk.bean.weather.WeatherHourlyBean
 import me.wsj.fengyun.adapter.ForecastAdapter
+import me.wsj.fengyun.bean.Air
+import me.wsj.fengyun.bean.Daily
 import me.wsj.fengyun.bean.Now
 import me.wsj.fengyun.bean.Warning
 import me.wsj.fengyun.databinding.FragmentWeatherBinding
@@ -128,6 +130,80 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         viewModel.warning.observe(this) {
             showWarning(it)
         }
+
+        viewModel.airNow.observe(this) {
+            showAirNow(it)
+        }
+
+        viewModel.forecast.observe(this) {
+            showForecast(it)
+        }
+    }
+
+    /**
+     *
+     */
+    private fun showForecast(dailyForecast: List<Daily>) {
+        getCurrentTime()
+        val forecastBase = dailyForecast[0]
+        val condCodeD = forecastBase.iconDay
+        val condCodeN = forecastBase.iconNight
+        val tmpMin = forecastBase.tempMin
+        val tmpMax = forecastBase.tempMax
+        sunrise = forecastBase.sunrise
+        sunset = forecastBase.sunset
+        moonRise = forecastBase.moonrise
+        moonSet = forecastBase.moonset
+        todayDetailBinding!!.sunView.setTimes(sunrise, sunset, currentTime)
+        todayDetailBinding!!.moonView.setTimes(moonRise, moonSet, currentTime)
+        todayMaxTmp = tmpMax
+        todayMinTmp = tmpMin
+        todayDetailBinding!!.tvMaxTmp.text = "$tmpMax°"
+        todayDetailBinding!!.tvMinTmp.text = "$tmpMin°"
+        todayDetailBinding!!.ivTodayDay.setImageResource(
+            IconUtils.getDayIconDark(
+                context,
+                condCodeD
+            )
+        )
+        todayDetailBinding!!.ivTodayNight.setImageResource(
+            IconUtils.getNightIconDark(
+                context,
+                condCodeN
+            )
+        )
+        if (forecastAdapter == null) {
+            forecastAdapter = ForecastAdapter(activity, dailyForecast)
+            mBinding.rvForecast.adapter = forecastAdapter
+            val forecastManager = LinearLayoutManager(
+                activity
+            )
+            forecastManager.orientation = LinearLayoutManager.VERTICAL
+            mBinding.rvForecast.layoutManager = forecastManager
+        } else {
+            forecastAdapter!!.refreshData(activity, dailyForecast)
+        }
+    }
+
+    /**
+     * 空气质量
+     */
+    private fun showAirNow(airNow: Air) {
+        todayDetailBinding!!.ivLine2.visibility = View.VISIBLE
+        todayDetailBinding!!.gridAir.visibility = View.VISIBLE
+        todayDetailBinding!!.rvAir.visibility = View.VISIBLE
+        todayDetailBinding!!.airTitle.visibility = View.VISIBLE
+
+        todayDetailBinding!!.tvAir.text = airNow.category
+        todayDetailBinding!!.tvAirNum.text = airNow.aqi
+        todayDetailBinding!!.tvTodayPm25.text = airNow.pm2p5
+        todayDetailBinding!!.tvTodayPm10.text = airNow.pm10
+        todayDetailBinding!!.tvTodaySo2.text = airNow.so2
+        todayDetailBinding!!.tvTodayNo2.text = airNow.no2
+        todayDetailBinding!!.tvTodayCo.text = airNow.co
+        todayDetailBinding!!.tvTodayO3.text = airNow.o3
+        todayDetailBinding!!.rvAir.background =
+            WeatherUtil.getAirBackground(requireContext(), airNow.aqi)
     }
 
     /**
@@ -145,10 +221,8 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     override fun loadData() {
         val weatherImpl = WeatherImpl(this.activity, this)
         weatherImpl.getWeatherHourly(mCityId)
-        weatherImpl.getAirForecast(mCityId)
-        weatherImpl.getAirNow(mCityId)
 
-        weatherImpl.getWeatherForecast(mCityId)
+//        weatherImpl.getWeatherForecast(mCityId)
 
         viewModel.loadData(mCityId)
     }
@@ -157,7 +231,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         super.onResume()
         condCode?.let {
             mainViewModel.setCondCode(it)
-            LogUtil.e("-----------------ch bg------------------ ch bg$it")
+//            LogUtil.e("-----------------ch bg------------------ ch bg$it")
         }
 
         setViewTime()
@@ -188,85 +262,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             mBinding.ivBack.setImageResource(IconUtils.getNightBack(context, condCode))
         }
         mBinding.swipeLayout.isRefreshing = false
-    }
-
-    override fun getWeatherForecast(bean: WeatherDailyBean?) {
-        if (bean != null && bean.daily != null) {
-            weatherForecastBean = bean
-            getCurrentTime()
-            val dailyForecast = bean.daily
-            val forecastBase = dailyForecast[0]
-            val condCodeD = forecastBase.iconDay
-            val condCodeN = forecastBase.iconNight
-            val tmpMin = forecastBase.tempMin
-            val tmpMax = forecastBase.tempMax
-            sunrise = forecastBase.sunrise
-            sunset = forecastBase.sunset
-            moonRise = forecastBase.moonRise
-            moonSet = forecastBase.moonSet
-            todayDetailBinding!!.sunView.setTimes(sunrise, sunset, currentTime)
-            todayDetailBinding!!.moonView.setTimes(moonRise, moonSet, currentTime)
-            todayMaxTmp = tmpMax
-            todayMinTmp = tmpMin
-            todayDetailBinding!!.tvMaxTmp.text = "$tmpMax°"
-            todayDetailBinding!!.tvMinTmp.text = "$tmpMin°"
-            todayDetailBinding!!.ivTodayDay.setImageResource(
-                IconUtils.getDayIconDark(
-                    context,
-                    condCodeD
-                )
-            )
-            todayDetailBinding!!.ivTodayNight.setImageResource(
-                IconUtils.getNightIconDark(
-                    context,
-                    condCodeN
-                )
-            )
-            if (forecastAdapter == null) {
-                forecastAdapter = ForecastAdapter(activity, dailyForecast)
-                mBinding.rvForecast.adapter = forecastAdapter
-                val forecastManager = LinearLayoutManager(
-                    activity
-                )
-                forecastManager.orientation = LinearLayoutManager.VERTICAL
-                mBinding.rvForecast.layoutManager = forecastManager
-            } else {
-                forecastAdapter!!.refreshData(activity, dailyForecast)
-            }
-        }
-    }
-
-    override fun getAirNow(bean: AirNowBean?) {
-        if (bean != null && bean.now != null) {
-            todayDetailBinding!!.ivLine2.visibility = View.VISIBLE
-            todayDetailBinding!!.gridAir.visibility = View.VISIBLE
-            todayDetailBinding!!.rvAir.visibility = View.VISIBLE
-            todayDetailBinding!!.airTitle.visibility = View.VISIBLE
-            val airNowCity = bean.now
-            val qlty = airNowCity.category
-            val aqi = airNowCity.aqi
-            val pm25 = airNowCity.pm2p5
-            val pm10 = airNowCity.pm10
-            val so2 = airNowCity.so2
-            val no2 = airNowCity.no2
-            val co = airNowCity.co
-            val o3 = airNowCity.o3
-            todayDetailBinding!!.tvAir.text = qlty
-            todayDetailBinding!!.tvAirNum.text = aqi
-            todayDetailBinding!!.tvTodayPm25.text = pm25
-            todayDetailBinding!!.tvTodayPm10.text = pm10
-            todayDetailBinding!!.tvTodaySo2.text = so2
-            todayDetailBinding!!.tvTodayNo2.text = no2
-            todayDetailBinding!!.tvTodayCo.text = co
-            todayDetailBinding!!.tvTodayO3.text = o3
-            todayDetailBinding!!.rvAir.background =
-                WeatherUtil.getAirBackground(requireContext(), aqi)
-        } else {
-            todayDetailBinding!!.ivLine2.visibility = View.GONE
-            todayDetailBinding!!.gridAir.visibility = View.GONE
-            todayDetailBinding!!.rvAir.visibility = View.GONE
-            todayDetailBinding!!.airTitle.visibility = View.GONE
-        }
     }
 
     override fun getWeatherHourly(bean: WeatherHourlyBean?) {
@@ -368,6 +363,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             }
         }
         getWeatherHourly(weatherHourlyBean)
-        getWeatherForecast(weatherForecastBean)
+//        getWeatherForecast(weatherForecastBean)
     }
 }

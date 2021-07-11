@@ -69,25 +69,25 @@ public class WeatherImpl implements WeatherPresenters {
     @Override
     public void getWeatherForecast(final String location) {
 
-        QWeather.getWeather3D(context, location, lang, unit, new QWeather.OnResultWeatherDailyListener() {
-            @Override
-            public void onError(Throwable throwable) {
-                Log.i("sky", "getWeatherForecast onError: ");
-                WeatherDailyBean weatherForecast = SpUtils.getBean(context, "weatherForecast", WeatherDailyBean.class);
-                weatherInterface.getWeatherForecast(weatherForecast);
-                getAirForecast(location);
-            }
-
-            @Override
-            public void onSuccess(WeatherDailyBean weatherDailyBean) {
-                if (Code.OK.getCode().equalsIgnoreCase(weatherDailyBean.getCode().getCode())) {
-                    weatherInterface.getWeatherForecast(weatherDailyBean);
-                    getAirForecast(location);
-                    SpUtils.saveBean(context, "weatherForecast", weatherDailyBean);
-                }
-            }
-
-        });
+//        QWeather.getWeather3D(context, location, lang, unit, new QWeather.OnResultWeatherDailyListener() {
+//            @Override
+//            public void onError(Throwable throwable) {
+//                Log.i("sky", "getWeatherForecast onError: ");
+//                WeatherDailyBean weatherForecast = SpUtils.getBean(context, "weatherForecast", WeatherDailyBean.class);
+//                weatherInterface.getWeatherForecast(weatherForecast);
+//                getAirForecast(location);
+//            }
+//
+//            @Override
+//            public void onSuccess(WeatherDailyBean weatherDailyBean) {
+//                if (Code.OK.getCode().equalsIgnoreCase(weatherDailyBean.getCode().getCode())) {
+//                    weatherInterface.getWeatherForecast(weatherDailyBean);
+//                    getAirForecast(location);
+//                    SpUtils.saveBean(context, "weatherForecast", weatherDailyBean);
+//                }
+//            }
+//
+//        });
     }
 
     @Override
@@ -114,51 +114,51 @@ public class WeatherImpl implements WeatherPresenters {
 
     @Override
     public void getAirNow(final String location) {
-        QWeather.getAirNow(context, location, lang, new QWeather.OnResultAirNowListener() {
-            @Override
-            public void onError(Throwable throwable) {
-                Log.i("sky", "getAirNow onError: ");
-                getParentAir(location);
-            }
-
-            @Override
-            public void onSuccess(AirNowBean airNowBean) {
-                if (Code.OK.getCode().equalsIgnoreCase(airNowBean.getCode().getCode())) {
-                    weatherInterface.getAirNow(airNowBean);
-                    SpUtils.saveBean(context, "airNow", airNowBean);
-                }
-            }
-        });
+//        QWeather.getAirNow(context, location, lang, new QWeather.OnResultAirNowListener() {
+//            @Override
+//            public void onError(Throwable throwable) {
+//                Log.i("sky", "getAirNow onError: ");
+//                getParentAir(location);
+//            }
+//
+//            @Override
+//            public void onSuccess(AirNowBean airNowBean) {
+//                if (Code.OK.getCode().equalsIgnoreCase(airNowBean.getCode().getCode())) {
+//                    weatherInterface.getAirNow(airNowBean);
+//                    SpUtils.saveBean(context, "airNow", airNowBean);
+//                }
+//            }
+//        });
     }
 
     private void getParentAir(String location) {
-        QWeather.getGeoCityLookup(context, location, Range.WORLD, 3, lang, new QWeather.OnResultGeoListener() {
-            @Override
-            public void onError(Throwable throwable) {
-
-            }
-
-            @Override
-            public void onSuccess(GeoBean geoBean) {
-                String parentCity = geoBean.getLocationBean().get(0).getAdm2();
-                if (TextUtils.isEmpty(parentCity)) {
-                    parentCity = geoBean.getLocationBean().get(0).getAdm1();
-                }
-                QWeather.getAirNow(context, parentCity, lang, new QWeather.OnResultAirNowListener() {
-                    @Override
-                    public void onError(Throwable throwable) {
-                        weatherInterface.getAirNow(null);
-                    }
-
-                    @Override
-                    public void onSuccess(AirNowBean airNow) {
-                        if (Code.OK.getCode().equalsIgnoreCase(airNow.getCode().getCode())) {
-                            weatherInterface.getAirNow(airNow);
-                        }
-                    }
-                });
-            }
-        });
+//        QWeather.getGeoCityLookup(context, location, Range.WORLD, 3, lang, new QWeather.OnResultGeoListener() {
+//            @Override
+//            public void onError(Throwable throwable) {
+//
+//            }
+//
+//            @Override
+//            public void onSuccess(GeoBean geoBean) {
+//                String parentCity = geoBean.getLocationBean().get(0).getAdm2();
+//                if (TextUtils.isEmpty(parentCity)) {
+//                    parentCity = geoBean.getLocationBean().get(0).getAdm1();
+//                }
+//                QWeather.getAirNow(context, parentCity, lang, new QWeather.OnResultAirNowListener() {
+//                    @Override
+//                    public void onError(Throwable throwable) {
+//                        weatherInterface.getAirNow(null);
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(AirNowBean airNow) {
+//                        if (Code.OK.getCode().equalsIgnoreCase(airNow.getCode().getCode())) {
+//                            weatherInterface.getAirNow(airNow);
+//                        }
+//                    }
+//                });
+//            }
+//        });
     }
 
     @Override

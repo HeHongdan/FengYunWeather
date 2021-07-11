@@ -14,14 +14,9 @@ import com.qweather.sdk.bean.weather.WeatherNowBean;
 public interface WeatherInterface {
 
     /**
-     * 3-7天天气预报
-     */
-    void getWeatherForecast(WeatherDailyBean bean);
-
-    /**
      * 空气实况
      */
-    void getAirNow(AirNowBean bean);
+//    void getAirNow(AirNowBean bean);
 
     /**
      * 空气预报

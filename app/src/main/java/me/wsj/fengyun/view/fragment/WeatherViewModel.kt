@@ -5,10 +5,7 @@ import android.graphics.drawable.Drawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
 import me.wsj.fengyun.R
-import me.wsj.fengyun.bean.Now
-import me.wsj.fengyun.bean.Warning
-import me.wsj.fengyun.bean.WarningBean
-import me.wsj.fengyun.bean.WeatherNow
+import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.view.base.BaseViewModel
 import me.wsj.lib.Constants
 import me.wsj.lib.net.HttpUtils
@@ -17,6 +14,8 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
 
     val weatherNow = MutableLiveData<Now>()
     val warning = MutableLiveData<Warning>()
+    val airNow = MutableLiveData<Air>()
+    val forecast = MutableLiveData<List<Daily>>()
 
     fun loadData(cityId: String) {
         val param = HashMap<String, Any>()
@@ -40,27 +39,22 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
                 }
             }
         }
-    }
 
-
-    /**
-     * 获取星期
-     *
-     * @param num 0-6
-     * @return 星期
-     */
-    private fun getWeek(num: Int): String {
-        var week = " "
-        when (num) {
-            1 -> week = "周一"
-            2 -> week = "周二"
-            3 -> week = "周三"
-            4 -> week = "周四"
-            5 -> week = "周五"
-            6 -> week = "周六"
-            7 -> week = "周日"
+        // 实时空气
+        launch {
+            val url = "https://devapi.qweather.com/v7/air/now"
+            HttpUtils.get<AirNow>(url, param) { code, result ->
+                airNow.value = result.now
+            }
         }
-        return week
+
+        // 3天 天气预报
+        launch {
+            val url = "https://devapi.qweather.com/v7/weather/3d"
+            HttpUtils.get<ForestBean>(url, param) { code, result ->
+                forecast.value = result.daily
+            }
+        }
     }
 
 }

@@ -71,35 +71,50 @@ class WeatherUtil {
         @JvmStatic
         fun getAirBackground(context: Context, aqi: String): Drawable? {
             val num = aqi.toInt()
-			val res = context.resources
-            return when {
+
+            val drawable = when {
                 num <= 50 -> {
-                    ResourcesCompat.getDrawable(
-                        res,
-                        R.drawable.shape_aqi_excellent,
-                        null
-                    )
+                    R.drawable.shape_aqi_excellent
                 }
                 num <= 100 -> {
-                    ResourcesCompat.getDrawable(res, R.drawable.shape_aqi_good, null)
+                    R.drawable.shape_aqi_good
                 }
                 num <= 150 -> {
-                    ResourcesCompat.getDrawable(res, R.drawable.shape_aqi_low, null)
+                    R.drawable.shape_aqi_low
                 }
                 num <= 200 -> {
-                    ResourcesCompat.getDrawable(res, R.drawable.shape_aqi_mid, null)
+                    R.drawable.shape_aqi_mid
                 }
                 num <= 300 -> {
-                    ResourcesCompat.getDrawable(res, R.drawable.shape_aqi_bad, null)
+                    R.drawable.shape_aqi_bad
                 }
                 else -> {
-                    ResourcesCompat.getDrawable(
-                        res,
-                        R.drawable.shape_aqi_serious,
-                        null
-                    )
+                    R.drawable.shape_aqi_serious
                 }
             }
+
+            return ResourcesCompat.getDrawable(context.resources, drawable, null)
+        }
+
+        /**
+         * 获取星期
+         *
+         * @param num 0-6
+         * @return 星期
+         */
+        @JvmStatic
+        public fun getWeek(num: Int): String {
+            var week = " "
+            when (num) {
+                1 -> week = "周一"
+                2 -> week = "周二"
+                3 -> week = "周三"
+                4 -> week = "周四"
+                5 -> week = "周五"
+                6 -> week = "周六"
+                7 -> week = "周日"
+            }
+            return week
         }
     }
 }
