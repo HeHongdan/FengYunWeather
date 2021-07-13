@@ -5,13 +5,16 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ForecastAdapter
 import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.databinding.FragmentWeatherBinding
 import me.wsj.fengyun.databinding.LayoutTodayDetailBinding
 import me.wsj.fengyun.extension.notEmpty
+import me.wsj.fengyun.extension.toastCenter
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
 import me.wsj.fengyun.utils.Lunar
@@ -21,10 +24,11 @@ import me.wsj.fengyun.view.base.BaseVmFragment
 import me.wsj.fengyun.view.base.LoadState
 import me.wsj.fengyun.widget.horizonview.ScrollWatched
 import me.wsj.fengyun.widget.horizonview.ScrollWatcher
+import me.wsj.fengyun.widget.titanic.Titanic
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import per.wsj.commonlib.utils.LogUtil
-import per.wsj.commonlib.utils.TimeUtil
+import per.wsj.commonlib.utils.Typefaces
 import java.util.*
 
 private const val PARAM_CITY_ID = "param_city_id"
@@ -75,11 +79,15 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.loadCache(mCityId)
+    }
+
     override fun onResume() {
         super.onResume()
         condCode?.let {
             mainViewModel.setCondCode(it)
-//            LogUtil.e("-----------------ch bg------------------ ch bg$it")
         }
 
         Calendar.getInstance().apply {
@@ -126,6 +134,9 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
                 watched.notifyWatcher(scrollX)
             }
         }
+
+        // 设置字体
+        mBinding.tvTodayTmp.typeface = Typefaces.get(requireContext(), "widget_clock.ttf")
     }
 
     override fun initEvent() {
@@ -135,8 +146,8 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             showWeatherNow(it)
         }
 
-        viewModel.warning.observe(this) {
-            showWarning(it)
+        viewModel.warnings.observe(this) {
+            showWarnings(it)
         }
 
         viewModel.airNow.observe(this) {
@@ -153,7 +164,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         viewModel.loadState.observe(this) {
             when (it) {
                 is LoadState.Start -> {
-
+                    mBinding.swipeLayout.isRefreshing = true
                 }
                 is LoadState.Error -> {
 
@@ -169,6 +180,9 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     override fun loadData() {
         viewModel.loadData(mCityId)
+
+        // 启动titanic
+        Titanic().start(mBinding.tvTodayTmp)
     }
 
     @SuppressLint("SetTextI18n")
@@ -179,6 +193,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         mainViewModel.setCondCode(now.icon)
         mBinding.tvTodayCond.text = now.text
         mBinding.tvTodayTmp.text = now.temp
+        mBinding.tvUnit.visibility = View.VISIBLE
 
         if (ContentUtil.APP_SETTING_UNIT == "hua") {
             mBinding.tvTodayTmp.text = WeatherUtil.getF(now.temp).toString() + "°F"
@@ -267,14 +282,27 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     /**
      * 预警
      */
-    private fun showWarning(alarmBase: Warning) {
-        // todo 多个切换： https://www.jianshu.com/p/a9c14ee77f1e
-        mBinding.tvTodayAlarm.visibility = View.VISIBLE
-        val level: String = alarmBase.level
-        mBinding.tvTodayAlarm.text = alarmBase.typeName + level + "预警"
-        val warningRes = WeatherUtil.getWarningRes(requireContext(), level)
-        mBinding.tvTodayAlarm.background = warningRes.first
-        mBinding.tvTodayAlarm.setTextColor(warningRes.second)
+    private fun showWarnings(warnings: List<Warning>) {
+        mBinding.alarmFlipper.visibility = View.VISIBLE
+        mBinding.alarmFlipper.setInAnimation(requireContext(), R.anim.bottom_in)
+        mBinding.alarmFlipper.setOutAnimation(requireContext(), R.anim.top_out)
+        mBinding.alarmFlipper.flipInterval = 3000
+        for (warning in warnings) {
+            val level: String = warning.level
+            val tip = warning.typeName + level + "预警"
+            val warningRes = WeatherUtil.getWarningRes(requireContext(), level)
+            val textView: TextView = layoutInflater.inflate(R.layout.item_warning, null) as TextView
+            textView.background = warningRes.first
+            textView.text = tip
+            textView.setOnClickListener {
+                toastCenter(warning.text)
+            }
+            textView.setTextColor(warningRes.second)
+            mBinding.alarmFlipper.addView(textView)
+        }
+        if (warnings.size > 1) {
+            mBinding.alarmFlipper.startFlipping()
+        }
     }
 
     /**

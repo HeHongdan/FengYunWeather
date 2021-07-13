@@ -4,19 +4,35 @@ import android.app.Application
 import android.graphics.drawable.Drawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.*
+import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.view.base.BaseViewModel
 import me.wsj.lib.Constants
 import me.wsj.lib.net.HttpUtils
+import per.wsj.commonlib.utils.LogUtil
+
+const val CACHE_WEATHER_NOW = "now_"
 
 class WeatherViewModel(val app: Application) : BaseViewModel(app) {
 
     val weatherNow = MutableLiveData<Now>()
-    val warning = MutableLiveData<Warning>()
+    val warnings = MutableLiveData<List<Warning>>()
     val airNow = MutableLiveData<Air>()
     val forecast = MutableLiveData<List<Daily>>()
     val hourly = MutableLiveData<List<Hourly>>()
+
+    fun loadCache(cityId: String) {
+        launchSilent {
+            var cache = AppRepo.getInstance().getCache<Now>(CACHE_WEATHER_NOW + cityId)
+            cache?.let {
+//                LogUtil.e("now: $it")
+                weatherNow.postValue(it)
+            }
+        }
+    }
 
     fun loadData(cityId: String) {
         val param = HashMap<String, Any>()
@@ -28,6 +44,9 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
             val url = "https://devapi.qweather.com/v7/weather/now"
             HttpUtils.get<WeatherNow>(url, param) { code, result ->
                 weatherNow.value = result.now
+                launch {
+                    AppRepo.getInstance().saveCache(CACHE_WEATHER_NOW + cityId, result.now)
+                }
             }
         }
 
@@ -36,7 +55,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
             val url = "https://devapi.qweather.com/v7/warning/now"
             HttpUtils.get<WarningBean>(url, param) { code, result ->
                 if (result.warning.isNotEmpty()) {
-                    warning.value = result.warning[0]
+                    warnings.value = result.warning
                 }
             }
         }

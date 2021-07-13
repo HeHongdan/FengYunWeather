@@ -15,6 +15,7 @@ import me.wsj.fengyun.adapter.TopCityAdapter
 import me.wsj.fengyun.bean.CityBean
 import me.wsj.fengyun.bean.Location
 import me.wsj.fengyun.databinding.ActivityAddCityBinding
+import me.wsj.fengyun.databinding.ActivityAddCityBinding.*
 import me.wsj.fengyun.extension.startActivity
 import me.wsj.fengyun.extension.toast
 import me.wsj.fengyun.utils.ContentUtil
@@ -41,7 +42,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
 
     private var requestedGPS = false
 
-    override fun bindView() = ActivityAddCityBinding.inflate(layoutInflater)
+    override fun bindView() = inflate(layoutInflater)
 
     override fun prepareData(intent: Intent) {
         fromSplash = intent.getBooleanExtra("fromSplash", false)
@@ -106,7 +107,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
             viewModel.getCityInfo(it, true)
         }
 
-        // 根据定位城市后去详细信息
+        // 根据定位城市获取详细信息
         viewModel.curCity.observe(this) { item ->
             val curCity = location2CityBean(item)
             // 显示城市详细位置
@@ -117,7 +118,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         // 选中的热门城市的信息
         viewModel.choosedCity.observe(this) { item ->
             val curCity = location2CityBean(item)
-            viewModel.addCity(curCity, true)
+            viewModel.addCity(curCity)
         }
 
         viewModel.loadState.observe(this) {

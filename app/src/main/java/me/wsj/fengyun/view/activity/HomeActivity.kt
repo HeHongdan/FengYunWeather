@@ -12,6 +12,7 @@ import me.wsj.fengyun.db.entity.CityEntity
 import me.wsj.fengyun.extension.startActivity
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.IconUtils
+import me.wsj.fengyun.utils.expand
 import me.wsj.fengyun.view.activity.vm.MainViewModel
 import me.wsj.fengyun.view.base.BaseVmActivity
 import me.wsj.fengyun.view.fragment.WeatherFragment
@@ -53,6 +54,8 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
             override fun onPageScrollStateChanged(i: Int) {}
         })
+
+        mBinding.ivAddCity.expand(10, 10)
     }
 
     override fun initEvent() {

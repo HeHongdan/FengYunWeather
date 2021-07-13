@@ -2,10 +2,7 @@ package me.wsj.fengyun.view.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.preference.CheckBoxPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
+import androidx.preference.*
 import me.wsj.fengyun.R
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.view.activity.AboutActivity
@@ -36,70 +33,78 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         about?.widgetLayoutResource = R.layout.layout_arrow_right
 
-        val unitHua = findPreference<CheckBoxPreference>("key_unit_hua")
-        val unitShe = findPreference<CheckBoxPreference>("key_unit_she")
+        val lanCategory = findPreference<PreferenceCategory>("key_lan_group")!!
+        val unitCategory = findPreference<PreferenceCategory>("key_unit_group")!!
 
-        unitHua?.isSelectable = !unitHua!!.isChecked
+        initState(lanCategory)
+        initState(unitCategory)
+
+        val unitHua = findPreference<CheckBoxPreference>("key_unit_hua")!!
+        val unitShe = findPreference<CheckBoxPreference>("key_unit_she")!!
+
         unitHua.setOnPreferenceClickListener {
-            unitShe?.isChecked = !unitHua.isChecked
-            unitHua.isSelectable = !unitHua.isChecked
-            unitShe?.isSelectable = unitHua.isChecked
+            changeState(unitCategory, it as CheckBoxPreference)
 
             changeUnit("hua")
             true
         }
 
-        unitShe?.isSelectable = !unitShe!!.isChecked
         unitShe.setOnPreferenceClickListener {
-            unitHua.isChecked = !unitShe.isChecked
-            unitShe.isSelectable = !unitShe.isChecked
-            unitHua.isSelectable = unitShe.isChecked
+            changeState(unitCategory, it as CheckBoxPreference)
 
             changeUnit("she")
             true
         }
 
-        val lanSys = findPreference<CheckBoxPreference>("key_lan_system")
-        val lanCn = findPreference<CheckBoxPreference>("key_lan_cn")
-        val lanEn = findPreference<CheckBoxPreference>("key_lan_en")
+        val lanSys = findPreference<CheckBoxPreference>("key_lan_system")!!
+        val lanCn = findPreference<CheckBoxPreference>("key_lan_cn")!!
+        val lanEn = findPreference<CheckBoxPreference>("key_lan_en")!!
 
-        lanSys?.isSelectable = !lanSys!!.isChecked
-        lanSys?.setOnPreferenceClickListener {
-            lanCn?.isChecked = !lanSys.isChecked
-            lanEn?.isChecked = !lanSys.isChecked
-
-            lanSys.isSelectable = !lanSys.isChecked
-            lanCn?.isSelectable = lanSys.isChecked
-            lanEn?.isSelectable = lanSys.isChecked
+        lanSys.setOnPreferenceClickListener {
+            changeState(lanCategory, it as CheckBoxPreference)
 
             changeLang("sys")
             true
         }
 
-        lanCn?.isSelectable = !lanCn!!.isChecked
-        lanCn?.setOnPreferenceClickListener {
-            lanSys?.isChecked = !lanCn.isChecked
-            lanEn?.isChecked = !lanCn.isChecked
-
-            lanCn.isSelectable = !lanCn.isChecked
-            lanSys?.isSelectable = lanCn.isChecked
-            lanEn?.isSelectable = lanCn.isChecked
+        lanCn.setOnPreferenceClickListener {
+            changeState(lanCategory, it as CheckBoxPreference)
 
             changeLang("zh")
             true
         }
 
-        lanEn?.isSelectable = !lanEn!!.isChecked
-        lanEn?.setOnPreferenceClickListener {
-            lanCn?.isChecked = !lanEn.isChecked
-            lanSys?.isChecked = !lanEn.isChecked
-
-            lanEn.isSelectable = !lanEn.isChecked
-            lanCn?.isSelectable = lanEn.isChecked
-            lanSys?.isSelectable = lanEn.isChecked
+        lanEn.setOnPreferenceClickListener {
+            changeState(lanCategory, it as CheckBoxPreference)
 
             changeLang("en")
             true
+        }
+    }
+
+    /**
+     * 初始化可选状态
+     */
+    fun initState(category: PreferenceCategory) {
+        val childCount = category.preferenceCount
+        for (i in 0 until childCount) {
+            val item = category.getPreference(i) as CheckBoxPreference
+            item.isSelectable = !item.isChecked
+        }
+    }
+
+    /**
+     * 改变可选及选中状态
+     */
+    fun changeState(category: PreferenceCategory, target: CheckBoxPreference) {
+        val childCount = category.preferenceCount
+        target.isSelectable = false
+        for (i in 0 until childCount) {
+            val other = category.getPreference(i) as CheckBoxPreference
+            if (other.key != target.key) {
+                other.isChecked = false
+                other.isSelectable = true
+            }
         }
     }
 

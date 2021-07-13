@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_f2f2f2"
     android:orientation="vertical"
     tools:context=".view.activity.AddCityActivity">
 
@@ -16,7 +15,7 @@
         <AutoCompleteTextView
             android:id="@+id/et_search"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="40dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="16dp"
@@ -44,7 +43,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <LinearLayout
             android:id="@+id/ll_history"

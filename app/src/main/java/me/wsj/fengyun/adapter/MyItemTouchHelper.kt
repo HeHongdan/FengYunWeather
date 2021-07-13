@@ -51,9 +51,11 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
 
 //            viewHolder?.itemView?.setBackgroundColor(context.getColor(R.color.color_item_high_light_drag))
-            viewHolder?.itemView?.elevation = 100f
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                viewHolder?.itemView?.elevation = 100f
+            }
             //获取系统震动服务//震动70毫秒
-            val vib = context?.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
+            val vib = context.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vib.vibrate(VibrationEffect.createOneShot(70, DEFAULT_AMPLITUDE))
             } else {
@@ -68,7 +70,9 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
      */
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        viewHolder.itemView.elevation = 0f
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            viewHolder.itemView.elevation = 0f
+        }
 //        val ints = intArrayOf(android.R.attr.selectableItemBackground)
 //        val typedArray = context.obtainStyledAttributes(ints)
 //        val drawable = typedArray.getDrawable(0)
