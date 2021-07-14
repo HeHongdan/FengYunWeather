@@ -17,7 +17,7 @@ import java.util.List;
 
 import me.wsj.fengyun.R;
 import me.wsj.fengyun.bean.Daily;
-import me.wsj.fengyun.utils.IconUtils;
+import me.wsj.lib.utils.IconUtils;
 import me.wsj.fengyun.utils.WeatherUtil;
 
 

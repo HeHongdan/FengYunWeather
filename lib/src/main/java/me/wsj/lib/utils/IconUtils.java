@@ -1,9 +1,9 @@
-package me.wsj.fengyun.utils;
+package me.wsj.lib.utils;
 
 
 import android.content.Context;
 
-import me.wsj.fengyun.R;
+import me.wsj.lib.R;
 import per.wsj.commonlib.utils.LogUtil;
 
 public class IconUtils {

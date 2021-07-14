@@ -1,4 +1,4 @@
-package me.wsj.fengyun.extension
+package me.wsj.lib.extension
 
 import android.app.Activity
 import android.content.Context
@@ -6,9 +6,7 @@ import android.content.Intent
 import android.view.Gravity
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import me.wsj.fengyun.R
-import me.wsj.fengyun.databinding.CustomToastBinding
-import kotlin.contracts.contract
+import me.wsj.lib.databinding.CustomToastBinding
 
 fun Context.toast(content: String) {
     showToast(this, content)
@@ -35,6 +33,12 @@ private fun showToast(context: Context, content: String) {
 
 inline fun <reified T : Activity> Activity.startActivity() {
     startActivity(Intent(this, T::class.java))
+}
+
+inline fun <reified T : Activity> Activity.startActivity(pair: Pair<String, Int>) {
+    val intent = Intent(this, T::class.java)
+    intent.putExtra(pair.first, pair.second)
+    startActivity(intent)
 }
 
 inline fun CharSequence?.notEmpty(): Boolean {

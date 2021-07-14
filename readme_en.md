@@ -16,9 +16,9 @@
 
 ## Preview
 
-![add_city](/img/add_city.png)
+![weather_info](/img/home.gif)
 
-![weather_info](/img/weather_info.png)
+![add_city](/img/add_city.png)
 
 ![forecast](/img/forecast.png)
 

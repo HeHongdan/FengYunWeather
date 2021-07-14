@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.wsj.fengyun.R
 import me.wsj.fengyun.db.AppRepo
-import me.wsj.fengyun.extension.startActivity
+import me.wsj.lib.extension.startActivity
 import per.wsj.commonlib.permission.PermissionUtil
 import per.wsj.commonlib.utils.LogUtil
 

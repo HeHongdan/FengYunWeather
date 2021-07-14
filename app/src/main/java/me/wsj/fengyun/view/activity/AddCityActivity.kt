@@ -16,8 +16,8 @@ import me.wsj.fengyun.bean.CityBean
 import me.wsj.fengyun.bean.Location
 import me.wsj.fengyun.databinding.ActivityAddCityBinding
 import me.wsj.fengyun.databinding.ActivityAddCityBinding.*
-import me.wsj.fengyun.extension.startActivity
-import me.wsj.fengyun.extension.toast
+import me.wsj.lib.extension.startActivity
+import me.wsj.lib.extension.toast
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.expand
 import me.wsj.fengyun.view.activity.vm.SearchViewModel

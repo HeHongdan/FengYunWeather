@@ -15,7 +15,7 @@ public class ContentUtil {
 //    public static String SYS_LANG = "zh";
     public static String APP_SETTING_UNIT = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext()).getString("unit","she");
 
-    public static String APP_SETTING_THEME = SpUtils.getString(MyApplication.getContext(), "theme", "浅色");
+    public static String APP_SETTING_THEME = "浅色";
 
 
     public static boolean UNIT_CHANGE = false;

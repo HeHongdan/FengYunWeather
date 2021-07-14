@@ -1,5 +1,7 @@
 package me.wsj.fengyun.widget.titanic;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -10,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.animation.LinearInterpolator;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -125,6 +128,7 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
                 animationSetupCallback.onSetupAnimation(TitanicTextView.this);
             }
         }
+        play();
     }
 
     /**
@@ -180,5 +184,55 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
         }
 
         super.onDraw(canvas);
+    }
+
+    private AnimatorSet animatorSet;
+
+    public void play() {
+        if (animatorSet == null) {
+            setSinking(true);
+
+            ValueAnimator maskXAnimator = ValueAnimator.ofInt(0, 200);
+            maskXAnimator.setRepeatCount(ValueAnimator.INFINITE);
+            maskXAnimator.setDuration(1000);
+            maskXAnimator.setStartDelay(0);
+            maskXAnimator.addUpdateListener(animation -> {
+                int value = (int) animation.getAnimatedValue();
+                maskX = value;
+                invalidate();
+            });
+
+            int h = getMeasuredHeight();
+
+            ValueAnimator maskYAnimator = ValueAnimator.ofInt(h / 2, -h / 2);
+            maskYAnimator.setRepeatCount(ValueAnimator.INFINITE);
+            maskYAnimator.setRepeatMode(ValueAnimator.REVERSE);
+            maskYAnimator.setDuration(10000);
+            maskYAnimator.setStartDelay(0);
+            maskYAnimator.addUpdateListener(animation -> {
+                int value = (int) animation.getAnimatedValue();
+                maskY = value;
+                invalidate();
+            });
+
+            animatorSet = new AnimatorSet();
+            animatorSet.playTogether(maskXAnimator, maskYAnimator);
+            animatorSet.setInterpolator(new LinearInterpolator());
+            animatorSet.start();
+        }
+    }
+
+    public void destory() {
+        if (animatorSet != null) {
+            animatorSet.removeAllListeners();
+            animatorSet.cancel();
+            animatorSet = null;
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        destory();
     }
 }

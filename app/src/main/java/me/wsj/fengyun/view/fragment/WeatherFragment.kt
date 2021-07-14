@@ -7,16 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ForecastAdapter
 import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.databinding.FragmentWeatherBinding
 import me.wsj.fengyun.databinding.LayoutTodayDetailBinding
-import me.wsj.fengyun.extension.notEmpty
-import me.wsj.fengyun.extension.toastCenter
+import me.wsj.lib.extension.notEmpty
+import me.wsj.lib.extension.toastCenter
 import me.wsj.fengyun.utils.ContentUtil
-import me.wsj.fengyun.utils.IconUtils
+import me.wsj.lib.utils.IconUtils
 import me.wsj.fengyun.utils.Lunar
 import me.wsj.fengyun.utils.WeatherUtil
 import me.wsj.fengyun.view.activity.vm.MainViewModel
@@ -82,19 +83,20 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     override fun onStart() {
         super.onStart()
         viewModel.loadCache(mCityId)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        condCode?.let {
-            mainViewModel.setCondCode(it)
-        }
 
         Calendar.getInstance().apply {
             val day = get(Calendar.DAY_OF_MONTH)
             mBinding.tvDate.text =
                 (get(Calendar.MONTH) + 1).toString() + "月" + day + "日 农历" +
                         Lunar(this).toString()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        condCode?.let {
+            LogUtil.e("onResume() setcondcoe: " + condCode)
+            mainViewModel.setCondCode(it)
         }
 
         setViewTime()
@@ -182,15 +184,17 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         viewModel.loadData(mCityId)
 
         // 启动titanic
-        Titanic().start(mBinding.tvTodayTmp)
+//        Titanic().start(mBinding.tvTodayTmp)
     }
 
     @SuppressLint("SetTextI18n")
     fun showWeatherNow(now: Now) {
         condCode = now.icon
         nowTmp = now.temp
-
-        mainViewModel.setCondCode(now.icon)
+        lifecycleScope.launchWhenResumed {
+            LogUtil.e("showWeatherNow() setcondcoe: " + condCode)
+            mainViewModel.setCondCode(now.icon)
+        }
         mBinding.tvTodayCond.text = now.text
         mBinding.tvTodayTmp.text = now.temp
         mBinding.tvUnit.visibility = View.VISIBLE

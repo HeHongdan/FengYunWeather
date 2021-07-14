@@ -4,12 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import me.wsj.fengyun.R
-import me.wsj.fengyun.extension.toast
+import me.wsj.lib.extension.toast
 import per.wsj.commonlib.utils.LogUtil
 
 
