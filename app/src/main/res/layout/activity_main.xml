@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.MainActivity">
+    tools:context=".view.activity.HomeActivity">
 
     <ImageView
         android:id="@+id/iv_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@mipmap/back_100d" />
+        android:src="@drawable/bg_0_d" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rv_title"
@@ -83,7 +83,6 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rv_title"
-        android:background="@color/color_666" />
+        android:layout_below="@+id/rv_title" />
 
 </RelativeLayout>

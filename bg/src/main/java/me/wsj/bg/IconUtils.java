@@ -3,6 +3,7 @@ package me.wsj.bg;
 
 import android.content.Context;
 
+import me.wsj.lib.utils.ConvertUtil;
 import per.wsj.commonlib.utils.LogUtil;
 
 public class IconUtils {

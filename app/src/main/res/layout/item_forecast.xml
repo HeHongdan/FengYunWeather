@@ -6,7 +6,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@color/color_f0f0f0"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -43,7 +42,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="6dp"/>
+                android:layout_marginStart="6dp" />
 
             <TextView
                 android:id="@+id/tv_min"

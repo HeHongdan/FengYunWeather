@@ -28,9 +28,7 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun bindView() = ActivityMainBinding.inflate(layoutInflater)
 
-    override fun prepareData(intent: Intent) {
-
-    }
+    override fun prepareData(intent: Intent) {}
 
     override fun initView() {
         hideTitleBar()
@@ -144,9 +142,14 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         val nowTime = DateTime.now()
         val hourOfDay = nowTime.hourOfDay
         if (hourOfDay in 7..18) {
-            mBinding.ivBg.setImageResource(IconUtils.getDayBack(this@HomeActivity, condCode))
+            mBinding.ivBg.setImageResource(IconUtils.getDayBg(this@HomeActivity, condCode.toInt()))
         } else {
-            mBinding.ivBg.setImageResource(IconUtils.getNightBack(this@HomeActivity, condCode))
+            mBinding.ivBg.setImageResource(
+                IconUtils.getNightBg(
+                    this@HomeActivity,
+                    condCode.toInt()
+                )
+            )
         }
     }
 }

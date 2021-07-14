@@ -25,7 +25,6 @@ import me.wsj.fengyun.view.base.BaseVmFragment
 import me.wsj.fengyun.view.base.LoadState
 import me.wsj.fengyun.widget.horizonview.ScrollWatched
 import me.wsj.fengyun.widget.horizonview.ScrollWatcher
-import me.wsj.fengyun.widget.titanic.Titanic
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import per.wsj.commonlib.utils.LogUtil
@@ -208,13 +207,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         todayDetailBinding!!.tvTodayVisible.text = now.vis + "KM"
         todayDetailBinding!!.tvWindDir.text = now.windDir
         todayDetailBinding!!.tvWindSc.text = now.windScale + "级"
-        val nowTime = DateTime.now()
-        val hourOfDay = nowTime.hourOfDay
-        if (hourOfDay in 7..18) {
-            mBinding.ivBack.setImageResource(IconUtils.getDayBack(context, condCode))
-        } else {
-            mBinding.ivBack.setImageResource(IconUtils.getNightBack(context, condCode))
-        }
     }
 
     /**
@@ -266,7 +258,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      * 空气质量
      */
     private fun showAirNow(airNow: Air) {
-        todayDetailBinding!!.ivLine2.visibility = View.VISIBLE
         todayDetailBinding!!.gridAir.visibility = View.VISIBLE
         todayDetailBinding!!.rvAir.visibility = View.VISIBLE
         todayDetailBinding!!.airTitle.visibility = View.VISIBLE

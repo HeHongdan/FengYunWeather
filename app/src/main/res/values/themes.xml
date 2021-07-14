@@ -56,4 +56,14 @@
         <item name="android:shadowRadius">3</item>
     </style>
 
+    <style name="HomeCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:background">@drawable/shape_rect_r8_tcc_white</item>
+    </style>
+
 </resources>
