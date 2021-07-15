@@ -1,18 +1,17 @@
 package me.wsj.fengyun.widget.skyview;
 
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 
@@ -22,16 +21,22 @@ import me.wsj.fengyun.R;
 import me.wsj.fengyun.utils.ContentUtil;
 import me.wsj.fengyun.utils.WeatherUtil;
 import per.wsj.commonlib.utils.DisplayUtil;
+import per.wsj.commonlib.utils.LogUtil;
 
 public class SunView extends View {
 
-    private int mWidth; //屏幕宽度
-    private int marginTop = 50;//离顶部的高度
+    /**
+     * view宽度
+     */
+    private int mWidth;
+    /**
+     * 离顶部的高度
+     */
+    private int marginTop = 30;
     private int mCircleColor;  //圆弧颜色
     private int mFontColor;  //字体颜色
     private int mRadius;  //圆的半径
 
-    private float mCurrentAngle; //当前旋转的角度
     private float mTotalMinute; //总时间(日落时间减去日出时间的总分钟数)
     private float mNeedMinute; //当前时间减去日出时间后的总分钟数
     private float mPercentage; //根据所给的时间算出来的百分占比
@@ -42,19 +47,44 @@ public class SunView extends View {
     private String mEndTime; //结束时间（日落时间）
     private String mCurrentTime; //当前时间
 
-    private Paint mTextPaint; //画笔
-    private Paint mLinePaint; //画笔
-    private Paint mTimePaint; //画笔
-    private RectF mRectF; //半圆弧所在的矩形
-    private Bitmap mSunIcon; //太阳图片
-    private WindowManager wm;
-    private Paint mShadePaint;
+    private int lineBias;
+
+    /**
+     * 日出日落等文字画笔
+     */
+    private Paint mTextPaint;
+    /**
+     * 日出日落时间画笔
+     */
+    private Paint mTimePaint;
+
+    /**
+     * 底部线
+     */
+    private Paint mLinePaint;
+
+    /**
+     * 太阳轨迹画笔
+     */
     private Paint mPathPaint;
-    private Context mContext;
-    private boolean isSun = true;
-    private float endHour;
+
+    private Paint mCirclePaint;
+
     private Paint shadePaint;
-    private Paint pathPaint;
+
+    /**
+     * 圆弧所在矩形
+     */
+    private RectF mRectF = new RectF();
+
+    private Context mContext;
+
+    private float endHour;
+
+    private boolean isSun = true;
+
+    private Bitmap mSunIcon; //太阳图片
+
 
     public SunView(Context context) {
         this(context, null);
@@ -71,31 +101,55 @@ public class SunView extends View {
 
     private void initView(Context context, @Nullable AttributeSet attrs) {
         mContext = context;
-        marginTop = DisplayUtil.dip2px(context, 30);
-        @SuppressLint("CustomViewStyleable") TypedArray type = context.obtainStyledAttributes(attrs, R.styleable.SunAnimationView);
-        mCircleColor = type.getColor(R.styleable.SunAnimationView_sun_circle_color, getContext().getResources().getColor(R.color.dark_text_color));
+        marginTop = DisplayUtil.dip2px(context, 20);
+
+        TypedArray type = context.obtainStyledAttributes(attrs, R.styleable.SunAnimationView);
+        mCircleColor = type.getColor(R.styleable.SunAnimationView_sun_circle_color, getContext().getResources().getColor(R.color.sun_line_color));
         mFontColor = type.getColor(R.styleable.SunAnimationView_sun_font_color, getContext().getResources().getColor(R.color.colorAccent));
-        mRadius = type.getInteger(R.styleable.SunAnimationView_sun_circle_radius, DisplayUtil.dip2px(getContext(), 130));
-        mRadius = DisplayUtil.dip2px(getContext(), mRadius);
-        mFontSize = type.getDimension(R.styleable.SunAnimationView_sun_font_size, DisplayUtil.dip2px(getContext(), 12));
-//        mFontSize = DisplayUtil.dip2px(getContext(), mFontSize);
+        mRadius = (int) type.getDimension(R.styleable.SunAnimationView_sun_circle_radius, 75);
+        mFontSize = type.getDimension(R.styleable.SunAnimationView_sun_font_size, 13);
 
         isSun = type.getBoolean(R.styleable.SunAnimationView_type, true);
         type.recycle();
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint.setColor(mFontColor);
+        mTextPaint.setTextSize(mFontSize);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+
         mTimePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTimePaint.setColor(getResources().getColor(R.color.air_text_common_light));
+        mTimePaint.setTextSize(mFontSize);
+        mTimePaint.setTextAlign(Paint.Align.CENTER);
 
+        mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mLinePaint.setStyle(Paint.Style.STROKE);
+        mLinePaint.setDither(true);// 防止抖动
+        mLinePaint.setStrokeWidth(2);
+        mLinePaint.setColor(mContext.getResources().getColor(R.color.color_ccc));
+
+        // 渐变遮罩的画笔
         shadePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        pathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        shadePaint.setColor(mContext.getResources().getColor(R.color.back_white));
+        shadePaint.setStyle(Paint.Style.FILL);
 
-    }
+        mPathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPathPaint.setColor(mContext.getResources().getColor(R.color.attention_text_light));
+        mPathPaint.setStyle(Paint.Style.STROKE);
+        mPathPaint.setStrokeWidth(3);
 
-    public void setType(boolean isSun, int circleColor, int fontColor) {
-        this.isSun = isSun;
-        mCircleColor = circleColor;
-        mFontColor = fontColor;
+        mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCirclePaint.setStyle(Paint.Style.STROKE);
+        mCirclePaint.setColor(mCircleColor);
+
+        if (isSun) {
+            mSunIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_sun);
+        } else {
+            mSunIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_moon);
+        }
+        mSunIcon = WeatherUtil.bitmapResize(mSunIcon, DisplayUtil.dip2px(mContext, 18), DisplayUtil.dip2px(mContext, 18));
+
+        lineBias = DisplayUtil.dip2px(mContext, 10);
     }
 
     public void setTimes(String startTime, String endTime, String currentTime) {
@@ -127,82 +181,44 @@ public class SunView extends View {
         mTotalMinute = calculateTime(mStartTime, mEndTime, false);//计算总时间，单位：分钟
         mNeedMinute = calculateTime(mStartTime, mCurrentTime, true);//计算当前所给的时间 单位：分钟
         mPercentage = Float.parseFloat(formatTime(mTotalMinute, mNeedMinute));//当前时间的总分钟数占日出日落总分钟数的百分比
-        mCurrentAngle = 180 * mPercentage;
+        LogUtil.e("percentage: " + mPercentage);
+        float currentAngle = 180 * mPercentage;
+        LogUtil.e("currentAngle: " + currentAngle);
 
-        setAnimation(0, mCurrentAngle, 2000);
-
+        setAnimation(0, currentAngle, 3000);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        mWidth = wm.getDefaultDisplay().getWidth() / 2;
-        positionX = mWidth / 2 - mRadius - DisplayUtil.dip2px(mContext, 9); // 太阳图片的初始x坐标
-        positionY = mRadius; // 太阳图片的初始y坐标
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        mWidth = getMeasuredWidth();
+        // start x of sun
+        positionX = (mWidth >> 1) - mRadius - DisplayUtil.dip2px(mContext, 9);
+        // start y of sun
+        positionY = mRadius + marginTop - (mSunIcon.getHeight() >> 1);
+
+        mRectF.set((mWidth >> 1) - mRadius, marginTop, (mWidth >> 1) + mRadius, mRadius * 2 + marginTop);
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, mWidth / 2 - mRadius, marginTop, mWidth / 2 + mRadius, mRadius * 2 + marginTop);
-    }
-
-    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
-        // 渐变遮罩的画笔
-        shadePaint.setColor(mContext.getResources().getColor(R.color.back_white));
-
-        shadePaint.setStyle(Paint.Style.FILL);
-        mShadePaint = shadePaint;
-
-        pathPaint.setColor(mContext.getResources().getColor(R.color.attention_text_light));
-        if (isSun) {
-            mSunIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_sun);
-        } else {
-            mSunIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_moon);
-        }
-        mSunIcon = WeatherUtil.bitmapResize(mSunIcon,DisplayUtil.dip2px(mContext, 18), DisplayUtil.dip2px(mContext, 18));
-//        mSunIcon = DisplayUtil.bitmapResize(mSunIcon, DisplayUtil.dip2px(mContext, 18), DisplayUtil.dip2px(mContext, 18));
-        pathPaint.setStyle(Paint.Style.STROKE);
-        pathPaint.setStrokeWidth(2);
-        mPathPaint = pathPaint;
-        mLinePaint.setStyle(Paint.Style.STROKE);
-        mLinePaint.setDither(true);//防止抖动
-        mLinePaint.setStrokeWidth(2);
-        //第一步：画半圆
-        drawSemicircle(canvas);
-//        canvas.save();
-
-        mLinePaint.setColor(mContext.getResources().getColor(R.color.attention_text_light));
-        canvas.drawLine(mWidth / 2 - mRadius - DisplayUtil.dip2px(mContext, 10), mRadius + marginTop, mWidth / 2 + mRadius + DisplayUtil.dip2px(mContext, 10), mRadius + marginTop, mLinePaint);
-        //第二步：绘制太阳的初始位置 以及 后面在动画中不断的更新太阳的X，Y坐标来改变太阳图片在视图中的显示
-        //第三部：绘制图上的文字
-        drawSunPosition(canvas);
-        drawFont(canvas);
-
         super.onDraw(canvas);
-    }
 
-    /**
-     * 绘制半圆
-     */
-    private void drawSemicircle(Canvas canvas) {
-        mRectF = new RectF(mWidth / 2 - mRadius, marginTop, mWidth / 2 + mRadius, mRadius * 2 + marginTop);
-        mTextPaint.setStyle(Paint.Style.STROKE);
-        mTextPaint.setDither(true);//防止抖动
-        mTextPaint.setColor(mCircleColor);
-        canvas.drawArc(mRectF, 180, 180, true, mTextPaint);
-    }
+        // step1：draw half circle
+        canvas.drawArc(mRectF, 180, 180, false, mCirclePaint);
 
-    /**
-     * 绘制太阳的位置
-     */
-    private void drawSunPosition(Canvas canvas) {
-//        canvas.drawRect(positionX + DisplayUtil.dip2px(mContext, 10), marginTop, mWidth / 2 + mRadius, mRadius * 2 + marginTop, mShadePaint);
-        canvas.drawArc(mRectF, 180, 180, true, mPathPaint);
+        // step2：draw bottom line
+        canvas.drawLine(mWidth / 2 - mRadius - lineBias, mRadius + marginTop, mWidth / 2 + mRadius + lineBias, mRadius + marginTop, mLinePaint);
 
-        canvas.drawBitmap(mSunIcon, positionX, positionY, mLinePaint);
+        // step3：draw text
+        drawText(canvas);
+
+        // step4：draw sun/moon
+        canvas.save();
+        canvas.rotate(mCurrentAngle, mWidth / 2, mRadius + marginTop);
+        canvas.drawBitmap(mSunIcon, positionX, positionY, mPathPaint);
+        canvas.restore();
     }
 
     /**
@@ -210,23 +226,8 @@ public class SunView extends View {
      *
      * @param canvas
      */
-    private void drawFont(Canvas canvas) {
-        /*if (ContentUtil.APP_SETTING_TESI.equalsIgnoreCase("mid")) {
-            mFontSize = DisplayUtil.dip2px(getContext(), 10);
-        } else if (ContentUtil.APP_SETTING_TESI.equalsIgnoreCase("large")) {
-            mFontSize = DisplayUtil.dip2px(getContext(), 13);
-        } else {
-            mFontSize = DisplayUtil.dip2px(getContext(), 12);
-        }*/
+    private void drawText(Canvas canvas) {
 
-        mTextPaint.setColor(mFontColor);
-        mTextPaint.setTextSize(mFontSize);
-        if (ContentUtil.APP_SETTING_THEME.equals("深色")) {
-            mTimePaint.setColor(getResources().getColor(R.color.aqi_color_light));
-        } else {
-            mTimePaint.setColor(getResources().getColor(R.color.air_text_common_light));
-        }
-        mTimePaint.setTextSize(mFontSize);
         String startTime = TextUtils.isEmpty(mStartTime) ? "" : mStartTime;
         String endTime = TextUtils.isEmpty(mEndTime) ? "" : mEndTime;
         String sunrise = "日出";
@@ -235,39 +236,11 @@ public class SunView extends View {
             sunrise = "月出";
             sunset = "月落";
         }
-        /*if (ContentUtil.APP_SETTING_LANG.equals("en") || ContentUtil.APP_SETTING_LANG.equals("sys") && ContentUtil.SYS_LANG.equals("en")) {
-            sunrise = "Sunrise";
-            sunset = "Sunset";
-            if (!isSun) {
-                sunrise = "Moonrise";
-                sunset = "Moonset";
-            }
-        }*/
-        mTimePaint.setTextAlign(Paint.Align.CENTER);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
+
         canvas.drawText(sunrise, mWidth / 2 - mRadius + DisplayUtil.dip2px(mContext, 8), mRadius + DisplayUtil.dip2px(mContext, 16) + marginTop, mTextPaint);
         canvas.drawText(startTime, mWidth / 2 - mRadius + DisplayUtil.dip2px(mContext, 8), mRadius + DisplayUtil.dip2px(mContext, 32) + marginTop, mTimePaint);
         canvas.drawText(sunset, mWidth / 2 + mRadius - DisplayUtil.dip2px(mContext, 8), mRadius + DisplayUtil.dip2px(mContext, 16) + marginTop, mTextPaint);
         canvas.drawText(endTime, mWidth / 2 + mRadius - DisplayUtil.dip2px(mContext, 8), mRadius + DisplayUtil.dip2px(mContext, 32) + marginTop, mTimePaint);
-    }
-
-    /**
-     * 精确计算文字宽度
-     *
-     * @param paint 画笔
-     * @param str   字符串文本
-     */
-    public static int getTextWidth(Paint paint, String str) {
-        int iRet = 0;
-        if (str != null && str.length() > 0) {
-            int len = str.length();
-            float[] widths = new float[len];
-            paint.getTextWidths(str, widths);
-            for (int j = 0; j < len; j++) {
-                iRet += (int) Math.ceil(widths[j]);
-            }
-        }
-        return iRet;
     }
 
     /**
@@ -378,26 +351,25 @@ public class SunView extends View {
         return decimalFormat.format(needTime / totalTime);//format 返回的是字符串
     }
 
+    private float mCurrentAngle = 0;
+
     private void setAnimation(float startAngle, float currentAngle, int duration) {
         ValueAnimator sunAnimator = ValueAnimator.ofFloat(startAngle, currentAngle);
         sunAnimator.setDuration(duration);
-        sunAnimator.setTarget(currentAngle);
-        sunAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                //每次要绘制的圆弧角度
-                mCurrentAngle = (float) animation.getAnimatedValue();
-                invalidateView();
-            }
-
+        sunAnimator.addUpdateListener(animation -> {
+            //每次要绘制的圆弧角度
+            mCurrentAngle = (float) animation.getAnimatedValue();
+//            LogUtil.e("mCurrentAngle: " + mCurrentAngle);
+            invalidate();
+//            invalidateView(mCurrentAngle);
         });
         sunAnimator.start();
     }
 
-    private void invalidateView() {
+    private void invalidateView(float angle) {
         //绘制太阳的x坐标和y坐标
-        positionX = mWidth / 2 - (float) (mRadius * Math.cos((mCurrentAngle) * Math.PI / 180)) - DisplayUtil.dip2px(mContext, 10);
-        positionY = mRadius - (float) (mRadius * Math.sin((mCurrentAngle) * Math.PI / 180)) + DisplayUtil.dip2px(mContext, 18);
+        positionX = mWidth / 2 - (float) (mRadius * Math.cos((angle) * Math.PI / 180)) - DisplayUtil.dip2px(mContext, 8);
+        positionY = mRadius - (float) (mRadius * Math.sin((angle) * Math.PI / 180)) + DisplayUtil.dip2px(mContext, 16);
         invalidate();
     }
 }

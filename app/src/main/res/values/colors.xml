@@ -12,6 +12,10 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="white">#ffffff</color>
+
+    <color name="color_999">#999999</color>
+    <color name="color_ccc">#cccccc</color>
+
     <color name="white80">#ccffffff</color>
     <color name="back_white">#f7f8fa</color>
     <color name="color_fafafa">#fafafa</color>
@@ -62,7 +66,7 @@
     <color name="color_32ad5a">#32ad5a</color>
     <color name="dark_trans_color">#3f32F6FF</color>
     <color name="sun_stoke_color">#802e3a48</color>
-    <color name="sun_line_color">#2e3a48</color>
+    <color name="sun_line_color">#333333</color>
     <color name="line_back_dark">#3f8DA0BA</color>
 
     <color name="text_choose">#67707A</color>

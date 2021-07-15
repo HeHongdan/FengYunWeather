@@ -19,7 +19,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="360dp">
+                android:layout_height="380dp">
 
                 <me.wsj.fengyun.widget.titanic.TitanicTextView
                     android:id="@+id/tv_today_tmp"
@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="90dp"
                     android:textColor="@color/white"
-                    android:textSize="90sp"
+                    android:textSize="80sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -92,8 +92,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
                     android:background="@drawable/shape_rect_r8_tcc_white"
                     android:orientation="vertical">
 
@@ -154,17 +154,20 @@
                     android:id="@+id/rv_forecast"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginRight="6dp"
                     android:background="@drawable/shape_rect_r8_tcc_white">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
-                <include
-                    layout="@layout/layout_today_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                <include layout="@layout/layout_today_detail" />
+
+                <include layout="@layout/layout_air_quality" />
+
+                <include layout="@layout/layout_sun_moon" />
+
+                <include layout="@layout/layout_support" />
 
             </LinearLayout>
 

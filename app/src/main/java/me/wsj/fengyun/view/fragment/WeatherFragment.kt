@@ -13,6 +13,8 @@ import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ForecastAdapter
 import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.databinding.FragmentWeatherBinding
+import me.wsj.fengyun.databinding.LayoutAirQualityBinding
+import me.wsj.fengyun.databinding.LayoutSunMoonBinding
 import me.wsj.fengyun.databinding.LayoutTodayDetailBinding
 import me.wsj.lib.extension.notEmpty
 import me.wsj.lib.extension.toastCenter
@@ -60,6 +62,10 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     private var todayDetailBinding: LayoutTodayDetailBinding? = null
 
+    private lateinit var airQualityBinding: LayoutAirQualityBinding
+
+    private lateinit var sunMoonBinding: LayoutSunMoonBinding
+
     private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +100,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     override fun onResume() {
         super.onResume()
         condCode?.let {
-            LogUtil.e("onResume() setcondcoe: " + condCode)
+            LogUtil.e("onResume() set cond code: $condCode")
             mainViewModel.setCondCode(it)
         }
 
@@ -108,6 +114,10 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         todayDetailBinding = LayoutTodayDetailBinding.bind(mBinding.root)
+
+        sunMoonBinding = LayoutSunMoonBinding.bind(mBinding.root)
+
+        airQualityBinding = LayoutAirQualityBinding.bind(mBinding.root)
 
         mBinding.horizontalScrollView.setToday24HourView(mBinding.hourly)
 
@@ -181,9 +191,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     override fun loadData() {
         viewModel.loadData(mCityId)
-
-        // 启动titanic
-//        Titanic().start(mBinding.tvTodayTmp)
     }
 
     @SuppressLint("SetTextI18n")
@@ -191,7 +198,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         condCode = now.icon
         nowTmp = now.temp
         lifecycleScope.launchWhenResumed {
-            LogUtil.e("showWeatherNow() setcondcoe: " + condCode)
+            LogUtil.e("showWeatherNow() set cond code: $condCode")
             mainViewModel.setCondCode(now.icon)
         }
         mBinding.tvTodayCond.text = now.text
@@ -217,18 +224,16 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         val forecastBase = dailyForecast[0]
         val condCodeD = forecastBase.iconDay
         val condCodeN = forecastBase.iconNight
-        val tmpMin = forecastBase.tempMin
-        val tmpMax = forecastBase.tempMax
+        todayMinTmp = forecastBase.tempMin
+        todayMaxTmp = forecastBase.tempMax
         sunrise = forecastBase.sunrise
         sunset = forecastBase.sunset
         moonRise = forecastBase.moonrise
         moonSet = forecastBase.moonset
-        todayDetailBinding!!.sunView.setTimes(sunrise, sunset, currentTime)
-        todayDetailBinding!!.moonView.setTimes(moonRise, moonSet, currentTime)
-        todayMaxTmp = tmpMax
-        todayMinTmp = tmpMin
-        todayDetailBinding!!.tvMaxTmp.text = "$tmpMax°"
-        todayDetailBinding!!.tvMinTmp.text = "$tmpMin°"
+        sunMoonBinding.sunView.setTimes(sunrise, sunset, currentTime)
+        sunMoonBinding.moonView.setTimes(moonRise, moonSet, currentTime)
+        todayDetailBinding!!.tvMaxTmp.text = "$todayMaxTmp°"
+        todayDetailBinding!!.tvMinTmp.text = "$todayMinTmp°"
         todayDetailBinding!!.ivTodayDay.setImageResource(
             IconUtils.getDayIconDark(
                 context,
@@ -258,19 +263,19 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      * 空气质量
      */
     private fun showAirNow(airNow: Air) {
-        todayDetailBinding!!.gridAir.visibility = View.VISIBLE
-        todayDetailBinding!!.rvAir.visibility = View.VISIBLE
-        todayDetailBinding!!.airTitle.visibility = View.VISIBLE
+        airQualityBinding.gridAir.visibility = View.VISIBLE
+        airQualityBinding.rvAir.visibility = View.VISIBLE
+        airQualityBinding.airTitle.visibility = View.VISIBLE
 
-        todayDetailBinding!!.tvAir.text = airNow.category
-        todayDetailBinding!!.tvAirNum.text = airNow.aqi
-        todayDetailBinding!!.tvTodayPm25.text = airNow.pm2p5
-        todayDetailBinding!!.tvTodayPm10.text = airNow.pm10
-        todayDetailBinding!!.tvTodaySo2.text = airNow.so2
-        todayDetailBinding!!.tvTodayNo2.text = airNow.no2
-        todayDetailBinding!!.tvTodayCo.text = airNow.co
-        todayDetailBinding!!.tvTodayO3.text = airNow.o3
-        todayDetailBinding!!.rvAir.background =
+        airQualityBinding.tvAir.text = airNow.category
+        airQualityBinding.tvAirNum.text = airNow.aqi
+        airQualityBinding.tvTodayPm25.text = airNow.pm2p5
+        airQualityBinding.tvTodayPm10.text = airNow.pm10
+        airQualityBinding.tvTodaySo2.text = airNow.so2
+        airQualityBinding.tvTodayNo2.text = airNow.no2
+        airQualityBinding.tvTodayCo.text = airNow.co
+        airQualityBinding.tvTodayO3.text = airNow.o3
+        airQualityBinding.rvAir.background =
             WeatherUtil.getAirBackground(requireContext(), airNow.aqi)
     }
 
@@ -367,8 +372,8 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     private fun setViewTime() {
         if (!hasAni && sunrise.notEmpty() && sunset.notEmpty() && moonRise.notEmpty() && moonSet.notEmpty()) {
             getCurrentTime()
-            todayDetailBinding!!.sunView.setTimes(sunrise, sunset, currentTime)
-            todayDetailBinding!!.moonView.setTimes(moonRise, moonSet, currentTime)
+            sunMoonBinding.sunView.setTimes(sunrise, sunset, currentTime)
+            sunMoonBinding.moonView.setTimes(moonRise, moonSet, currentTime)
             hasAni = true
         }
     }
@@ -382,20 +387,18 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     }
 
     fun changeUnit() {
-        if (todayDetailBinding!!.tvMaxTmp != null) {
-            if (ContentUtil.APP_SETTING_UNIT == "hua") {
-                LogUtil.e("当前城市1：$condCode")
-                todayDetailBinding!!.tvMaxTmp.text =
-                    WeatherUtil.getF(todayMaxTmp!!).toString() + "°F"
-                todayDetailBinding!!.tvMinTmp.text =
-                    WeatherUtil.getF(todayMinTmp!!).toString() + "°F"
-                mBinding.tvTodayTmp.text = WeatherUtil.getF(nowTmp!!).toString() + "°F"
-            } else {
-                LogUtil.e("当前城市2：$condCode")
-                todayDetailBinding!!.tvMaxTmp.text = "$todayMaxTmp°C"
-                todayDetailBinding!!.tvMinTmp.text = "$todayMinTmp°C"
-                mBinding.tvTodayTmp.text = "$nowTmp°C"
-            }
+        if (ContentUtil.APP_SETTING_UNIT == "hua") {
+            LogUtil.e("当前城市1：$condCode")
+            todayDetailBinding!!.tvMaxTmp.text =
+                WeatherUtil.getF(todayMaxTmp!!).toString() + "°F"
+            todayDetailBinding!!.tvMinTmp.text =
+                WeatherUtil.getF(todayMinTmp!!).toString() + "°F"
+            mBinding.tvTodayTmp.text = WeatherUtil.getF(nowTmp!!).toString() + "°F"
+        } else {
+            LogUtil.e("当前城市2：$condCode")
+            todayDetailBinding!!.tvMaxTmp.text = "$todayMaxTmp°C"
+            todayDetailBinding!!.tvMinTmp.text = "$todayMinTmp°C"
+            mBinding.tvTodayTmp.text = "$nowTmp°C"
         }
 //        getWeatherHourly(weatherHourlyBean)
 //        getWeatherForecast(weatherForecastBean)

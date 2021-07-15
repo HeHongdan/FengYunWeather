@@ -28,7 +28,7 @@ import androidx.core.view.ViewCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.customview.widget.ViewDragHelper;
 
-import me.wsj.fengyun.MyApplication;
+import me.wsj.fengyun.MyApp;
 import me.wsj.fengyun.R;
 import per.wsj.commonlib.utils.DisplayUtil;
 
@@ -117,10 +117,10 @@ public class MyBottomBehavior<V extends View> extends CoordinatorLayout.Behavior
                 }
             } else if (!MyBottomBehavior.this.hideable || !MyBottomBehavior.this.shouldHide(releasedChild, yvel) || releasedChild.getTop() <= MyBottomBehavior.this.collapsedOffset && Math.abs(xvel) >= Math.abs(yvel)) {
                 currentTop = releasedChild.getTop();
-                if (currentTop == 0){
+                if (currentTop == 0) {
                     top = 0;
                     targetState = 3;
-                }else if (currentTop <= MyBottomBehavior.this.halfExpandedOffset) {
+                } else if (currentTop <= MyBottomBehavior.this.halfExpandedOffset) {
                     top = MyBottomBehavior.this.halfExpandedOffset;
                     targetState = 6;
                 } else {
@@ -209,7 +209,7 @@ public class MyBottomBehavior<V extends View> extends CoordinatorLayout.Behavior
         }
 
         this.fitToContentsOffset = Math.max(0, this.parentHeight - child.getHeight());
-        this.halfExpandedOffset = parent.getHeight() - DisplayUtil.dip2px(MyApplication.getContext(), 470);
+        this.halfExpandedOffset = parent.getHeight() - DisplayUtil.dip2px(MyApp.Companion.getContext(), 470);
         this.calculateCollapsedOffset();
         if (this.state == 3) {
             ViewCompat.offsetTopAndBottom(child, this.getExpandedOffset());

@@ -42,7 +42,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
         // 实时天气
         launch {
             val url = "https://devapi.qweather.com/v7/weather/now"
-            HttpUtils.get<WeatherNow>(url, param) { code, result ->
+            HttpUtils.get<WeatherNow>(url, param) { _, result ->
                 weatherNow.value = result.now
                 launch {
                     AppRepo.getInstance().saveCache(CACHE_WEATHER_NOW + cityId, result.now)
@@ -53,7 +53,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
         // 预警
         launch {
             val url = "https://devapi.qweather.com/v7/warning/now"
-            HttpUtils.get<WarningBean>(url, param) { code, result ->
+            HttpUtils.get<WarningBean>(url, param) { _, result ->
                 if (result.warning.isNotEmpty()) {
                     warnings.value = result.warning
                 }
@@ -63,7 +63,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
         // 实时空气
         launch {
             val url = "https://devapi.qweather.com/v7/air/now"
-            HttpUtils.get<AirNow>(url, param) { code, result ->
+            HttpUtils.get<AirNow>(url, param) { _, result ->
                 airNow.value = result.now
             }
         }
@@ -71,7 +71,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
         // 3天 天气预报
         launch {
             val url = "https://devapi.qweather.com/v7/weather/3d"
-            HttpUtils.get<ForestBean>(url, param) { code, result ->
+            HttpUtils.get<ForestBean>(url, param) { _, result ->
                 forecast.value = result.daily
             }
         }
@@ -79,7 +79,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
         // 逐小时天气预报
         launch {
             val url = "https://devapi.qweather.com/v7/weather/24h"
-            HttpUtils.get<WeatherHourly>(url, param) { code, result ->
+            HttpUtils.get<WeatherHourly>(url, param) { _, result ->
                 hourly.value = result.hourly
             }
         }

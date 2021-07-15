@@ -40,7 +40,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
             param["location"] = keywords
             param["key"] = Constants.APK_KEY
 
-            HttpUtils.get<SearchCity>(url, param) { code, result ->
+            HttpUtils.get<SearchCity>(url, param) { _, result ->
                 searchResult.value = result.location
             }
 //            val result = HttpUtils.get<SearchCity>(url, param)
@@ -62,7 +62,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
             param["location"] = cityName
             param["key"] = Constants.APK_KEY
 
-            HttpUtils.get<SearchCity>(url, param) { code, result ->
+            HttpUtils.get<SearchCity>(url, param) { _, result ->
                 if (save) {
                     curCity.value = result.location[0]
                 } else {
