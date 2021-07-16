@@ -151,5 +151,7 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
                 )
             )
         }
+
+
     }
 }

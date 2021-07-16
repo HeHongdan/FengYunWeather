@@ -1,8 +1,9 @@
 package me.wsj.bg
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import me.wsj.lib.utils.IconUtils
 
 class ShowActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,5 +13,6 @@ class ShowActivity : AppCompatActivity() {
         val code = intent.getIntExtra("code",0)
         val dayBack = IconUtils.getDayBg(this, code)
         findViewById<ImageView>(R.id.ivBg).setImageResource(dayBack)
+
     }
 }
