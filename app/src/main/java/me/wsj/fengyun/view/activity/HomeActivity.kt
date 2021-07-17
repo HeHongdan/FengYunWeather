@@ -5,6 +5,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import coil.load
+import coil.transform.BlurTransformation
 import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ViewPagerAdapter
 import me.wsj.fengyun.databinding.ActivityMainBinding
@@ -57,6 +59,13 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         })
 
         mBinding.ivAddCity.expand(10, 10)
+
+        val bgDrawable = if (DateTime.now().hourOfDay in 7..18) {
+            R.drawable.bg_0_d
+        } else {
+            R.drawable.bg_0_n
+        }
+        mBinding.ivBg.setImageResource(bgDrawable)
     }
 
     override fun initEvent() {
@@ -80,6 +89,8 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         viewModel.mCurCondCode.observe(this) {
             changeBg(it)
         }
+
+
     }
 
     override fun initData() {
@@ -142,8 +153,7 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     fun changeBg(condCode: String) {
-        val nowTime = DateTime.now()
-        val hourOfDay = nowTime.hourOfDay
+        val hourOfDay = DateTime.now().hourOfDay
 
         // 获取背景
         val bgDrawable = if (hourOfDay in 7..18) {
@@ -166,6 +176,8 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        (mBinding.ivEffect.drawable as ICancelable).cancel()
+        mBinding.ivEffect.drawable?.let {
+            (it as ICancelable).cancel()
+        }
     }
 }
