@@ -85,12 +85,12 @@ class Effect1View : View {
         setMeasuredDimension(measuredWidth, measuredWidth)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // move to center point
-        canvas?.translate(mCenterPoint.x, mCenterPoint.y)
+        canvas.translate(mCenterPoint.x, mCenterPoint.y)
         // rotate canvas
-        canvas?.rotate(currentAngel)
+        canvas.rotate(currentAngel)
         // set alpha
         mSunDrawable.mutate().alpha = currentAlpha
         // set drawable bounds & draw it

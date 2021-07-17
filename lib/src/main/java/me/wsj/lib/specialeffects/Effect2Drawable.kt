@@ -9,27 +9,25 @@ import per.wsj.commonlib.utils.LogUtil
 
 /**
  * create by shiju.wang
- * sun
+ * cloud
  */
-class Effect1Drawable(private val mSunDrawable: Drawable) : Drawable(), ICancelable {
-
-    private val mCenterPoint = PointF()
-
-    /**
-     * half width of drawable
-     */
-    private var halfWidth = 0
-
-    private var currentAngel = 0f
-
-    private var currentAlpha = 0
+class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, val cloud3: Drawable) :
+    Drawable(), ICancelable {
 
     private var mAnimatorSet: AnimatorSet? = null
 
-    /*constructor(drawable: Drawable) : this() {
+    private var mWidth = 0
 
-        startAnim()
-    }*/
+    private var rate1 = 0f
+    private var x1 = 0
+    private var y1 = 0
+
+    private var x2 = 0
+    private var y2 = 0
+
+    private var x3 = 0
+    private var y3 = 0
+
     init {
         startAnim()
     }
@@ -37,20 +35,25 @@ class Effect1Drawable(private val mSunDrawable: Drawable) : Drawable(), ICancela
     override fun onBoundsChange(bounds: Rect) {
         super.onBoundsChange(bounds)
 
-        val width = bounds.right - bounds.left
+        mWidth = bounds.right - bounds.left
 
-        mCenterPoint.set(width * 7 / 8f, width * 3 / 16f)
-        halfWidth = width * 7 / 8
+        y1 = (mWidth * 0.1).toInt()
+        y2 = (mWidth * 0.3).toInt()
+        y2 = (mWidth * 0.8).toInt()
+
     }
 
     private fun startAnim() {
         if (mAnimatorSet == null) {
-            val rotateAnimator = ValueAnimator.ofFloat(0f, 360f)
+            val rotateAnimator = ValueAnimator.ofFloat(0f, 1f)
             rotateAnimator.repeatCount = ValueAnimator.INFINITE
-            rotateAnimator.duration = 15000
+            rotateAnimator.duration = 30000
             rotateAnimator.addUpdateListener {
-                currentAngel = (it.animatedValue) as Float
-//                LogUtil.e("currentAngel: $currentAngel")
+                rate1 = it.animatedValue as Float
+//                x1 = (mWidth * ((it.animatedValue) as Float)).toInt()
+//                x2 = (mWidth * ((it.animatedValue) as Float)).toInt()
+//                x3 = (mWidth * ((it.animatedValue) as Float)).toInt()
+//
                 invalidateSelf()
             }
             val alphaAnimator = ValueAnimator.ofInt(10, 255)
@@ -58,7 +61,7 @@ class Effect1Drawable(private val mSunDrawable: Drawable) : Drawable(), ICancela
             alphaAnimator.repeatCount = ValueAnimator.INFINITE
             alphaAnimator.duration = 5000
             alphaAnimator.addUpdateListener {
-                currentAlpha = (it.animatedValue) as Int
+//                currentAlpha = (it.animatedValue) as Int
             }
             mAnimatorSet = AnimatorSet()
             mAnimatorSet?.playTogether(rotateAnimator, alphaAnimator)
@@ -69,14 +72,16 @@ class Effect1Drawable(private val mSunDrawable: Drawable) : Drawable(), ICancela
 
     override fun draw(canvas: Canvas) {
         // move to center point
-        canvas.translate(mCenterPoint.x, mCenterPoint.y)
-        // rotate canvas
-        canvas.rotate(currentAngel)
-        // set alpha
-        mSunDrawable.mutate().alpha = currentAlpha
-        // set drawable bounds & draw it
-        mSunDrawable.setBounds(-halfWidth, -halfWidth, halfWidth, halfWidth)
-        mSunDrawable.draw(canvas)
+//        canvas.translate(mCenterPoint.x, mCenterPoint.y)
+//        // set drawable bounds & draw it
+//        mSunDrawable.setBounds(-halfWidth, -halfWidth, halfWidth, halfWidth)
+//        mSunDrawable.draw(canvas)
+        val total = cloud1.intrinsicWidth + mWidth
+        val curX = (-cloud1.intrinsicWidth + total * rate1).toInt()
+
+        cloud1.setBounds(curX, y1, curX + cloud1.intrinsicWidth, y1 + cloud1.intrinsicHeight)
+        cloud1.draw(canvas)
+
     }
 
     override fun setAlpha(alpha: Int) {

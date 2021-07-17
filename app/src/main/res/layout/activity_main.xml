@@ -13,6 +13,11 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bg_0_d" />
 
+    <ImageView
+        android:id="@+id/iv_effect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rv_title"
         android:layout_width="match_parent"

@@ -9,13 +9,16 @@ import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ViewPagerAdapter
 import me.wsj.fengyun.databinding.ActivityMainBinding
 import me.wsj.fengyun.db.entity.CityEntity
-import me.wsj.lib.extension.startActivity
 import me.wsj.fengyun.utils.ContentUtil
-import me.wsj.lib.utils.IconUtils
 import me.wsj.fengyun.utils.expand
 import me.wsj.fengyun.view.activity.vm.MainViewModel
 import me.wsj.fengyun.view.base.BaseVmActivity
 import me.wsj.fengyun.view.fragment.WeatherFragment
+import me.wsj.lib.EffectUtil
+import me.wsj.lib.extension.startActivity
+import me.wsj.lib.specialeffects.ICancelable
+import me.wsj.lib.utils.ConvertUtil.Companion.convert
+import me.wsj.lib.utils.IconUtils
 import org.joda.time.DateTime
 import per.wsj.commonlib.utils.DisplayUtil
 import java.util.*
@@ -141,17 +144,28 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     fun changeBg(condCode: String) {
         val nowTime = DateTime.now()
         val hourOfDay = nowTime.hourOfDay
-        if (hourOfDay in 7..18) {
-            mBinding.ivBg.setImageResource(IconUtils.getDayBg(this@HomeActivity, condCode.toInt()))
+
+        // 获取背景
+        val bgDrawable = if (hourOfDay in 7..18) {
+            IconUtils.getDayBg(this@HomeActivity, condCode.toInt())
         } else {
-            mBinding.ivBg.setImageResource(
-                IconUtils.getNightBg(
-                    this@HomeActivity,
-                    condCode.toInt()
-                )
-            )
+            IconUtils.getNightBg(this@HomeActivity, condCode.toInt())
+        }
+        mBinding.ivBg.setImageResource(bgDrawable)
+
+        // 获取特效
+        val effectDrawable = if (hourOfDay in 7..18) {
+            EffectUtil.getEffect(context, convert(condCode.toInt()))
+        } else {
+//            EffectUtil.getEffect(context, convert(condCode.toInt()))
+            null
         }
 
+        mBinding.ivEffect.setImageDrawable(effectDrawable)
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        (mBinding.ivEffect.drawable as ICancelable).cancel()
     }
 }
