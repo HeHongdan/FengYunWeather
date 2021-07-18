@@ -119,8 +119,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         airQualityBinding = LayoutAirQualityBinding.bind(mBinding.root)
 
-        mBinding.horizontalScrollView.setToday24HourView(mBinding.hourly)
-
         watched = object : ScrollWatched {
             override fun addWatcher(watcher: ScrollWatcher) {
                 watcherList.add(watcher)

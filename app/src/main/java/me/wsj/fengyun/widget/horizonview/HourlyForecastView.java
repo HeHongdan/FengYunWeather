@@ -34,7 +34,7 @@ import java.util.List;
 
 
 /**
- * Created by niu on 18/11/22.
+ *
  */
 
 public class HourlyForecastView extends View implements ScrollWatcher {
@@ -97,7 +97,6 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     private int mScrollX = 0;
     private float baseLineHeight;
     private Paint paint1;
-    private boolean isDark = false;
 
 
     public HourlyForecastView(Context context) {
@@ -111,8 +110,6 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     public HourlyForecastView(final Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -124,11 +121,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
     private void init(Context context) {
         mContext = context;
-        if (ContentUtil.APP_SETTING_THEME.equals("深色")) {
-            isDark = true;
-        } else {
-            isDark = false;
-        }
+
         initDefValue();
         initPaint();
     }
@@ -183,10 +176,8 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
         textSize = DisplayUtil.sp2px(mContext, 12);
 
-
         bitmapHeight = 1 / 2f * (2 * defHeightPixel - lowestTempHeight) + DisplayUtil.dip2px(mContext, 2);//- 给文字留地方
         bitmapXY = 18;
-
     }
 
     private TextPaint textLinePaint;
@@ -200,37 +191,35 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
         foldLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         foldLinePaint.setStyle(Paint.Style.STROKE);
-        foldLinePaint.setStrokeWidth(5);
+        foldLinePaint.setStrokeWidth(DisplayUtil.dip2px(mContext, 2));
         foldLinePaint.setColor(mContext.getResources().getColor(R.color.line_color));
 
         backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         backPaint.setStrokeWidth(2);
-        backPaint.setAntiAlias(true);
 
         dashPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         dashPaint.setColor(mContext.getResources().getColor(R.color.back_white));
-        DashPathEffect pathEffect = new DashPathEffect(new float[]{8, 8, 8, 8}, 1);
+
+        int effect = DisplayUtil.dip2px(mContext, 4);
+        DashPathEffect pathEffect = new DashPathEffect(new float[]{effect, effect, effect, effect}, 0);
         dashPaint.setPathEffect(pathEffect);
-        dashPaint.setStrokeWidth(3);
-        dashPaint.setAntiAlias(true);
+        dashPaint.setStrokeWidth(DisplayUtil.dip2px(mContext, 1));
         dashPaint.setStyle(Paint.Style.STROKE);
 
-        textPaint = new Paint();
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(textSize);
+        textPaint.setColor(mContext.getResources().getColor(R.color.search_light_un_color));
 
         textLinePaint = new TextPaint();
         textLinePaint.setTextSize(DisplayUtil.sp2px(getContext(), 12));
         textLinePaint.setAntiAlias(true);
-
         textLinePaint.setColor(mContext.getResources().getColor(R.color.black));
-        textPaint.setColor(mContext.getResources().getColor(R.color.search_light_un_color));
 
         baseLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         baseLinePaint.setStrokeWidth(3);
         baseLinePaint.setStyle(Paint.Style.STROKE);
         baseLinePaint.setColor(mContext.getResources().getColor(R.color.slategray));
-
 
         bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         bitmapPaint.setFilterBitmap(true);//图像滤波处理

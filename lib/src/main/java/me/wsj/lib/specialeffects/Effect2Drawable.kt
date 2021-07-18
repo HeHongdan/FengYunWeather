@@ -1,11 +1,15 @@
 package me.wsj.lib.specialeffects
 
-import android.animation.AnimatorSet
 import android.animation.ValueAnimator
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.ColorFilter
+import android.graphics.PixelFormat
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.animation.LinearInterpolator
 import per.wsj.commonlib.utils.LogUtil
+import kotlin.math.PI
+import kotlin.math.sin
 
 /**
  * create by shiju.wang
@@ -14,7 +18,7 @@ import per.wsj.commonlib.utils.LogUtil
 class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, val cloud3: Drawable) :
     Drawable(), ICancelable {
 
-    private var mAnimatorSet: AnimatorSet? = null
+    private var mAnimator: ValueAnimator? = null
 
     private var mWidth = 0
 
@@ -44,40 +48,23 @@ class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, val cloud3: Dr
     }
 
     private fun startAnim() {
-        if (mAnimatorSet == null) {
-            val rotateAnimator = ValueAnimator.ofFloat(0f, 1f)
-            rotateAnimator.repeatCount = ValueAnimator.INFINITE
-            rotateAnimator.duration = 30000
-            rotateAnimator.addUpdateListener {
+        if (mAnimator == null) {
+            mAnimator = ValueAnimator.ofFloat(0f, 1f)
+            mAnimator?.repeatCount = ValueAnimator.INFINITE
+            mAnimator?.duration = 30000
+            mAnimator?.interpolator = LinearInterpolator()
+            mAnimator?.addUpdateListener {
                 rate1 = it.animatedValue as Float
-//                x1 = (mWidth * ((it.animatedValue) as Float)).toInt()
-//                x2 = (mWidth * ((it.animatedValue) as Float)).toInt()
-//                x3 = (mWidth * ((it.animatedValue) as Float)).toInt()
-//
+
                 invalidateSelf()
             }
-            val alphaAnimator = ValueAnimator.ofInt(10, 255)
-            alphaAnimator.repeatMode = ValueAnimator.REVERSE
-            alphaAnimator.repeatCount = ValueAnimator.INFINITE
-            alphaAnimator.duration = 5000
-            alphaAnimator.addUpdateListener {
-//                currentAlpha = (it.animatedValue) as Int
-            }
-            mAnimatorSet = AnimatorSet()
-            mAnimatorSet?.playTogether(rotateAnimator, alphaAnimator)
-            mAnimatorSet?.interpolator = LinearInterpolator()
-            mAnimatorSet?.start()
+            mAnimator?.start()
         }
     }
 
     override fun draw(canvas: Canvas) {
-        // move to center point
-//        canvas.translate(mCenterPoint.x, mCenterPoint.y)
-//        // set drawable bounds & draw it
-//        mSunDrawable.setBounds(-halfWidth, -halfWidth, halfWidth, halfWidth)
-//        mSunDrawable.draw(canvas)
         val total = cloud1.intrinsicWidth + mWidth
-        val curX = (-cloud1.intrinsicWidth + total * rate1).toInt()
+        val curX = (-cloud1.intrinsicWidth + total * sin(rate1 / 2 / PI)).toInt()
 
         cloud1.setBounds(curX, y1, curX + cloud1.intrinsicWidth, y1 + cloud1.intrinsicHeight)
         cloud1.draw(canvas)
@@ -97,7 +84,8 @@ class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, val cloud3: Dr
     }
 
     override fun cancel() {
-        mAnimatorSet?.cancel()
+        mAnimator?.removeAllListeners()
+        mAnimator?.cancel()
         LogUtil.e("cancel ---------------------------> ")
     }
 }

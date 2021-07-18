@@ -9,7 +9,7 @@ import per.wsj.commonlib.utils.DisplayUtil;
 
 
 /**
- * Created by niu on 2018/11/22.
+ *
  */
 public class IndexHorizontalScrollView extends HorizontalScrollView {
 
@@ -28,16 +28,21 @@ public class IndexHorizontalScrollView extends HorizontalScrollView {
     }
 
     @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        if (getChildCount() != 1) {
+            throw new IllegalStateException("require one child");
+        }
+        this.hourlyForecastView = (HourlyForecastView) getChildAt(0);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         int offset = computeHorizontalScrollOffset();
         int maxOffset = computeHorizontalScrollRange() - DisplayUtil.getScreenWidth();
-        if(hourlyForecastView != null){
+        if (hourlyForecastView != null) {
             hourlyForecastView.setScrollOffset(offset, maxOffset);
         }
-    }
-
-    public void setToday24HourView(HourlyForecastView today24HourView){
-        this.hourlyForecastView = today24HourView;
     }
 }
