@@ -11,8 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.joda.time.DateTime;
-
+import java.util.Calendar;
 import java.util.List;
 
 import me.wsj.fengyun.R;
@@ -56,12 +55,16 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.MyView
         myViewHolder.tvMin.setText(tmpMin + "°");
         myViewHolder.ivDay.setImageResource(IconUtils.getDayIconDark(context, condCodeD));
         myViewHolder.ivNight.setImageResource(IconUtils.getDayIconDark(context, condCodeN));
-        DateTime now = DateTime.now();
-        myViewHolder.tvWeek.setText(
-                WeatherUtil.getWeek(now.plusDays(i).getDayOfWeek()));
-        myViewHolder.tvWeek.setTextColor(context.getResources().getColor(R.color.edit_hint_color));
+
         if (i == 0) {
             myViewHolder.tvWeek.setText(context.getString(R.string.today));
+        } else if (i == 1) {
+//            int week = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
+//            myViewHolder.tvWeek.setText(
+//                    WeatherUtil.getWeek(week + i));
+            myViewHolder.tvWeek.setText(context.getString(R.string.tomorrow));
+        } else {
+            myViewHolder.tvWeek.setText(context.getString(R.string.after_t));
         }
     }
 

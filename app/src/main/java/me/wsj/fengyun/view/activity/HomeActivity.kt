@@ -5,8 +5,6 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import coil.load
-import coil.transform.BlurTransformation
 import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ViewPagerAdapter
 import me.wsj.fengyun.databinding.ActivityMainBinding
@@ -19,9 +17,7 @@ import me.wsj.fengyun.view.fragment.WeatherFragment
 import me.wsj.lib.EffectUtil
 import me.wsj.lib.extension.startActivity
 import me.wsj.lib.specialeffects.ICancelable
-import me.wsj.lib.utils.ConvertUtil.Companion.convert
 import me.wsj.lib.utils.IconUtils
-import org.joda.time.DateTime
 import per.wsj.commonlib.utils.DisplayUtil
 import java.util.*
 
@@ -60,12 +56,7 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
         mBinding.ivAddCity.expand(10, 10)
 
-        val bgDrawable = if (DateTime.now().hourOfDay in 7..18) {
-            R.drawable.bg_0_d
-        } else {
-            R.drawable.bg_0_n
-        }
-        mBinding.ivBg.setImageResource(bgDrawable)
+        mBinding.ivBg.setImageResource(IconUtils.getDefaultBg())
     }
 
     override fun initEvent() {
@@ -153,24 +144,12 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     fun changeBg(condCode: String) {
-        val hourOfDay = DateTime.now().hourOfDay
-
         // 获取背景
-        val bgDrawable = if (hourOfDay in 7..18) {
-            IconUtils.getDayBg(this@HomeActivity, condCode.toInt())
-        } else {
-            IconUtils.getNightBg(this@HomeActivity, condCode.toInt())
-        }
+        val bgDrawable = IconUtils.getBg(this@HomeActivity, condCode.toInt())
         mBinding.ivBg.setImageResource(bgDrawable)
 
         // 获取特效
-        val effectDrawable = if (hourOfDay in 7..18) {
-            EffectUtil.getEffect(context, convert(condCode.toInt()))
-        } else {
-//            EffectUtil.getEffect(context, convert(condCode.toInt()))
-            null
-        }
-
+        val effectDrawable = EffectUtil.getEffect(context, condCode.toInt())
         mBinding.ivEffect.setImageDrawable(effectDrawable)
     }
 

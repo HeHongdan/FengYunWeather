@@ -25,6 +25,27 @@ public class IconUtils {
     /**
      * 获取白天背景
      */
+    public static int getDefaultBg() {
+        int now = DateUtil.getNowHour();
+        boolean isDay = now >= 7 && now <= 18;
+        if (isDay) return R.drawable.bg_0_d;
+        else return R.drawable.bg_0_n;
+    }
+
+
+    /**
+     * 获取白天背景
+     */
+    public static int getBg(Context context, int code) {
+        int now = DateUtil.getNowHour();
+        boolean isDay = now >= 7 && now <= 18;
+        if (isDay) return getDayBg(context, code);
+        else return getNightBg(context, code);
+    }
+
+    /**
+     * 获取白天背景
+     */
     public static int getDayBg(Context context, int code) {
         int newCode = ConvertUtil.convert(code);
         return getDrawableRes(context, "bg_" + newCode + "_d", R.drawable.bg_0_d);
@@ -36,22 +57,6 @@ public class IconUtils {
     public static int getNightBg(Context context, int code) {
         int newCode = ConvertUtil.convert(code);
         return getDrawableRes(context, "bg_" + newCode + "_n", R.drawable.bg_0_n);
-    }
-
-    /**
-     * 获取白天背景
-     */
-    @Deprecated
-    public static int getDayBack(Context context, String weather) {
-        return getDrawableRes(context, "back_" + weather + "d", R.mipmap.back_100d);
-    }
-
-    /**
-     * 获取晚上背景
-     */
-    @Deprecated
-    public static int getNightBack(Context context, String weather) {
-        return getDrawableRes(context, "back_" + weather + "n", R.mipmap.back_100n);
     }
 
     public static int getDrawableRes(Context context, String weather, int def) {

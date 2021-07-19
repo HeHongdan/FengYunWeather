@@ -27,8 +27,7 @@ import me.wsj.fengyun.view.base.BaseVmFragment
 import me.wsj.fengyun.view.base.LoadState
 import me.wsj.fengyun.widget.horizonview.ScrollWatched
 import me.wsj.fengyun.widget.horizonview.ScrollWatcher
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
+import me.wsj.lib.utils.DateUtil
 import per.wsj.commonlib.utils.LogUtil
 import per.wsj.commonlib.utils.Typefaces
 import java.util.*
@@ -44,7 +43,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     private lateinit var watched: ScrollWatched
 
-    private var currentTime: String? = null
     private var sunrise: String? = null
     private var sunset: String? = null
     private var moonRise: String? = null
@@ -218,7 +216,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      * 三天预报
      */
     private fun showForecast(dailyForecast: List<Daily>) {
-        getCurrentTime()
+        val currentTime = DateUtil.getNowTime()
         val forecastBase = dailyForecast[0]
         val condCodeD = forecastBase.iconDay
         val condCodeN = forecastBase.iconNight
@@ -233,23 +231,15 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         todayDetailBinding!!.tvMaxTmp.text = "$todayMaxTmp°"
         todayDetailBinding!!.tvMinTmp.text = "$todayMinTmp°"
         todayDetailBinding!!.ivTodayDay.setImageResource(
-            IconUtils.getDayIconDark(
-                context,
-                condCodeD
-            )
+            IconUtils.getDayIconDark(context, condCodeD)
         )
         todayDetailBinding!!.ivTodayNight.setImageResource(
-            IconUtils.getNightIconDark(
-                context,
-                condCodeN
-            )
+            IconUtils.getNightIconDark(context, condCodeN)
         )
         if (forecastAdapter == null) {
             forecastAdapter = ForecastAdapter(activity, dailyForecast)
             mBinding.rvForecast.adapter = forecastAdapter
-            val forecastManager = LinearLayoutManager(
-                activity
-            )
+            val forecastManager = LinearLayoutManager(activity)
             forecastManager.orientation = LinearLayoutManager.VERTICAL
             mBinding.rvForecast.layoutManager = forecastManager
         } else {
@@ -369,19 +359,11 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      */
     private fun setViewTime() {
         if (!hasAni && sunrise.notEmpty() && sunset.notEmpty() && moonRise.notEmpty() && moonSet.notEmpty()) {
-            getCurrentTime()
+            val currentTime = DateUtil.getNowTime()
             sunMoonBinding.sunView.setTimes(sunrise, sunset, currentTime)
             sunMoonBinding.moonView.setTimes(moonRise, moonSet, currentTime)
             hasAni = true
         }
-    }
-
-    private fun getCurrentTime() {
-        var now = DateTime.now(DateTimeZone.UTC)
-        val a = "+8.0".toFloat()
-        val minute = a * 60
-        now = now.plusMinutes(minute.toInt())
-        currentTime = now.toString("HH:mm")
     }
 
     fun changeUnit() {
