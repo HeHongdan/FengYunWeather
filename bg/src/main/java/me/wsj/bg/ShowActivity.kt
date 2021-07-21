@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import me.wsj.lib.EffectUtil
+import me.wsj.lib.specialeffects.ICancelable
+import me.wsj.lib.utils.ConvertUtil.Companion.convert
 import me.wsj.lib.utils.IconUtils
 
 class ShowActivity : AppCompatActivity() {
@@ -12,11 +14,18 @@ class ShowActivity : AppCompatActivity() {
         setContentView(R.layout.activity_show)
 
         val code = intent.getIntExtra("code", 0)
-        val dayBack = IconUtils.getDayBg(this, code)
-        findViewById<ImageView>(R.id.ivBg).setImageResource(dayBack)
+//        val dayBack = IconUtils.getDayBg(this, code)
+        findViewById<ImageView>(R.id.ivBg).setImageResource(IconUtils.getBg(this, code))
 
-//        findViewById<ImageView>(R.id.ivEffect).setImageDrawable(EffectUtil.getEffect(this, code))
-//        )
+//        val newCode = convert(code)
+        findViewById<ImageView>(R.id.ivEffect).setImageDrawable(EffectUtil.getEffect(this, code))
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        findViewById<ImageView>(R.id.ivEffect).drawable?.let {
+            (it as ICancelable).cancel()
+        }
     }
 }

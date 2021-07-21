@@ -93,6 +93,6 @@ class Effect1Drawable(private val mSunDrawable: Drawable) : Drawable(), ICancela
 
     override fun cancel() {
         mAnimatorSet?.cancel()
-        LogUtil.e("cancel ---------------------------> ")
+        LogUtil.d("Effect1Drawable cancel ---------------------------> ")
     }
 }

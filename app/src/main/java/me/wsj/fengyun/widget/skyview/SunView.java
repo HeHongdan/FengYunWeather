@@ -181,9 +181,9 @@ public class SunView extends View {
         mTotalMinute = calculateTime(mStartTime, mEndTime, false);//计算总时间，单位：分钟
         mNeedMinute = calculateTime(mStartTime, mCurrentTime, true);//计算当前所给的时间 单位：分钟
         mPercentage = Float.parseFloat(formatTime(mTotalMinute, mNeedMinute));//当前时间的总分钟数占日出日落总分钟数的百分比
-        LogUtil.e("percentage: " + mPercentage);
+        LogUtil.d("percentage: " + mPercentage);
         float currentAngle = 180 * mPercentage;
-        LogUtil.e("currentAngle: " + currentAngle);
+        LogUtil.d("currentAngle: " + currentAngle);
 
         setAnimation(0, currentAngle, 3000);
     }

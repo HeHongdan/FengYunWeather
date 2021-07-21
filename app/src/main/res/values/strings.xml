@@ -40,6 +40,7 @@
     <string name="top_city">热门城市</string>
     <string name="current_location">当前位置</string>
     <string name="forecast">预报</string>
+    <string name="forecast_hourly">逐小时预报</string>
     <string name="now">.  现在</string>
 
     <string name="powered">Powered By wangsj</string>

@@ -1,4 +1,4 @@
-package me.wsj.lib.specialeffects
+package me.wsj.lib.specialeffects.deprecate
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator

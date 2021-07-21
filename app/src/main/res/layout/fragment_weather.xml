@@ -31,7 +31,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="20" />
+                    tools:text="25" />
 
                 <TextView
                     android:id="@+id/tv_today_cond"
@@ -84,92 +84,29 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <include layout="@layout/layout_today_brief_info" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_forecast"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/shape_rect_r8_tcc_white"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_forecast" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    android:background="@drawable/shape_rect_r8_tcc_white"
-                    android:orientation="vertical">
+            <include layout="@layout/layout_forecast_hourly" />
 
-                    <TextView
-                        android:id="@+id/tv_forecast_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="16dp"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="12dp"
-                        android:text="@string/forecast"
-                        android:textColor="@color/color_212121"
-                        android:textSize="16sp"
-                        tools:ignore="RtlSymmetry" />
+            <include layout="@layout/layout_today_detail" />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp">
+            <include layout="@layout/layout_air_quality" />
 
-                        <TextView
-                            android:id="@+id/tv_line_max_tmp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="16dp"
-                            android:text="21°"
-                            android:textColor="@color/color_ababab"
-                            android:textSize="16sp" />
+            <include layout="@layout/layout_sun_moon" />
 
-                        <TextView
-                            android:id="@+id/tv_line_min_tmp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="66dp"
-                            android:text="11°"
-                            android:textColor="@color/color_ababab"
-                            android:textSize="16sp" />
-
-                        <me.wsj.fengyun.widget.horizonview.IndexHorizontalScrollView
-                            android:id="@+id/horizontalScrollView"
-                            android:layout_width="match_parent"
-                            android:layout_height="98dp"
-                            android:layout_marginLeft="50dp">
-
-                            <me.wsj.fengyun.widget.horizonview.HourlyForecastView
-                                android:id="@+id/hourly"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                        </me.wsj.fengyun.widget.horizonview.IndexHorizontalScrollView>
-
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_forecast"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginRight="6dp"
-                    android:background="@drawable/shape_rect_r8_tcc_white">
-
-                </androidx.recyclerview.widget.RecyclerView>
-
-                <include layout="@layout/layout_today_detail" />
-
-                <include layout="@layout/layout_air_quality" />
-
-                <include layout="@layout/layout_sun_moon" />
-
-                <include layout="@layout/layout_support" />
-
-            </LinearLayout>
+            <include layout="@layout/layout_support" />
 
         </LinearLayout>
 

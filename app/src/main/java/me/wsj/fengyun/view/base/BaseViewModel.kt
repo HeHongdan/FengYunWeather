@@ -62,7 +62,7 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
                         if (runningCount.get() > 0) {
                             runningCount.getAndDecrement()
                         }
-                        LogUtil.e("runningCount - : $runningCount")
+                        LogUtil.d("runningCount - : $runningCount")
                         loadState.value = LoadState.Finish
                     }
                 }

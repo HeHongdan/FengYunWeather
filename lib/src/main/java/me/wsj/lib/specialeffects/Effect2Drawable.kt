@@ -23,13 +23,10 @@ class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, val cloud3: Dr
     private var mWidth = 0
 
     private var rate1 = 0f
-    private var x1 = 0
     private var y1 = 0
 
-    private var x2 = 0
     private var y2 = 0
 
-    private var x3 = 0
     private var y3 = 0
 
     init {
@@ -41,9 +38,9 @@ class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, val cloud3: Dr
 
         mWidth = bounds.right - bounds.left
 
-        y1 = (mWidth * 0.1).toInt()
+        y1 = (mWidth * 0.05).toInt()
         y2 = (mWidth * 0.3).toInt()
-        y2 = (mWidth * 0.8).toInt()
+        y3 = (mWidth * 0.54).toInt()
 
     }
 
@@ -63,11 +60,24 @@ class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, val cloud3: Dr
     }
 
     override fun draw(canvas: Canvas) {
-        val total = cloud1.intrinsicWidth + mWidth
-        val curX = (-cloud1.intrinsicWidth + total * sin(rate1 / 2 / PI)).toInt()
+        val total1 = cloud1.intrinsicWidth + mWidth
+        val curX1 = (-cloud1.intrinsicWidth + total1 * rate1).toInt()
 
-        cloud1.setBounds(curX, y1, curX + cloud1.intrinsicWidth, y1 + cloud1.intrinsicHeight)
+        cloud1.setBounds(curX1, y1, curX1 + cloud1.intrinsicWidth, y1 + cloud1.intrinsicHeight)
         cloud1.draw(canvas)
+
+        val total2 = cloud2.intrinsicWidth * 4 + mWidth
+        val curX2 = (-cloud2.intrinsicWidth * 2 + total2 * rate1).toInt()
+        cloud2.setBounds(curX2, y2, curX2 + cloud2.intrinsicWidth, y2 + cloud2.intrinsicHeight)
+        cloud2.draw(canvas)
+
+        val total3 = cloud3.intrinsicWidth * 3 + mWidth
+        val curX3 = (-cloud3.intrinsicWidth * 2 + total3 * rate1).toInt()
+        cloud3.setBounds(curX3, y3, curX3 + cloud3.intrinsicWidth, y3 + cloud3.intrinsicHeight)
+        cloud3.draw(canvas)
+    }
+
+    fun delay3() {
 
     }
 
@@ -86,6 +96,6 @@ class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, val cloud3: Dr
     override fun cancel() {
         mAnimator?.removeAllListeners()
         mAnimator?.cancel()
-        LogUtil.e("cancel ---------------------------> ")
+        LogUtil.d("Effect2Drawable cancel ---------------------------> ")
     }
 }

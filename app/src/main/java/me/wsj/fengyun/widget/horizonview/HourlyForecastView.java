@@ -62,7 +62,6 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     //画虚线的点的index
     private List<Integer> dashLineList;
 
-
     private int screenWidth;
     //每个item的宽度
     private int itemWidth;
@@ -170,7 +169,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         lowestTempHeight = DisplayUtil.dip2px(mContext, 40);//长度  非y轴值
         highestTempHeight = DisplayUtil.dip2px(mContext, 70);
         //defPadding
-        paddingT = DisplayUtil.dip2px(mContext, 20);
+        paddingT = DisplayUtil.dip2px(mContext, 9);
         paddingL = DisplayUtil.dip2px(mContext, 10);
         paddingR = DisplayUtil.dip2px(mContext, 15);
 
@@ -565,7 +564,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
     //设置scrollerView的滚动条的位置，通过位置计算当前的时段
     public void setScrollOffset(int offset, int maxScrollOffset) {
-        this.maxScrollOffset = maxScrollOffset + DisplayUtil.dip2px(mContext, 50);
+        this.maxScrollOffset = maxScrollOffset;
         scrollOffset = offset;
         currentItemIndex = calculateItemIndex();
         invalidate();

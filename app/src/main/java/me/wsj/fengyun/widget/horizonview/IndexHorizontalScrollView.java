@@ -3,6 +3,7 @@ package me.wsj.fengyun.widget.horizonview;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.HorizontalScrollView;
 
 import per.wsj.commonlib.utils.DisplayUtil;
@@ -25,6 +26,15 @@ public class IndexHorizontalScrollView extends HorizontalScrollView {
 
     public IndexHorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+    }
+
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        if (hourlyForecastView != null) {
+            ((ScrollWatcher) hourlyForecastView).update(l);
+        }
     }
 
     @Override
@@ -39,8 +49,10 @@ public class IndexHorizontalScrollView extends HorizontalScrollView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         int offset = computeHorizontalScrollOffset();
-        int maxOffset = computeHorizontalScrollRange() - DisplayUtil.getScreenWidth();
+        int range = computeHorizontalScrollRange();
+        int maxOffset = range - getMeasuredWidth();
         if (hourlyForecastView != null) {
             hourlyForecastView.setScrollOffset(offset, maxOffset);
         }

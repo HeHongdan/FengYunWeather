@@ -1,33 +1,27 @@
 package me.wsj.fengyun.view.fragment
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import me.wsj.fengyun.R
-import me.wsj.fengyun.adapter.ForecastAdapter
+import me.wsj.fengyun.adapter.Forecast3dAdapter
 import me.wsj.fengyun.bean.*
-import me.wsj.fengyun.databinding.FragmentWeatherBinding
-import me.wsj.fengyun.databinding.LayoutAirQualityBinding
-import me.wsj.fengyun.databinding.LayoutSunMoonBinding
-import me.wsj.fengyun.databinding.LayoutTodayDetailBinding
-import me.wsj.lib.extension.notEmpty
-import me.wsj.lib.extension.toastCenter
+import me.wsj.fengyun.databinding.*
 import me.wsj.fengyun.utils.ContentUtil
-import me.wsj.lib.utils.IconUtils
 import me.wsj.fengyun.utils.Lunar
 import me.wsj.fengyun.utils.WeatherUtil
 import me.wsj.fengyun.view.activity.vm.MainViewModel
 import me.wsj.fengyun.view.base.BaseVmFragment
 import me.wsj.fengyun.view.base.LoadState
-import me.wsj.fengyun.widget.horizonview.ScrollWatched
-import me.wsj.fengyun.widget.horizonview.ScrollWatcher
+import me.wsj.lib.extension.notEmpty
+import me.wsj.lib.extension.toastCenter
 import me.wsj.lib.utils.DateUtil
+import me.wsj.lib.utils.IconUtils
 import per.wsj.commonlib.utils.LogUtil
 import per.wsj.commonlib.utils.Typefaces
 import java.util.*
@@ -38,10 +32,6 @@ private const val PARAM_CITY_ID = "param_city_id"
 class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>() {
 
     private lateinit var mCityId: String
-
-    private val watcherList by lazy { ArrayList<ScrollWatcher>() }
-
-    private lateinit var watched: ScrollWatched
 
     private var sunrise: String? = null
     private var sunset: String? = null
@@ -56,15 +46,22 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     private var condCode: String? = null
 
-    private var forecastAdapter: ForecastAdapter? = null
+    private var mForecastAdapter: Forecast3dAdapter? = null
 
-    private var todayDetailBinding: LayoutTodayDetailBinding? = null
+    private val mForecastList by lazy { ArrayList<Daily>() }
+
+    private lateinit var todayBriefInfoBinding: LayoutTodayBriefInfoBinding
+
+    private lateinit var todayDetailBinding: LayoutTodayDetailBinding
+
+    private lateinit var forecastHourlyBinding: LayoutForecastHourlyBinding
 
     private lateinit var airQualityBinding: LayoutAirQualityBinding
 
     private lateinit var sunMoonBinding: LayoutSunMoonBinding
 
     private lateinit var mainViewModel: MainViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,39 +108,26 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         // must use activity
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
+        todayBriefInfoBinding = LayoutTodayBriefInfoBinding.bind(mBinding.root)
+
+        forecastHourlyBinding = LayoutForecastHourlyBinding.bind(mBinding.root)
+
         todayDetailBinding = LayoutTodayDetailBinding.bind(mBinding.root)
 
         sunMoonBinding = LayoutSunMoonBinding.bind(mBinding.root)
 
         airQualityBinding = LayoutAirQualityBinding.bind(mBinding.root)
 
-        watched = object : ScrollWatched {
-            override fun addWatcher(watcher: ScrollWatcher) {
-                watcherList.add(watcher)
-            }
-
-            override fun removeWatcher(watcher: ScrollWatcher) {
-                watcherList.remove(watcher)
-            }
-
-            override fun notifyWatcher(x: Int) {
-                for (watcher in watcherList) {
-                    watcher.update(x)
-                }
-            }
-        }
-
-        watched.addWatcher(mBinding.hourly)
-
-        //横向滚动监听
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mBinding.horizontalScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
-                watched.notifyWatcher(scrollX)
-            }
-        }
-
         // 设置字体
         mBinding.tvTodayTmp.typeface = Typefaces.get(requireContext(), "widget_clock.ttf")
+
+        for (i in 0 until 3) {
+            mForecastList.add(Daily(iconDay = "100", textDay = "晴", tempMin = "20", tempMax = "25"))
+        }
+        mForecastAdapter = Forecast3dAdapter(requireContext(), mForecastList)
+        mBinding.rvForecast.adapter = mForecastAdapter
+        val forecastManager = GridLayoutManager(requireContext(), 3)
+        mBinding.rvForecast.layoutManager = forecastManager
     }
 
     override fun initEvent() {
@@ -204,12 +188,19 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         if (ContentUtil.APP_SETTING_UNIT == "hua") {
             mBinding.tvTodayTmp.text = WeatherUtil.getF(now.temp).toString() + "°F"
         }
-        todayDetailBinding!!.tvTodayRain.text = now.precip + "mm"
-        todayDetailBinding!!.tvTodayPressure.text = now.pressure + "HPA"
-        todayDetailBinding!!.tvTodayHum.text = "${now.humidity}%"
-        todayDetailBinding!!.tvTodayVisible.text = now.vis + "KM"
-        todayDetailBinding!!.tvWindDir.text = now.windDir
-        todayDetailBinding!!.tvWindSc.text = now.windScale + "级"
+        todayDetailBinding.tvTodayRain.text = now.precip + "mm"
+        todayDetailBinding.tvTodayPressure.text = now.pressure + "HPA"
+        todayDetailBinding.tvTodayHum.text = "${now.humidity}%"
+        todayDetailBinding.tvTodayVisible.text = now.vis + "KM"
+        todayDetailBinding.tvWindDir.text = now.windDir
+        todayDetailBinding.tvWindSc.text = now.windScale + "级"
+
+        todayBriefInfoBinding.tvFeelTemp.text = now.temp + "°C"
+        todayBriefInfoBinding.tvHumidity.text = now.humidity + "%"
+        todayBriefInfoBinding.tvWindScale.text = now.windDir + now.windScale + "级"
+        todayBriefInfoBinding.tvPressure.text = now.pressure + "hpa"
+
+
     }
 
     /**
@@ -228,23 +219,18 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         moonSet = forecastBase.moonset
         sunMoonBinding.sunView.setTimes(sunrise, sunset, currentTime)
         sunMoonBinding.moonView.setTimes(moonRise, moonSet, currentTime)
-        todayDetailBinding!!.tvMaxTmp.text = "$todayMaxTmp°"
-        todayDetailBinding!!.tvMinTmp.text = "$todayMinTmp°"
-        todayDetailBinding!!.ivTodayDay.setImageResource(
+        todayDetailBinding.tvMaxTmp.text = "$todayMaxTmp°"
+        todayDetailBinding.tvMinTmp.text = "$todayMinTmp°"
+        todayDetailBinding.ivTodayDay.setImageResource(
             IconUtils.getDayIconDark(context, condCodeD)
         )
-        todayDetailBinding!!.ivTodayNight.setImageResource(
+        todayDetailBinding.ivTodayNight.setImageResource(
             IconUtils.getNightIconDark(context, condCodeN)
         )
-        if (forecastAdapter == null) {
-            forecastAdapter = ForecastAdapter(activity, dailyForecast)
-            mBinding.rvForecast.adapter = forecastAdapter
-            val forecastManager = LinearLayoutManager(activity)
-            forecastManager.orientation = LinearLayoutManager.VERTICAL
-            mBinding.rvForecast.layoutManager = forecastManager
-        } else {
-            forecastAdapter!!.refreshData(activity, dailyForecast)
-        }
+        mForecastList.clear()
+        mForecastList.addAll(dailyForecast)
+
+        mForecastAdapter?.notifyDataSetChanged()
     }
 
     /**
@@ -333,17 +319,19 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             maxTmp = Math.max(tmp, maxTmp)
         }
         //设置当天的最高最低温度
-        mBinding.hourly.setHighestTemp(maxTmp)
-        mBinding.hourly.setLowestTemp(minTmp)
+        forecastHourlyBinding.hourly.setHighestTemp(maxTmp)
+        forecastHourlyBinding.hourly.setLowestTemp(minTmp)
         if (maxTmp == minTmp) {
-            mBinding.hourly.setLowestTemp(minTmp - 1)
+            forecastHourlyBinding.hourly.setLowestTemp(minTmp - 1)
         }
-        mBinding.hourly.initData(data)
-        mBinding.tvLineMaxTmp.text = "$maxTmp°"
-        mBinding.tvLineMinTmp.text = "$minTmp°"
+        forecastHourlyBinding.hourly.initData(data)
+        forecastHourlyBinding.tvLineMaxTmp.text = "$maxTmp°"
+        forecastHourlyBinding.tvLineMinTmp.text = "$minTmp°"
         if (ContentUtil.APP_SETTING_UNIT == "hua") {
-            mBinding.tvLineMaxTmp.text = WeatherUtil.getF(maxTmp.toString()).toString() + "°"
-            mBinding.tvLineMinTmp.text = WeatherUtil.getF(minTmp.toString()).toString() + "°"
+            forecastHourlyBinding.tvLineMaxTmp.text =
+                WeatherUtil.getF(maxTmp.toString()).toString() + "°"
+            forecastHourlyBinding.tvLineMinTmp.text =
+                WeatherUtil.getF(minTmp.toString()).toString() + "°"
         }
     }
 
@@ -369,15 +357,15 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     fun changeUnit() {
         if (ContentUtil.APP_SETTING_UNIT == "hua") {
             LogUtil.e("当前城市1：$condCode")
-            todayDetailBinding!!.tvMaxTmp.text =
+            todayDetailBinding.tvMaxTmp.text =
                 WeatherUtil.getF(todayMaxTmp!!).toString() + "°F"
-            todayDetailBinding!!.tvMinTmp.text =
+            todayDetailBinding.tvMinTmp.text =
                 WeatherUtil.getF(todayMinTmp!!).toString() + "°F"
             mBinding.tvTodayTmp.text = WeatherUtil.getF(nowTmp!!).toString() + "°F"
         } else {
             LogUtil.e("当前城市2：$condCode")
-            todayDetailBinding!!.tvMaxTmp.text = "$todayMaxTmp°C"
-            todayDetailBinding!!.tvMinTmp.text = "$todayMinTmp°C"
+            todayDetailBinding.tvMaxTmp.text = "$todayMaxTmp°C"
+            todayDetailBinding.tvMinTmp.text = "$todayMinTmp°C"
             mBinding.tvTodayTmp.text = "$nowTmp°C"
         }
 //        getWeatherHourly(weatherHourlyBean)

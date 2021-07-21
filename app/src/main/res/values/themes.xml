@@ -68,4 +68,12 @@
         <item name="android:background">@drawable/shape_rect_r8_tcc_white</item>
     </style>
 
+    <style name="HomeCard_Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:textColor">@color/color_333</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>
