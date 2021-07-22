@@ -55,7 +55,7 @@ class SplashActivity : AppCompatActivity() {
         lifecycleScope.launch {
             var citySize = 0
 
-            DensityUtil.setDensity(application, 418f)
+//            DensityUtil.setDensity(application, 418f)
 
             withContext(Dispatchers.IO) {
                 val start = System.currentTimeMillis()

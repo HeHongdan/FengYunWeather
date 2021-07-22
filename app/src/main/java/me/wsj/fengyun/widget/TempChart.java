@@ -5,11 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
 import me.wsj.fengyun.R;
+import me.wsj.fengyun.bean.Daily;
 import per.wsj.commonlib.utils.DisplayUtil;
 
 public class TempChart extends View {
@@ -20,7 +22,7 @@ public class TempChart extends View {
 
     private int lowTemp, highTemp;
 
-    private int mWidth, mHeight;
+    private float mHalfWidth, mHeight;
 
     private Paint mLowPaint, mHighPaint, mTextPaint;
 
@@ -58,22 +60,29 @@ public class TempChart extends View {
         mTextPaint.setColor(getResources().getColor(R.color.color_666));
         textHeight = (int) (mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top);
 
+        int lineWidth = DisplayUtil.dip2px(getContext(), 2);
         mLowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLowPaint.setStrokeWidth(10);
-        mLowPaint.setColor(Color.parseColor("#FF7200"));
+        mLowPaint.setStrokeWidth(lineWidth);
+        mLowPaint.setColor(Color.parseColor("#00A368"));
 
         mHighPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mHighPaint.setStrokeWidth(10);
-        mHighPaint.setColor(Color.parseColor("#00A368"));
+        mHighPaint.setStrokeWidth(lineWidth);
+        mHighPaint.setColor(Color.parseColor("#FF7200"));
 
         pntRadius = DisplayUtil.dip2px(getContext(), 3);
     }
 
-    public void setData(int minTemp, int maxTemp, int lowTemp, int highTemp) {
+    private Daily mPrev, mNext;
+
+
+    public void setData(int minTemp, int maxTemp, Daily prev, Daily current, Daily next) {
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
-        this.lowTemp = lowTemp;
-        this.highTemp = highTemp;
+        this.lowTemp = Integer.parseInt(current.getTempMin());
+        this.highTemp = Integer.parseInt(current.getTempMax());
+
+        mPrev = prev;
+        mNext = next;
 
         lowText = lowTemp + "°C";
         highText = highTemp + "°C";
@@ -88,10 +97,10 @@ public class TempChart extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        mWidth = getMeasuredWidth();
+        mHalfWidth = getMeasuredWidth()/2f;
         mHeight = getMeasuredHeight();
 
-        usableHeight = mHeight - topBottom * 2 - textHeight * 2;
+        usableHeight = (int) (mHeight - topBottom * 2 - textHeight * 2);
 
         density = usableHeight / (float) tempDiff;
     }
@@ -99,18 +108,32 @@ public class TempChart extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.translate(mWidth / 2, 0);
+        canvas.translate(mHalfWidth, 0);
 
         int topY = (int) ((maxTemp - highTemp) * density + topBottom + textHeight);
         int bottomY = (int) ((maxTemp - lowTemp) * density + topBottom + textHeight);
-        canvas.drawCircle(0, topY, pntRadius, mLowPaint);
-        canvas.drawCircle(0, bottomY, pntRadius, mHighPaint);
-
+        canvas.drawCircle(0, topY, pntRadius, mHighPaint);
+        canvas.drawCircle(0, bottomY, pntRadius, mLowPaint);
 
         canvas.drawText(highText, -lowTextWidth / 2, topY - mTextPaint.getFontMetrics().bottom * 2, mTextPaint);
 
         canvas.drawText(lowText, -lowTextWidth / 2, bottomY + textHeight, mTextPaint);
+
+        if (mPrev != null) {
+            Pair<Integer, Integer> prev = getEnds(mPrev);
+            canvas.drawLine(-mHalfWidth, (prev.first + topY) / 2f, 0, topY, mHighPaint);
+            canvas.drawLine(-mHalfWidth, (prev.second + bottomY) / 2f, 0, bottomY, mLowPaint);
+        }
+        if (mNext != null) {
+            Pair<Integer, Integer> next = getEnds(mNext);
+            canvas.drawLine(0, topY, mHalfWidth, (next.first + topY) / 2f, mHighPaint);
+            canvas.drawLine(0, bottomY, mHalfWidth, (next.second + bottomY) / 2f, mLowPaint);
+        }
     }
 
-
+    private Pair<Integer, Integer> getEnds(Daily daily) {
+        int topY = (int) ((maxTemp - Integer.parseInt(daily.getTempMax())) * density + topBottom + textHeight);
+        int bottomY = (int) ((maxTemp - Integer.parseInt(daily.getTempMin())) * density + topBottom + textHeight);
+        return new Pair<>(topY, bottomY);
+    }
 }

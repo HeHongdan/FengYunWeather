@@ -37,7 +37,13 @@ class Forecast15dAdapter(val context: Context, val datas: List<Daily>) :
         holder.tvWind.text = item.windDirDay
         holder.tvWindScale.text = item.windScaleDay + "级"
 
-        holder.tempChart.setData(mMin, mMax, item.tempMin.toInt(), item.tempMax.toInt())
+        holder.tempChart.setData(
+            mMin,
+            mMax,
+            if (position == 0) null else datas[position - 1],
+            item,
+            if (position == datas.size - 1) null else datas[position + 1]
+        )
     }
 
     val weeks = arrayOf("周日", "周一", "周二", "周三", "周四", "周五", "周六")
