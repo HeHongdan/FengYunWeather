@@ -201,12 +201,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         if (ContentUtil.APP_SETTING_UNIT == "hua") {
             mBinding.tvTodayTmp.text = WeatherUtil.getF(now.temp).toString() + "°F"
         }
-//        todayDetailBinding.tvTodayRain.text = now.precip + "mm"
-//        todayDetailBinding.tvTodayPressure.text = now.pressure + "HPA"
-//        todayDetailBinding.tvTodayHum.text = "${now.humidity}%"
-//        todayDetailBinding.tvTodayVisible.text = now.vis + "KM"
-//        todayDetailBinding.tvWindDir.text = now.windDir
-//        todayDetailBinding.tvWindSc.text = now.windScale + "级"
 
         todayBriefInfoBinding.tvFeelTemp.text = now.temp + "°C"
         todayBriefInfoBinding.tvHumidity.text = now.humidity + "%"
@@ -235,11 +229,11 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         mForecastList.addAll(dailyForecast)
 
         mForecastAdapter3d?.notifyDataSetChanged()
-        var min = 0
-        var max = 0
+        var min = forecastBase.tempMin.toInt()
+        var max = forecastBase.tempMax.toInt()
         dailyForecast.forEach {
             min = Math.min(it.tempMin.toInt(), min)
-            max = Math.max(it.tempMin.toInt(), max)
+            max = Math.max(it.tempMax.toInt(), max)
         }
 
         mForecastAdapter15d?.setRange(min, max)

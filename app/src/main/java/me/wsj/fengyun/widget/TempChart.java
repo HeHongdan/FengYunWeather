@@ -35,6 +35,8 @@ public class TempChart extends View {
 
     private float density = 0f;
 
+    private float pntRadius;
+
     public TempChart(Context context) {
         this(context, null);
     }
@@ -49,7 +51,7 @@ public class TempChart extends View {
     }
 
     private void init() {
-        topBottom = DisplayUtil.dip2px(getContext(), 12);
+        topBottom = DisplayUtil.dip2px(getContext(), 8);
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(DisplayUtil.sp2px(getContext(), 12));
@@ -63,6 +65,8 @@ public class TempChart extends View {
         mHighPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mHighPaint.setStrokeWidth(10);
         mHighPaint.setColor(Color.parseColor("#00A368"));
+
+        pntRadius = DisplayUtil.dip2px(getContext(), 3);
     }
 
     public void setData(int minTemp, int maxTemp, int lowTemp, int highTemp) {
@@ -96,15 +100,16 @@ public class TempChart extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.translate(mWidth / 2, 0);
-        canvas.drawColor(Color.parseColor("#ccffff"));
 
         int topY = (int) ((maxTemp - highTemp) * density + topBottom + textHeight);
-        int bottomY = (int) ((maxTemp - lowTemp) * density + mHeight - topBottom - textHeight);
-        canvas.drawPoint(0, topY, mLowPaint);
-        canvas.drawPoint(0, bottomY, mHighPaint);
+        int bottomY = (int) ((maxTemp - lowTemp) * density + topBottom + textHeight);
+        canvas.drawCircle(0, topY, pntRadius, mLowPaint);
+        canvas.drawCircle(0, bottomY, pntRadius, mHighPaint);
 
 
-        canvas.drawText("25°C", -lowTextWidth / 2, mHeight, mTextPaint);
+        canvas.drawText(highText, -lowTextWidth / 2, topY - mTextPaint.getFontMetrics().bottom * 2, mTextPaint);
+
+        canvas.drawText(lowText, -lowTextWidth / 2, bottomY + textHeight, mTextPaint);
     }
 
 
