@@ -28,7 +28,11 @@ class EffectUtil {
                             context.resources.getDrawable(R.drawable.cloudy_day_1),
                             context.resources.getDrawable(R.drawable.cloudy_day_3)
                         )
-                    } else null
+                    } else
+                        Effect2Drawable(
+                            context.resources.getDrawable(R.drawable.cloudy_day_2),
+                            context.resources.getDrawable(R.drawable.cloudy_day_1)
+                        )
                 }
                 else -> {
                     null

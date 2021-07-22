@@ -13,6 +13,7 @@ import me.wsj.fengyun.R
 import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.lib.extension.startActivity
+import me.wsj.lib.utils.DensityUtil
 import per.wsj.commonlib.permission.PermissionUtil
 import per.wsj.commonlib.utils.DisplayUtil
 
@@ -53,21 +54,16 @@ class SplashActivity : AppCompatActivity() {
     private fun startIntent() {
         lifecycleScope.launch {
             var citySize = 0
+
+            DensityUtil.setDensity(application, 418f)
+
             withContext(Dispatchers.IO) {
                 val start = System.currentTimeMillis()
                 val cities = AppRepo.getInstance().getCities()
 //                LogUtil.e("time use: " + (System.currentTimeMillis() - start))
                 citySize = cities.size
 
-                val screenRealSize = DisplayUtil.getScreenRealSize(this@SplashActivity).y
-//                val navHeight =
-                val navHeight =
-                    if (ContentUtil.isNavigationBarShowing(this@SplashActivity))
-                        DisplayUtil.getNavigationBarHeight(this@SplashActivity) else 0
-
-                val statusBarHeight = DisplayUtil.getStatusBarHeight2(this@SplashActivity)
-                val dp45 = DisplayUtil.dip2px(this@SplashActivity, 45f)
-                ContentUtil.visibleHeight = screenRealSize - navHeight - statusBarHeight - dp45
+                getScreenInfo()
 
                 delay(1000L)
             }
@@ -78,6 +74,19 @@ class SplashActivity : AppCompatActivity() {
             }
             finish()
         }
+    }
+
+    private fun getScreenInfo() {
+        val screenRealSize = DisplayUtil.getScreenRealSize(this@SplashActivity).y
+//                val navHeight =
+        val navHeight =
+            if (ContentUtil.isNavigationBarShowing(this@SplashActivity))
+                DisplayUtil.getNavigationBarHeight(this@SplashActivity) else 0
+
+        val statusBarHeight = DisplayUtil.getStatusBarHeight2(this@SplashActivity)
+        val dp45 = DisplayUtil.dip2px(this@SplashActivity, 45f)
+        ContentUtil.visibleHeight = screenRealSize - navHeight - statusBarHeight - dp45
+
     }
 
     override fun onDestroy() {
