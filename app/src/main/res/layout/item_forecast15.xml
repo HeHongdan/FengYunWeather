@@ -19,18 +19,18 @@
         android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:textColor="@color/color_999"
         android:textSize="12sp"
-        android:layout_marginTop="6dp"
         tools:text="08/01" />
 
     <TextView
         android:id="@+id/tv_day_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:textColor="@color/color_666"
         android:textSize="14sp"
-        android:layout_marginTop="6dp"
         tools:text="晴" />
 
     <ImageView
@@ -41,12 +41,17 @@
         app:tint="@color/color_666"
         tools:src="@mipmap/icon_100d" />
 
+    <me.wsj.fengyun.widget.TempChart
+        android:id="@+id/tempChart"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginTop="16dp" />
 
     <ImageView
         android:id="@+id/iv_night"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         app:tint="@color/color_666"
         tools:src="@mipmap/icon_100d" />
 

@@ -24,7 +24,6 @@ import me.wsj.fengyun.view.base.LoadState
 import me.wsj.lib.extension.notEmpty
 import me.wsj.lib.extension.toastCenter
 import me.wsj.lib.utils.DateUtil
-import me.wsj.lib.utils.IconUtils
 import per.wsj.commonlib.utils.LogUtil
 import per.wsj.commonlib.utils.Typefaces
 import java.util.*
@@ -223,8 +222,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     private fun showForecast(dailyForecast: List<Daily>) {
         val currentTime = DateUtil.getNowTime()
         val forecastBase = dailyForecast[0]
-        val condCodeD = forecastBase.iconDay
-        val condCodeN = forecastBase.iconNight
         todayMinTmp = forecastBase.tempMin
         todayMaxTmp = forecastBase.tempMax
         sunrise = forecastBase.sunrise
@@ -233,19 +230,19 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         moonSet = forecastBase.moonset
         sunMoonBinding.sunView.setTimes(sunrise, sunset, currentTime)
         sunMoonBinding.moonView.setTimes(moonRise, moonSet, currentTime)
-//        todayDetailBinding.tvMaxTmp.text = "$todayMaxTmp°"
-//        todayDetailBinding.tvMinTmp.text = "$todayMinTmp°"
-//        todayDetailBinding.ivTodayDay.setImageResource(
-//            IconUtils.getDayIconDark(context, condCodeD)
-//        )
-//        todayDetailBinding.ivTodayNight.setImageResource(
-//            IconUtils.getNightIconDark(context, condCodeN)
-//        )
+
         mForecastList.clear()
         mForecastList.addAll(dailyForecast)
 
         mForecastAdapter3d?.notifyDataSetChanged()
-        mForecastAdapter15d?.notifyDataSetChanged()
+        var min = 0
+        var max = 0
+        dailyForecast.forEach {
+            min = Math.min(it.tempMin.toInt(), min)
+            max = Math.max(it.tempMin.toInt(), max)
+        }
+
+        mForecastAdapter15d?.setRange(min, max)
     }
 
     /**

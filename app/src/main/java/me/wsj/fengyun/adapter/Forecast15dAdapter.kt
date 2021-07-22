@@ -9,11 +9,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Daily
+import me.wsj.fengyun.widget.TempChart
 import me.wsj.lib.utils.IconUtils
 import java.util.*
 
 class Forecast15dAdapter(val context: Context, val datas: List<Daily>) :
     RecyclerView.Adapter<Forecast15dAdapter.ViewHolder>() {
+
+    private var mMin = 0
+    private var mMax = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -33,6 +37,7 @@ class Forecast15dAdapter(val context: Context, val datas: List<Daily>) :
         holder.tvWind.text = item.windDirDay
         holder.tvWindScale.text = item.windScaleDay + "级"
 
+        holder.tempChart.setData(mMin, mMax, item.tempMin.toInt(), item.tempMax.toInt())
     }
 
     val weeks = arrayOf("周日", "周一", "周二", "周三", "周四", "周五", "周六")
@@ -54,6 +59,12 @@ class Forecast15dAdapter(val context: Context, val datas: List<Daily>) :
 
     override fun getItemCount(): Int = datas.size
 
+    fun setRange(min: Int, max: Int) {
+        mMin = min
+        mMax = max
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvWeek = itemView.findViewById<TextView?>(R.id.tv_week)
         val tvDate = itemView.findViewById<TextView?>(R.id.tv_date)
@@ -65,5 +76,7 @@ class Forecast15dAdapter(val context: Context, val datas: List<Daily>) :
 
         val tvWind = itemView.findViewById<TextView?>(R.id.tv_wind)
         val tvWindScale = itemView.findViewById<TextView?>(R.id.tv_wind_scale)
+
+        val tempChart = itemView.findViewById<TempChart?>(R.id.tempChart)
     }
 }
