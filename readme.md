@@ -16,13 +16,17 @@
 
 ## 预览
 
-![weather_info](/img/home.gif)
+| ![weather_info](/img/home.gif) | ![add_city](/img/add_city.png) |
+| ------------------------------ | ------------------------------ |
+| ![forecast](/img/forecast.png) | ![sun_moon](/img/sun_moon.png) |
 
-![add_city](/img/add_city.png)
 
-![forecast](/img/forecast.png)
 
-![sun_moon](/img/sun_moon.png)
+
+
+
+
+
 
 ## TODO
 
