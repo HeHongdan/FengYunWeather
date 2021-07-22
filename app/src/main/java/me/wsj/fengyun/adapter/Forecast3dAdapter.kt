@@ -43,7 +43,7 @@ class Forecast3dAdapter(val context: Context, val datas: List<Daily>) :
         }
     }
 
-    override fun getItemCount(): Int = datas.size
+    override fun getItemCount(): Int = 3
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivDay = itemView.findViewById<ImageView?>(R.id.iv_day)

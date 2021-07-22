@@ -128,11 +128,11 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         mLocationOption.httpTimeOut = 20000
         mLocationClient.setLocationListener { aMapLocation ->
             if (aMapLocation.errorCode == 0) {
-                curLocation.postValue(aMapLocation.district)
+                curLocation.value = aMapLocation.district
             } else {
-                loadState.postValue(LoadState.Error("获取定位失败,请重试"))
+                loadState.value = LoadState.Error("获取定位失败,请重试")
             }
-            loadState.postValue(LoadState.Finish)
+            loadState.value = LoadState.Finish
             mLocationClient.onDestroy()
         }
         //给定位客户端对象设置定位参数

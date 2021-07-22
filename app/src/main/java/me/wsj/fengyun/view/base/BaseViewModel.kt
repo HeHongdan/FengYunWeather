@@ -55,7 +55,7 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
                     // handle error
                     val error = ExceptionUtils.parseException(throwable)
                     if (BuildConfig.DEBUG) {
-                        LogUtil.e("异常：$throwable")
+                        LogUtil.e("$loadingType -> 异常：$throwable")
                     }
                     if (loadingType == 0) {
                         loadState.value = LoadState.Error(error)

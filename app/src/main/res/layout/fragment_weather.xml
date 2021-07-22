@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <me.wsj.fengyun.widget.BindBottomLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="380dp">
+                android:layout_height="wrap_content">
 
                 <me.wsj.fengyun.widget.titanic.TitanicTextView
                     android:id="@+id/tv_today_tmp"
@@ -87,11 +87,12 @@
             <include layout="@layout/layout_today_brief_info" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_forecast"
+                android:id="@+id/rv_forecast3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:layout_marginRight="6dp"
                 android:background="@drawable/shape_rect_r8_tcc_white"
                 tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -100,7 +101,9 @@
 
             <include layout="@layout/layout_forecast_hourly" />
 
-            <include layout="@layout/layout_today_detail" />
+            <include layout="@layout/layout_forecast_15d" />
+
+            <!--<include layout="@layout/layout_today_detail" />-->
 
             <include layout="@layout/layout_air_quality" />
 
@@ -108,7 +111,7 @@
 
             <include layout="@layout/layout_support" />
 
-        </LinearLayout>
+        </me.wsj.fengyun.widget.BindBottomLayout>
 
     </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

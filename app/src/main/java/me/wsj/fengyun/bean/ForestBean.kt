@@ -7,7 +7,7 @@ data class ForestBean(
 
 data class Daily(
     var cloud: String = "",
-    var fxDate: String = "",
+    var fxDate: String = "2021-01-01",
     var humidity: String = "",
     var iconDay: String = "",
     var iconNight: String = "",

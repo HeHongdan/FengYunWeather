@@ -68,9 +68,9 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
             }
         }
 
-        // 3天 天气预报
+        // 15天 天气预报
         launch {
-            val url = "https://devapi.qweather.com/v7/weather/3d"
+            val url = "https://devapi.qweather.com/v7/weather/15d"
             HttpUtils.get<ForestBean>(url, param) { _, result ->
                 forecast.value = result.daily
             }

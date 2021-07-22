@@ -66,11 +66,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         mBinding.rvTopCity.adapter = topCityAdapter
         mBinding.rvTopCity.layoutManager = layoutManager
 
-
         mBinding.tvGetPos.expand(10, 10)
-    }
-
-    override fun initEvent() {
         //编辑框输入监听
         mBinding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -94,7 +90,9 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         searchAdapter?.setOnCityCheckedListener {
             viewModel.addCity(it)
         }
+    }
 
+    override fun initEvent() {
         viewModel.cacheLocation.observe(this) {
             mBinding.tvCurLocation.visibility = View.VISIBLE
             mBinding.tvCurLocation.text = it
@@ -263,7 +261,6 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
 
     override fun onResume() {
         super.onResume()
-        LogUtil.e("onResume")
         if (requestedGPS) {
             requestedGPS = false
             if (checkGPSOpen()) {

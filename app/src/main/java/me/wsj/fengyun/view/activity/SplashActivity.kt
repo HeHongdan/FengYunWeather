@@ -1,26 +1,20 @@
 package me.wsj.fengyun.view.activity
 
 import android.Manifest
-import android.animation.Animator
 import android.os.Bundle
 import android.view.ViewPropertyAnimator
-import android.view.animation.BounceInterpolator
-import android.view.animation.DecelerateInterpolator
-import android.view.animation.LinearInterpolator
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.wsj.fengyun.R
 import me.wsj.fengyun.db.AppRepo
+import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.lib.extension.startActivity
 import per.wsj.commonlib.permission.PermissionUtil
-import per.wsj.commonlib.utils.LogUtil
+import per.wsj.commonlib.utils.DisplayUtil
 
 class SplashActivity : AppCompatActivity() {
 
@@ -42,6 +36,9 @@ class SplashActivity : AppCompatActivity() {
                 startIntent()
             }.start()
 
+
+//        ContentUtil.visibleHeight = screenSize - statusBarHeight - dp45
+
 //        animate = findViewById<ImageView>(R.id.ivLogo).animate()
 
 //        animate.apply {
@@ -61,6 +58,17 @@ class SplashActivity : AppCompatActivity() {
                 val cities = AppRepo.getInstance().getCities()
 //                LogUtil.e("time use: " + (System.currentTimeMillis() - start))
                 citySize = cities.size
+
+                val screenRealSize = DisplayUtil.getScreenRealSize(this@SplashActivity).y
+//                val navHeight =
+                val navHeight =
+                    if (ContentUtil.isNavigationBarShowing(this@SplashActivity))
+                        DisplayUtil.getNavigationBarHeight(this@SplashActivity) else 0
+
+                val statusBarHeight = DisplayUtil.getStatusBarHeight2(this@SplashActivity)
+                val dp45 = DisplayUtil.dip2px(this@SplashActivity, 45f)
+                ContentUtil.visibleHeight = screenRealSize - navHeight - statusBarHeight - dp45
+
                 delay(1000L)
             }
             if (citySize == 0) {

@@ -73,8 +73,8 @@
 
         <ImageView
             android:id="@+id/iv_setting"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:background="?android:attr/selectableItemBackground"
             android:padding="14dp"
             android:src="@mipmap/icon_set"

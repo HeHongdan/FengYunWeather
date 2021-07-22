@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingBottom="12dp"
-            android:text="@string/forecast"
+            android:text="@string/forecast_hourly"
             android:textColor="@color/color_212121"
             android:textSize="16sp"
             tools:ignore="RtlSymmetry" />
