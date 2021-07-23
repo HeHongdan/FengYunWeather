@@ -198,7 +198,7 @@ public class SunView extends View {
 
         mRectF.set(mHalfWidth - mRadius, marginTop, mHalfWidth + mRadius, mRadius * 2 + marginTop);
 
-        int height = mHalfWidth + marginTop + DisplayUtil.dip2px(mContext, 30);
+        int height = mRadius + marginTop + DisplayUtil.dip2px(mContext, 40);
 
         setMeasuredDimension(getMeasuredWidth(), height);
     }
