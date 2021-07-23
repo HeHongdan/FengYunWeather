@@ -15,17 +15,11 @@
 - 天气特效
 
 ## 预览
+![weather_info](/img/home.gif)![hourly](/img/hourly.gif)
 
-| ![weather_info](/img/home.gif) | ![add_city](/img/add_city.png) |
-| ------------------------------ | ------------------------------ |
-| ![forecast](/img/forecast.png) | ![sun_moon](/img/sun_moon.png) |
+![15dforecast](/img/15d.gif)![sun_moon](/img/sun.gif)
 
-
-
-
-
-
-
+![add_city](/img/add_city.png)![settings](/img/settings.png)
 
 
 ## TODO

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -17,9 +18,9 @@
             android:textSize="16sp"
             tools:ignore="RtlSymmetry" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="96dp">
 
             <TextView
                 android:id="@+id/tv_line_max_tmp"
@@ -30,7 +31,9 @@
                 android:layout_marginTop="8dp"
                 android:text="21°"
                 android:textColor="@color/color_ababab"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_line_min_tmp"
@@ -41,22 +44,26 @@
                 android:layout_marginBottom="8dp"
                 android:text="11°"
                 android:textColor="@color/color_ababab"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
 
             <me.wsj.fengyun.widget.horizonview.IndexHorizontalScrollView
                 android:id="@+id/horizontalScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="84dp"
-                android:layout_marginLeft="50dp">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                app:layout_constraintLeft_toRightOf="@+id/tv_line_max_tmp"
+                app:layout_constraintRight_toRightOf="parent">
 
                 <me.wsj.fengyun.widget.horizonview.HourlyForecastView
                     android:id="@+id/hourly"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
 
             </me.wsj.fengyun.widget.horizonview.IndexHorizontalScrollView>
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </merge>

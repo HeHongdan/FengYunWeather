@@ -16,22 +16,26 @@
 
 ## Preview
 
-![weather_info](/img/home.gif)
+![weather_info](/img/home.gif)![hourly](/img/hourly.gif)
 
-![add_city](/img/add_city.png)
+![15dforecast](/img/15d.gif)![sun_moon](/img/sun.gif)
 
-![forecast](/img/forecast.png)
+![add_city](/img/add_city.png)![settings](/img/settings.png)
 
-![sun_moon](/img/sun_moon.png)
+
 
 ## TODO
 
 - [ ] Widget
 - [ ] Notification
-- [ ] Prettier Weather Icons
-- [ ] Multi-City Selection
-- [x] ~~Automatic Positioning~~
-- [ ] DIY Items Interface
+- [x] background change with weather
+- [x] temp number animation effect
+- [x] background animation effect
+- [x] sun & moon
+- [x] city manager
+
+## Download
+ - click me[![](https://img.shields.io/badge/Download-apk-green.svg)](https://wangsj.oss-cn-shanghai.aliyuncs.com/fengyun/fengyun-weather-1.0.0.apk)
 
 ## License
 

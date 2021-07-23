@@ -20,7 +20,7 @@
             <me.wsj.fengyun.widget.skyview.SunView
                 android:id="@+id/sun_view"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:sun_circle_color="@color/color_ccc"
                 app:sun_circle_radius="75dp"
@@ -30,7 +30,7 @@
             <me.wsj.fengyun.widget.skyview.SunView
                 android:id="@+id/moon_view"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:sun_circle_color="@color/color_ccc"
                 app:sun_circle_radius="75dp"

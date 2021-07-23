@@ -21,7 +21,6 @@
             android:id="@+id/rv_forecast15"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:orientation="horizontal"
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_forecast15" />

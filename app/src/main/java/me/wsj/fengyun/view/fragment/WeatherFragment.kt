@@ -56,8 +56,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     private lateinit var todayBriefInfoBinding: LayoutTodayBriefInfoBinding
 
-//    private lateinit var todayDetailBinding: LayoutTodayDetailBinding
-
     private lateinit var forecastHourlyBinding: LayoutForecastHourlyBinding
 
     private lateinit var forecast15dBinding: LayoutForecast15dBinding
@@ -119,8 +117,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         forecastHourlyBinding = LayoutForecastHourlyBinding.bind(mBinding.root)
 
         forecast15dBinding = LayoutForecast15dBinding.bind(mBinding.root)
-
-//        todayDetailBinding = LayoutTodayDetailBinding.bind(mBinding.root)
 
         sunMoonBinding = LayoutSunMoonBinding.bind(mBinding.root)
 
@@ -207,7 +203,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         todayBriefInfoBinding.tvWindScale.text = now.windDir + now.windScale + "级"
         todayBriefInfoBinding.tvPressure.text = now.pressure + "hpa"
 
-
     }
 
     /**
@@ -231,7 +226,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         mForecastAdapter3d?.notifyDataSetChanged()
         var min = forecastBase.tempMin.toInt()
         var max = forecastBase.tempMax.toInt()
-        dailyForecast.forEach {
+        mForecastList.forEach {
             min = Math.min(it.tempMin.toInt(), min)
             max = Math.max(it.tempMax.toInt(), max)
         }

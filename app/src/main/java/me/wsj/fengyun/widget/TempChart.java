@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import me.wsj.fengyun.R;
 import me.wsj.fengyun.bean.Daily;
 import per.wsj.commonlib.utils.DisplayUtil;
+import per.wsj.commonlib.utils.LogUtil;
 
 public class TempChart extends View {
 
@@ -76,6 +77,7 @@ public class TempChart extends View {
 
 
     public void setData(int minTemp, int maxTemp, Daily prev, Daily current, Daily next) {
+//        LogUtil.e("min: " + minTemp + " max:" + maxTemp + " prev:" + prev + " curr: " + current + " next: " + next);
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
         this.lowTemp = Integer.parseInt(current.getTempMin());
@@ -91,13 +93,17 @@ public class TempChart extends View {
         highTextWidth = (int) mTextPaint.measureText(highText);
 
         tempDiff = maxTemp - minTemp;
+
+        if (usableHeight != 0) {
+            density = usableHeight / (float) tempDiff;
+        }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        mHalfWidth = getMeasuredWidth()/2f;
+        mHalfWidth = getMeasuredWidth() / 2f;
         mHeight = getMeasuredHeight();
 
         usableHeight = (int) (mHeight - topBottom * 2 - textHeight * 2);

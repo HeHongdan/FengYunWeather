@@ -27,6 +27,7 @@ import me.wsj.fengyun.utils.ContentUtil;
 import me.wsj.lib.utils.IconUtils;
 import me.wsj.fengyun.utils.WeatherUtil;
 import per.wsj.commonlib.utils.DisplayUtil;
+import per.wsj.commonlib.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,7 +55,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     private Paint bitmapPaint;
 
     //文本的大小
-    private int textSize;
+    private int textHeight;
 
     //数据
     private List<Hourly> hourlyWeatherList;
@@ -91,11 +92,12 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     private int paddingL = 0;
     private int paddingT = 0;
     private int paddingR = 0;
-    private int paddingB = 0;
 
     private int mScrollX = 0;
     private float baseLineHeight;
     private Paint paint1;
+
+    private static int ITEM_SIZE = 24;
 
 
     public HourlyForecastView(Context context) {
@@ -125,11 +127,8 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         initPaint();
     }
 
-    private static int ITEM_SIZE = 24;
-
 
     public void initData(List<Hourly> weatherData) {
-
         hourlyWeatherList = weatherData;
         int size = weatherData.size();
         ITEM_SIZE = size;
@@ -139,7 +138,6 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         Iterator iterator = weatherData.iterator();
         Hourly hourlyBase;
         String lastText = "";
-
 
         int idx = 0;
         while (iterator.hasNext()) {
@@ -173,8 +171,6 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         paddingL = DisplayUtil.dip2px(mContext, 10);
         paddingR = DisplayUtil.dip2px(mContext, 15);
 
-        textSize = DisplayUtil.sp2px(mContext, 12);
-
         bitmapHeight = 1 / 2f * (2 * defHeightPixel - lowestTempHeight) + DisplayUtil.dip2px(mContext, 2);//- 给文字留地方
         bitmapXY = 18;
     }
@@ -205,13 +201,16 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         dashPaint.setStrokeWidth(DisplayUtil.dip2px(mContext, 1));
         dashPaint.setStyle(Paint.Style.STROKE);
 
+        int textSize = DisplayUtil.sp2px(mContext, 12);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(textSize);
         textPaint.setColor(mContext.getResources().getColor(R.color.search_light_un_color));
 
+        textHeight = (int) (textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top);
+
         textLinePaint = new TextPaint();
-        textLinePaint.setTextSize(DisplayUtil.sp2px(getContext(), 12));
+        textLinePaint.setTextSize(textSize);
         textLinePaint.setAntiAlias(true);
         textLinePaint.setColor(mContext.getResources().getColor(R.color.black));
 
@@ -229,46 +228,21 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        //当设置的padding值小于默认值是设置为默认值
-        paddingT = DisplayUtil.dip2px(mContext, 20);
-        paddingL = DisplayUtil.dip2px(mContext, 10);
-        paddingR = DisplayUtil.dip2px(mContext, 15);
-        paddingB = Math.max(paddingB, getPaddingBottom());
-
-        //获取测量模式
-        //注意 HorizontalScrollView的子View 在没有明确指定dp值的情况下 widthMode总是MeasureSpec.UNSPECIFIED
-        //同理 ScrollView的子View的heightMode
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-
         //获取测量大小
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-
-        if (widthMode == MeasureSpec.EXACTLY && heightMode == MeasureSpec.EXACTLY) {
-            mWidth = widthSize + paddingL + paddingR;
-            mHeight = heightSize;
-        }
-
-        //如果为wrap_content 那么View大小为默认值
-        if (widthMode == MeasureSpec.UNSPECIFIED && heightMode == MeasureSpec.AT_MOST) {
-            mWidth = defWidthPixel + paddingL + paddingR;
-            mHeight = defHeightPixel + paddingT + paddingB;
-        }
+        mWidth = defWidthPixel + paddingL + paddingR;
+        mHeight = heightSize;
 
         //设置视图的大小
         setMeasuredDimension(mWidth, mHeight);
-
     }
 
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        initDefValue();
-        initPaint();
+
         if (hourlyWeatherList != null && hourlyWeatherList.size() != 0) {
             drawLines(canvas);
             drawBitmaps(canvas);
@@ -300,7 +274,6 @@ public class HourlyForecastView extends View implements ScrollWatcher {
     }
 
     private void drawBitmaps(Canvas canvas) {
-
         int scrollX = mScrollX;
         boolean leftHide;
         boolean rightHide;
@@ -353,10 +326,8 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
             assert bd != null;
             Bitmap bitmap = WeatherUtil.bitmapResize(bd.getBitmap(), DisplayUtil.dip2px(mContext, bitmapXY), DisplayUtil.dip2px(mContext, bitmapXY));
-//            Bitmap bitmap = DisplayUtil.bitmapResize(bd.getBitmap(),
-//                    DisplayUtil.dip2px(mContext, bitmapXY), DisplayUtil.dip2px(mContext, bitmapXY));
 
-            //越界判断
+            // 越界判断
             if (drawPoint >= right - bitmap.getWidth() / 2f) {
                 drawPoint = right - bitmap.getWidth() / 2f;
             }
@@ -365,10 +336,6 @@ public class HourlyForecastView extends View implements ScrollWatcher {
             }
 
             drawBitmap(canvas, bitmap, drawPoint, bitmapHeight);
-//            String text = hourlyWeatherList.get(dashLineList.get(i)).getCond_txt();
-//            textPaint.setTextSize(DisplayUtil.sp2px(mContext, 8));
-//            canvas.drawText(text, drawPoint, bitmapHeight + bitmap.getHeight() + 100 / 3f, textPaint);
-
         }
 
     }
@@ -382,7 +349,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
     private void drawLines(Canvas canvas) {
         //底部的线的高度 高度为控件高度减去text高度的1.5倍
-        baseLineHeight = mHeight - 1.5f * textSize;
+        baseLineHeight = mHeight - 1.5f * textHeight;
         Path path = new Path();
         List<Float> dashWidth = new ArrayList<>();
         List<Float> dashHeight = new ArrayList<>();
@@ -516,14 +483,14 @@ public class HourlyForecastView extends View implements ScrollWatcher {
                     } else {
                         textPaint.setTextAlign(Paint.Align.CENTER);
                     }
-                    canvas.drawText(time.substring(time.length() - 11, time.length() - 6), w, baseLineHeight + textSize + DisplayUtil.dip2px(mContext, 3), textPaint);
+                    canvas.drawText(time.substring(time.length() - 11, time.length() - 6), w, baseLineHeight + textHeight + DisplayUtil.dip2px(mContext, 3) , textPaint);
                 }
             } else {
                 textPaint.setTextAlign(Paint.Align.CENTER);
                 if (i == 0) {
-                    canvas.drawText(mContext.getString(R.string.now), w, baseLineHeight + textSize + DisplayUtil.dip2px(mContext, 3), textPaint);
+                    canvas.drawText(mContext.getString(R.string.now), w, baseLineHeight + textHeight + DisplayUtil.dip2px(mContext, 3), textPaint);
                 } else {
-                    canvas.drawText(time.substring(time.length() - 11, time.length() - 6), w, baseLineHeight + textSize + DisplayUtil.dip2px(mContext, 3), textPaint);
+                    canvas.drawText(time.substring(time.length() - 11, time.length() - 6), w, baseLineHeight + textHeight + DisplayUtil.dip2px(mContext, 3), textPaint);
                 }
             }
         }

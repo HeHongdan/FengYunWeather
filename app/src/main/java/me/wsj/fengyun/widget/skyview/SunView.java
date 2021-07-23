@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.text.TextUtils;
@@ -18,7 +17,6 @@ import androidx.annotation.Nullable;
 import java.text.DecimalFormat;
 
 import me.wsj.fengyun.R;
-import me.wsj.fengyun.utils.ContentUtil;
 import me.wsj.fengyun.utils.WeatherUtil;
 import per.wsj.commonlib.utils.DisplayUtil;
 import per.wsj.commonlib.utils.LogUtil;
@@ -26,13 +24,13 @@ import per.wsj.commonlib.utils.LogUtil;
 public class SunView extends View {
 
     /**
-     * view宽度
+     * view宽度/2
      */
-    private int mWidth;
+    private int mHalfWidth;
     /**
      * 离顶部的高度
      */
-    private int marginTop = 30;
+    private int marginTop;
     private int mCircleColor;  //圆弧颜色
     private int mFontColor;  //字体颜色
     private int mRadius;  //圆的半径
@@ -101,7 +99,7 @@ public class SunView extends View {
 
     private void initView(Context context, @Nullable AttributeSet attrs) {
         mContext = context;
-        marginTop = DisplayUtil.dip2px(context, 20);
+        marginTop = DisplayUtil.dip2px(context, 12);
 
         TypedArray type = context.obtainStyledAttributes(attrs, R.styleable.SunAnimationView);
         mCircleColor = type.getColor(R.styleable.SunAnimationView_sun_circle_color, getContext().getResources().getColor(R.color.sun_line_color));
@@ -192,13 +190,17 @@ public class SunView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        mWidth = getMeasuredWidth();
+        mHalfWidth = getMeasuredWidth() >> 1;
         // start x of sun
-        positionX = (mWidth >> 1) - mRadius - DisplayUtil.dip2px(mContext, 9);
+        positionX = mHalfWidth - mRadius - DisplayUtil.dip2px(mContext, 9);
         // start y of sun
         positionY = mRadius + marginTop - (mSunIcon.getHeight() >> 1);
 
-        mRectF.set((mWidth >> 1) - mRadius, marginTop, (mWidth >> 1) + mRadius, mRadius * 2 + marginTop);
+        mRectF.set(mHalfWidth - mRadius, marginTop, mHalfWidth + mRadius, mRadius * 2 + marginTop);
+
+        int height = mHalfWidth + marginTop + DisplayUtil.dip2px(mContext, 30);
+
+        setMeasuredDimension(getMeasuredWidth(), height);
     }
 
     @Override
@@ -209,14 +211,14 @@ public class SunView extends View {
         canvas.drawArc(mRectF, 180, 180, false, mCirclePaint);
 
         // step2：draw bottom line
-        canvas.drawLine(mWidth / 2 - mRadius - lineBias, mRadius + marginTop, mWidth / 2 + mRadius + lineBias, mRadius + marginTop, mLinePaint);
+        canvas.drawLine(mHalfWidth - mRadius - lineBias, mRadius + marginTop, mHalfWidth + mRadius + lineBias, mRadius + marginTop, mLinePaint);
 
         // step3：draw text
         drawText(canvas);
 
         // step4：draw sun/moon
         canvas.save();
-        canvas.rotate(mCurrentAngle, mWidth / 2, mRadius + marginTop);
+        canvas.rotate(mCurrentAngle, mHalfWidth, mRadius + marginTop);
         canvas.drawBitmap(mSunIcon, positionX, positionY, mPathPaint);
         canvas.restore();
     }
@@ -236,11 +238,12 @@ public class SunView extends View {
             sunrise = "月出";
             sunset = "月落";
         }
+        int dp8 = DisplayUtil.dip2px(mContext, 8);
 
-        canvas.drawText(sunrise, mWidth / 2 - mRadius + DisplayUtil.dip2px(mContext, 8), mRadius + DisplayUtil.dip2px(mContext, 16) + marginTop, mTextPaint);
-        canvas.drawText(startTime, mWidth / 2 - mRadius + DisplayUtil.dip2px(mContext, 8), mRadius + DisplayUtil.dip2px(mContext, 32) + marginTop, mTimePaint);
-        canvas.drawText(sunset, mWidth / 2 + mRadius - DisplayUtil.dip2px(mContext, 8), mRadius + DisplayUtil.dip2px(mContext, 16) + marginTop, mTextPaint);
-        canvas.drawText(endTime, mWidth / 2 + mRadius - DisplayUtil.dip2px(mContext, 8), mRadius + DisplayUtil.dip2px(mContext, 32) + marginTop, mTimePaint);
+        canvas.drawText(sunrise, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dip2px(mContext, 20) + marginTop, mTextPaint);
+        canvas.drawText(startTime, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dip2px(mContext, 36) + marginTop, mTimePaint);
+        canvas.drawText(sunset, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dip2px(mContext, 20) + marginTop, mTextPaint);
+        canvas.drawText(endTime, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dip2px(mContext, 36) + marginTop, mTimePaint);
     }
 
     /**
@@ -359,17 +362,8 @@ public class SunView extends View {
         sunAnimator.addUpdateListener(animation -> {
             //每次要绘制的圆弧角度
             mCurrentAngle = (float) animation.getAnimatedValue();
-//            LogUtil.e("mCurrentAngle: " + mCurrentAngle);
             invalidate();
-//            invalidateView(mCurrentAngle);
         });
         sunAnimator.start();
-    }
-
-    private void invalidateView(float angle) {
-        //绘制太阳的x坐标和y坐标
-        positionX = mWidth / 2 - (float) (mRadius * Math.cos((angle) * Math.PI / 180)) - DisplayUtil.dip2px(mContext, 8);
-        positionY = mRadius - (float) (mRadius * Math.sin((angle) * Math.PI / 180)) + DisplayUtil.dip2px(mContext, 16);
-        invalidate();
     }
 }
