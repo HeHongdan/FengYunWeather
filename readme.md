@@ -33,7 +33,7 @@
 - [x] 城市管理（定位添加）
 
 ## 下载体验
- - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://wangsj.oss-cn-shanghai.aliyuncs.com/fengyun/fengyun-weather-1.0.0.apk)
+ - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://wangsj.oss-cn-shanghai.aliyuncs.com/fengyun/fengyun-weather-1.0.1.apk)
  - 下方二维码下载(每日上限100次，如达到上限，还是 clone 源码吧！✧(≖ ◡ ≖✿))）<br/>
    <img src="https://www.pgyer.com/app/qrcode/ENha"/>
 

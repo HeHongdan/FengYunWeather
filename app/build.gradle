@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
+//    id 'per.wsj.plugin.PublishPlugin'
 }
 
 android {
@@ -15,7 +16,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.1"
 
         multiDexEnabled true
 
