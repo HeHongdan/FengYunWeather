@@ -35,11 +35,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FengYunWeather.NoActionBar">
         <activity
-            android:name=".view.activity.HomeActivity"
+            android:name="me.wsj.fengyun.ui.activity.HomeActivity"
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".view.activity.SplashActivity"
+            android:name="me.wsj.fengyun.ui.activity.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -67,11 +67,11 @@
             android:permission="android.permission.ACCESS_FINE_LOCATION" />
 
         <activity
-            android:name=".view.activity.SettingsActivity"
+            android:name="me.wsj.fengyun.ui.activity.SettingsActivity"
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".view.activity.CityManagerActivity"
+            android:name="me.wsj.fengyun.ui.activity.CityManagerActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="me.wsj.fengyun.CITY_CONTROL" />
@@ -81,11 +81,11 @@
         </activity>
 
         <activity
-            android:name=".view.activity.AboutActivity"
+            android:name="me.wsj.fengyun.ui.activity.AboutActivity"
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".view.activity.AddCityActivity"
+            android:name="me.wsj.fengyun.ui.activity.AddCityActivity"
             android:launchMode="singleTask" />
     </application>
 

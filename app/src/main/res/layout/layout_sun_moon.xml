@@ -17,7 +17,7 @@
             android:layout_marginTop="24dp"
             android:orientation="horizontal">
 
-            <me.wsj.fengyun.widget.skyview.SunView
+            <me.wsj.fengyun.view.skyview.SunView
                 android:id="@+id/sun_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -27,7 +27,7 @@
                 app:sun_font_color="@color/color_666"
                 app:sun_font_size="12sp" />
 
-            <me.wsj.fengyun.widget.skyview.SunView
+            <me.wsj.fengyun.view.skyview.SunView
                 android:id="@+id/moon_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

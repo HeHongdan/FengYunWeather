@@ -15,7 +15,7 @@
 
         <!--<intent
             android:action="me.wsj.fengyun.CITY_CONTROL"
-            android:targetClass="me.wsj.fengyun.view.activity.CityControlActivity"
+            android:targetClass="me.wsj.fengyun.ui.activity.CityControlActivity"
             android:targetPackage="me.wsj.fengyun" />-->
 
     </Preference>

@@ -41,7 +41,7 @@
         app:tint="@color/color_666"
         tools:src="@mipmap/icon_100d" />
 
-    <me.wsj.fengyun.widget.TempChart
+    <me.wsj.fengyun.view.TempChart
         android:id="@+id/tempChart"
         android:layout_width="match_parent"
         android:layout_height="140dp"

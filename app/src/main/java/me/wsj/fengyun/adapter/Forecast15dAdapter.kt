@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Daily
-import me.wsj.fengyun.widget.TempChart
+import me.wsj.fengyun.view.TempChart
 import me.wsj.lib.utils.IconUtils
 import java.util.*
 

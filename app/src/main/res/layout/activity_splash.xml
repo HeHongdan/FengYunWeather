@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/welcome_bg"
-    tools:context=".view.activity.SplashActivity">
+    tools:context=".ui.activity.SplashActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
