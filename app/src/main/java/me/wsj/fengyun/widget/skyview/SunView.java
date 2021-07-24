@@ -4,22 +4,19 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import java.text.DecimalFormat;
 
 import me.wsj.fengyun.R;
-import me.wsj.fengyun.utils.WeatherUtil;
+import per.wsj.commonlib.utils.BitmapUtil;
 import per.wsj.commonlib.utils.DisplayUtil;
 import per.wsj.commonlib.utils.LogUtil;
 
@@ -85,6 +82,8 @@ public class SunView extends View {
 
     private Bitmap mSunIcon; //太阳图片
 
+    private int iconSize;
+
 
     public SunView(Context context) {
         this(context, null);
@@ -142,12 +141,12 @@ public class SunView extends View {
         mCirclePaint.setStyle(Paint.Style.STROKE);
         mCirclePaint.setColor(mCircleColor);
 
+        iconSize = DisplayUtil.dip2px(mContext, 18);
         if (isSun) {
-            mSunIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_sun);
+            mSunIcon = BitmapUtil.compressBySize(getContext(), R.mipmap.icon_sun, iconSize, iconSize);
         } else {
-            mSunIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_moon);
+            mSunIcon = BitmapUtil.compressBySize(getContext(), R.mipmap.icon_moon, iconSize, iconSize);
         }
-        mSunIcon = WeatherUtil.bitmapResize(mSunIcon, DisplayUtil.dip2px(mContext, 18), DisplayUtil.dip2px(mContext, 18));
 
         lineBias = DisplayUtil.dip2px(mContext, 10);
     }
@@ -200,7 +199,7 @@ public class SunView extends View {
 
         mRectF.set(mHalfWidth - mRadius, marginTop, mHalfWidth + mRadius, mRadius * 2 + marginTop);
 
-        int height = mRadius + marginTop + DisplayUtil.dip2px(mContext, 36);
+        int height = mRadius + marginTop + DisplayUtil.dip2px(mContext, 40);
 
         setMeasuredDimension(getMeasuredWidth(), height);
     }
@@ -231,6 +230,7 @@ public class SunView extends View {
      * @param canvas
      */
     private void drawText(Canvas canvas) {
+
         String startTime = TextUtils.isEmpty(mStartTime) ? "" : mStartTime;
         String endTime = TextUtils.isEmpty(mEndTime) ? "" : mEndTime;
         String sunrise = "日出";
@@ -241,10 +241,10 @@ public class SunView extends View {
         }
         int dp8 = DisplayUtil.dip2px(mContext, 8);
 
-        canvas.drawText(sunrise, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dip2px(mContext, 20) + marginTop, mTextPaint);
-        canvas.drawText(startTime, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dip2px(mContext, 36) + marginTop, mTimePaint);
-        canvas.drawText(sunset, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dip2px(mContext, 20) + marginTop, mTextPaint);
-        canvas.drawText(endTime, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dip2px(mContext, 36) + marginTop, mTimePaint);
+        canvas.drawText(sunrise, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dip2px(mContext, 21) + marginTop, mTextPaint);
+        canvas.drawText(startTime, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dip2px(mContext, 37) + marginTop, mTimePaint);
+        canvas.drawText(sunset, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dip2px(mContext, 21) + marginTop, mTextPaint);
+        canvas.drawText(endTime, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dip2px(mContext, 37) + marginTop, mTimePaint);
     }
 
     /**
