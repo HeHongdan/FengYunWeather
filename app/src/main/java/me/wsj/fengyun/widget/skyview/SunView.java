@@ -8,11 +8,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import java.text.DecimalFormat;
 
@@ -198,7 +200,7 @@ public class SunView extends View {
 
         mRectF.set(mHalfWidth - mRadius, marginTop, mHalfWidth + mRadius, mRadius * 2 + marginTop);
 
-        int height = mHalfWidth + marginTop + DisplayUtil.dip2px(mContext, 30);
+        int height = mRadius + marginTop + DisplayUtil.dip2px(mContext, 36);
 
         setMeasuredDimension(getMeasuredWidth(), height);
     }
@@ -229,7 +231,6 @@ public class SunView extends View {
      * @param canvas
      */
     private void drawText(Canvas canvas) {
-
         String startTime = TextUtils.isEmpty(mStartTime) ? "" : mStartTime;
         String endTime = TextUtils.isEmpty(mEndTime) ? "" : mEndTime;
         String sunrise = "日出";
