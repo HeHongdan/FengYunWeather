@@ -77,4 +77,19 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="ThemeOverlay.FengYunWeather.AppWidgetContainer" parent="">
+        <item name="appWidgetBackgroundColor">@android:color/transparent</item>
+        <item name="appWidgetTextColor">@color/light_blue_50</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="widget_text_style">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">?attr/appWidgetTextColor</item>
+        <item name="android:shadowColor">#ff000000</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+    </style>
+
 </resources>

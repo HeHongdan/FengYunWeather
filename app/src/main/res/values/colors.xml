@@ -144,5 +144,9 @@
     <color name="moon_light_circle">#33446FF2</color>
     <color name="sun_dark_circle">#33AD9442</color>
     <color name="moon_dark_circle">#334A5CC4</color>
+    <color name="light_blue_50">#FFE1F5FE</color>
+    <color name="light_blue_200">#FF81D4FA</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
 
 </resources>
