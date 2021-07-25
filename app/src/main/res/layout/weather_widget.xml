@@ -43,7 +43,6 @@
                 style="@style/widget_text_style"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/clockTime"
                 android:layout_weight="1"
                 android:format24Hour="MM月dd日"
                 tools:text="7月24日" />
@@ -58,17 +57,23 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvLunarDate"
-            style="@style/widget_text_style"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/llCalendar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/clockWeek"
-            android:layout_alignParentLeft="true"
-            android:background="?attr/appWidgetBackgroundColor"
-            android:gravity="center_vertical|left"
-            tools:text="六月十五日" />
+            android:gravity="center_vertical">
 
+            <TextView
+                android:id="@+id/tvLunarDate"
+                style="@style/widget_text_style"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/appWidgetBackgroundColor"
+                android:gravity="center_vertical|left"
+                tools:text="六月十五" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -89,8 +94,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tvWeather"
@@ -108,12 +112,22 @@
                 android:text="24°C" />
         </LinearLayout>
 
-        <TextView
+        <!--<TextView
             android:id="@+id/tvTempRange"
             style="@style/widget_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20~25°C" />
+            android:text="20~25°C" />-->
+
+        <TextView
+            android:id="@+id/tvLocation"
+            style="@style/widget_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            tools:text="浦东新区" />
 
     </LinearLayout>
 
