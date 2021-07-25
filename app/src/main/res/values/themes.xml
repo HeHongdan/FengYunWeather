@@ -83,13 +83,19 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="widget_text_style">
-        <item name="android:textSize">15sp</item>
+
+
+    <style name="widget_text_style_base">
         <item name="android:textColor">?attr/appWidgetTextColor</item>
-        <item name="android:shadowColor">#ff000000</item>
-        <item name="android:shadowRadius">1</item>
+        <item name="android:shadowColor">#99000000</item>
+        <item name="android:shadowRadius">2</item>
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
+    </style>
+
+
+    <style name="widget_text_style" parent="widget_text_style_base">
+        <item name="android:textSize">15sp</item>
     </style>
 
 </resources>

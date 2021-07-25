@@ -9,7 +9,8 @@
     android:paddingRight="@dimen/widget_horizontal_padding"
     android:paddingBottom="@dimen/widget_vertical_padding"
     android:theme="@style/ThemeOverlay.FengYunWeather.AppWidgetContainer"
-    tools:background="@color/light_blue_600">
+    tools:background="@color/light_blue_600"
+    tools:viewBindingIgnore="true">
 
 
     <LinearLayout
@@ -19,22 +20,22 @@
 
         <TextClock
             android:id="@+id/clockTime"
+            style="@style/widget_text_style_base"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
             android:format24Hour="HH:mm"
             android:gravity="center_vertical"
-            android:textColor="?attr/appWidgetTextColor"
             android:textSize="56sp"
             android:textStyle="normal"
             tools:text="12:00" />
 
         <LinearLayout
+            android:id="@+id/llCalendar"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical">
 
             <TextClock
@@ -61,10 +62,9 @@
             android:id="@+id/tvLunarDate"
             style="@style/widget_text_style"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/clockWeek"
             android:layout_alignParentLeft="true"
-            android:layout_weight="1"
             android:background="?attr/appWidgetBackgroundColor"
             android:gravity="center_vertical|left"
             tools:text="六月十五日" />
@@ -72,6 +72,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llWeather"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
@@ -80,8 +81,9 @@
         <ImageView
             android:id="@+id/ivWeather"
             android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="0dp"
             android:layout_marginTop="13dp"
+            android:layout_weight="1"
             android:src="@mipmap/icon_100d"
             android:tint="?attr/appWidgetTextColor" />
 
@@ -106,13 +108,11 @@
                 android:text="24°C" />
         </LinearLayout>
 
-
         <TextView
             android:id="@+id/tvTempRange"
             style="@style/widget_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="20~25°C" />
 
     </LinearLayout>
