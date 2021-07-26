@@ -60,9 +60,12 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
+    /**
+     * 这里基本没用了，都放在service中即可
+     */
     // Construct the RemoteViews object
-    val views = RemoteViews(context.packageName, R.layout.weather_widget)
-    views.setTextViewText(R.id.tvLunarDate, Lunar(Calendar.getInstance()).toString())
+    /*val views = RemoteViews(context.packageName, R.layout.weather_widget)
+//    views.setTextViewText(R.id.tvLunarDate, Lunar(Calendar.getInstance()).toString())
 
     val calendarIntent = Intent()
     val pkg =
@@ -84,5 +87,5 @@ internal fun updateAppWidget(
     views.setOnClickPendingIntent(R.id.llWeather, weatherPI)
 
     // Instruct the widget manager to update the widget
-    appWidgetManager.updateAppWidget(appWidgetId, views)
+    appWidgetManager.updateAppWidget(appWidgetId, views)*/
 }

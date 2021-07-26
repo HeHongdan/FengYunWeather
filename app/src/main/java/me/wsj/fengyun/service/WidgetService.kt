@@ -1,6 +1,7 @@
 package me.wsj.fengyun.service
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
@@ -17,7 +18,11 @@ import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Now
 import me.wsj.fengyun.bean.WeatherNow
 import me.wsj.fengyun.db.AppRepo
+import me.wsj.fengyun.ui.activity.HomeActivity
 import me.wsj.fengyun.ui.fragment.CACHE_WEATHER_NOW
+import me.wsj.fengyun.utils.Lunar
+import me.wsj.fengyun.utils.NotificationUtil
+import me.wsj.fengyun.utils.RomUtil
 import me.wsj.fengyun.widget.WeatherWidget
 import me.wsj.lib.net.HttpUtils
 import me.wsj.lib.utils.IconUtils
@@ -36,7 +41,7 @@ class WidgetService : LifecycleService() {
         super.onCreate()
         LogUtil.e("onCreate: ---------------------")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1, Notification())
+            startForeground(1, NotificationUtil.createNotification(this, "", "", 999))
         }
         lifecycleScope.launch(Dispatchers.IO) {
             while (true) {
@@ -86,9 +91,43 @@ class WidgetService : LifecycleService() {
             views.setTextViewText(R.id.tvTemp, it.temp + "°C")
             views.setImageViewResource(R.id.ivWeather, IconUtils.getDayIconDark(this, it.icon))
         }
+        views.setTextViewText(R.id.tvLunarDate, Lunar(Calendar.getInstance()).toString())
+
+        initEvent(views)
 
         val componentName = ComponentName(this, WeatherWidget::class.java)
         AppWidgetManager.getInstance(this).updateAppWidget(componentName, views);
+    }
+
+    /**
+     * 点击事件相关
+     */
+    private fun initEvent(views: RemoteViews) {
+        // 日历
+        val calendarIntent = Intent()
+        val pkg =
+            if (Build.VERSION.SDK_INT >= 8) "com.android.calendar" else "com.google.android.calendar"
+        calendarIntent.component = ComponentName(pkg, "com.android.calendar.LaunchActivity")
+
+        val calendarPI = PendingIntent.getActivity(this, 0, calendarIntent, 0)
+        views.setOnClickPendingIntent(R.id.llCalendar, calendarPI)
+        views.setOnClickPendingIntent(R.id.tvLunarDate, calendarPI)
+
+        // 时钟
+        val clockIntent = Intent()
+        LogUtil.e("brand: " + Build.BOARD)
+        val cls = if (RomUtil.isEmui()) "com.android.deskclock.AlarmsMainActivity"
+        else "com.android.deskclock.DeskClock"
+
+        clockIntent.component =
+            ComponentName("com.android.deskclock", cls)
+        val timePI = PendingIntent.getActivity(this, 0, clockIntent, 0)
+        views.setOnClickPendingIntent(R.id.clockTime, timePI)
+
+        // 风云
+        val weatherIntent = Intent(this, HomeActivity::class.java)
+        val weatherPI = PendingIntent.getActivity(this, 0, weatherIntent, 0)
+        views.setOnClickPendingIntent(R.id.llWeather, weatherPI)
     }
 
     override fun onDestroy() {
