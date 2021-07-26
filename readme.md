@@ -1,6 +1,6 @@
 # FengYunWeather 风云天气
 
-风停了云知道,雨停了风云知道。**FengYunWeather** 是一个开源的android 天气app，使用kotlin语言编写，采用MVVM架构，使用了kotlin协程，OkHttp，coil，Room等框架，代码逻辑非常清晰，适合新手入门，以及老手参考交流。
+风停了云知道，天晴了风云知道。**FengYunWeather** 是一个开源的android 天气app，使用kotlin语言编写，采用MVVM架构，使用了kotlin协程，OkHttp，coil，Room等框架，代码逻辑非常清晰，适合新手入门，以及老手参考交流。
 
 
 
@@ -24,7 +24,7 @@
 
 ## TODO
 
-- [ ] 通知栏提醒
+- [x] 通知栏提醒
 - [x] 桌面小部件
 - [x] 背景根据天气自动切换
 - [x] 气温数字特效
@@ -50,7 +50,7 @@
 
 ## 下载体验
 
- - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://wangsj.oss-cn-shanghai.aliyuncs.com/fengyun/fengyun-weather-1.0.3.apk)
+ - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://wangsj.oss-cn-shanghai.aliyuncs.com/fengyun/fengyun-weather-1.0.5.apk)
  - 下方二维码下载(每日上限100次，如达到上限，还是 clone 源码吧！✧(≖ ◡ ≖✿))）<br/>
    <img src="https://www.pgyer.com/app/qrcode/ENha"/>
 

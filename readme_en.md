@@ -26,7 +26,7 @@
 
 ## TODO
 
-- [ ] Notification
+- [x] Notification
 - [x] Widget
 - [x] background change with weather
 - [x] temp number animation effect

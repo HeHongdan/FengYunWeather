@@ -10,11 +10,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.SparseArray;
+import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
 import me.wsj.fengyun.R;
+import me.wsj.fengyun.bean.Now;
 import me.wsj.fengyun.ui.activity.HomeActivity;
+import me.wsj.lib.utils.IconUtils;
 
 
 public class NotificationUtil {
@@ -24,51 +27,54 @@ public class NotificationUtil {
 
     private static SparseArray<NotificationCompat.Builder> notificationMap = new SparseArray<>();
 
-    private static NotificationManager notificationManager;
-
-
-    private static NotificationManager initNotificationManager(Context context) {
-        if (notificationManager == null) {
-            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-
-        return notificationManager;
+    private static NotificationManager getNotificationManager(Context context) {
+        return (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     /**
-     * 创建进度通知栏
+     * 创建或更新
      *
      * @param context
-     * @param title
-     * @param content
-     * @param icon
+     * @param notifyId
+     * @return
      */
-    public static void createProgressNotification(Context context, String title, String content, int icon, int notifyId) {
-        initNotificationManager(context);
-
-        NotificationCompat.Builder builder = initBaseBuilder(context, title, content, icon);
-        builder.setOngoing(true);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            Intent intent = new Intent();
+    public static Notification createNotification(Context context, int notifyId) {
+        NotificationCompat.Builder builder = notificationMap.get(notifyId);
+        if (builder == null) {
+            builder = initBaseBuilder(context, "", "", R.mipmap.ic_launcher_round);
+            // 点击事件
+            Intent intent = new Intent(context, HomeActivity.class);
             PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
             builder.setContentIntent(contentIntent);
+            notificationMap.put(notifyId, builder);
         }
+        // 布局
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.layout_weather_notify);
+        builder.setCustomContentView(views);
 
-        notificationManager.notify(notifyId, builder.build());
+        Notification notification = builder.build();
 
-        notificationMap.put(notifyId, builder);
+        return notification;
     }
 
-    public static Notification createNotification(Context context, String title, String content, int notifyId) {
-        initNotificationManager(context);
+    public static void updateNotification(Context context, int notifyId, String cityName, Now now) {
+        NotificationCompat.Builder builder = notificationMap.get(notifyId);
+        if (builder == null) {
+            return;
+        }
 
-        NotificationCompat.Builder builder = initBaseBuilder(context, title, content, R.drawable.ic_launcher_foreground);
-//        builder.setOngoing(true);
-        Intent intent = new Intent(context, HomeActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        builder.setContentIntent(contentIntent);
+        // 布局
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.layout_weather_notify);
+        builder.setCustomContentView(views);
 
-        return builder.build();
+        views.setTextViewText(R.id.tvLocation, cityName);
+        if (now != null) {
+            views.setTextViewText(R.id.tvWeather, now.getText());
+            views.setTextViewText(R.id.tvTemp, now.getTemp() + "°C");
+            views.setImageViewResource(R.id.ivWeather, IconUtils.getDayIconDark(context, now.getIcon()));
+        }
+
+        getNotificationManager(context).notify(notifyId, builder.build());
     }
 
 
@@ -92,11 +98,13 @@ public class NotificationUtil {
 //            channel.enableVibration(true);  // 是否震动
             channel.shouldShowLights();//是否会闪光
 
-            notificationManager.createNotificationChannel(channel);
+            getNotificationManager(context).createNotificationChannel(channel);
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(content)
+                // 是否常驻,true为常驻
+                .setOngoing(true)
                 .setSmallIcon(icon)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), icon))
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -104,12 +112,30 @@ public class NotificationUtil {
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis());
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            builder.setSmallIcon(R.drawable.ic_launcher_foreground);
-//        } else {
-//            builder.setSmallIcon(icon);
-//        }
         return builder;
+    }
+
+
+    /**
+     * 创建进度通知栏
+     *
+     * @param context
+     * @param title
+     * @param content
+     * @param icon
+     */
+    public static void createProgressNotification(Context context, String title, String content, int icon, int notifyId) {
+        NotificationCompat.Builder builder = initBaseBuilder(context, title, content, icon);
+        builder.setOngoing(true);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            Intent intent = new Intent();
+            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            builder.setContentIntent(contentIntent);
+        }
+
+        getNotificationManager(context).notify(notifyId, builder.build());
+
+        notificationMap.put(notifyId, builder);
     }
 
     /**
@@ -117,8 +143,8 @@ public class NotificationUtil {
      *
      * @param notifyId
      */
-    public static void cancelNotification(int notifyId) {
-        notificationManager.cancel(notifyId);
+    public static void cancelNotification(Context context, int notifyId) {
+        getNotificationManager(context).cancel(notifyId);
         notificationMap.remove(notifyId);
     }
 
@@ -128,10 +154,10 @@ public class NotificationUtil {
      * @param notifyId
      * @param progress
      */
-    public static void updateNotification(int notifyId, float progress) {
+    public static void updateNotification(Context context, int notifyId, float progress) {
         NotificationCompat.Builder builder = notificationMap.get(notifyId);
         builder.setProgress(100, (int) progress, false);
         builder.setContentText(progress + "%");
-        notificationManager.notify(notifyId, builder.build());
+        getNotificationManager(context).notify(notifyId, builder.build());
     }
 }
