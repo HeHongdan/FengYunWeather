@@ -56,13 +56,12 @@
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
-        </activity> <!-- 高德设置key -->
-        <!-- todo add your key -->
-        <!--
+        </activity>
+        <!-- todo 高德设置key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="xxx" />
-        -->
+            android:value="${amap_app_key}" />
+
         <service android:name="com.amap.api.location.APSService" />
         <service
             android:name=".service.LocationService"

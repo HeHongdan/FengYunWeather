@@ -83,7 +83,7 @@ class SplashActivity : AppCompatActivity() {
                 DisplayUtil.getNavigationBarHeight(this@SplashActivity) else 0
 
         val statusBarHeight = DisplayUtil.getStatusBarHeight2(this@SplashActivity)
-        val dp45 = DisplayUtil.dip2px(this@SplashActivity, 45f)
+        val dp45 = DisplayUtil.dp2px(45f)
         ContentUtil.visibleHeight = screenRealSize - navHeight - statusBarHeight - dp45
 
     }

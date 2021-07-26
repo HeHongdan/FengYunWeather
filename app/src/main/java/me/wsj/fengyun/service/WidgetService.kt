@@ -10,13 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.wsj.fengyun.BuildConfig
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Now
 import me.wsj.fengyun.bean.WeatherNow
 import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.ui.fragment.CACHE_WEATHER_NOW
 import me.wsj.fengyun.widget.WeatherWidget
-import me.wsj.lib.Constants
 import me.wsj.lib.net.HttpUtils
 import me.wsj.lib.utils.IconUtils
 import per.wsj.commonlib.utils.LogUtil
@@ -62,7 +62,7 @@ class WidgetService : LifecycleService() {
         val url = "https://devapi.qweather.com/v7/weather/now"
         val param = HashMap<String, Any>()
         param["location"] = cityId
-        param["key"] = Constants.APK_KEY
+        param["key"] = BuildConfig.HeFengKey
 
         var now: Now? = null
         HttpUtils.get<WeatherNow>(url, param) { _, result ->

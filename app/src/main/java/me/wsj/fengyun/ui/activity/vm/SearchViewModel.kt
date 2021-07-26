@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
+import me.wsj.fengyun.BuildConfig
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.CityBean
 import me.wsj.fengyun.bean.Location
@@ -12,10 +13,11 @@ import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.db.entity.CityEntity
 import me.wsj.fengyun.ui.base.BaseViewModel
 import me.wsj.fengyun.ui.base.LoadState
-import me.wsj.lib.Constants
 import me.wsj.lib.net.HttpUtils
 import java.util.*
 import kotlin.collections.HashMap
+
+const val LAST_LOCATION = "LAST_LOCATION"
 
 class SearchViewModel(private val app: Application) : BaseViewModel(app) {
 
@@ -38,7 +40,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
             val url = "https://geoapi.qweather.com/v2/city/lookup"
             val param = HashMap<String, Any>()
             param["location"] = keywords
-            param["key"] = Constants.APK_KEY
+            param["key"] = BuildConfig.HeFengKey
 
             HttpUtils.get<SearchCity>(url, param) { _, result ->
                 searchResult.value = result.location
@@ -54,13 +56,13 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         launch {
             if (save) {
                 // 缓存定位城市
-                AppRepo.getInstance().saveCache(Constants.LAST_LOCATION, cityName)
+                AppRepo.getInstance().saveCache(LAST_LOCATION, cityName)
             }
 
             val url = "https://geoapi.qweather.com/v2/city/lookup"
             val param = HashMap<String, Any>()
             param["location"] = cityName
-            param["key"] = Constants.APK_KEY
+            param["key"] = BuildConfig.HeFengKey
 
             HttpUtils.get<SearchCity>(url, param) { _, result ->
                 if (save) {
@@ -145,7 +147,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
 
     fun getCacheLocation() {
         launch {
-            (AppRepo.getInstance().getCache<String>(Constants.LAST_LOCATION))?.let {
+            (AppRepo.getInstance().getCache<String>(LAST_LOCATION))?.let {
                 cacheLocation.postValue(it)
             }
         }

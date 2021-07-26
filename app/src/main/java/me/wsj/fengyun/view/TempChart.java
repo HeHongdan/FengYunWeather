@@ -54,14 +54,14 @@ public class TempChart extends View {
     }
 
     private void init() {
-        topBottom = DisplayUtil.dip2px(getContext(), 8);
+        topBottom = DisplayUtil.dp2px(8);
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(DisplayUtil.sp2px(getContext(), 12));
         mTextPaint.setColor(getResources().getColor(R.color.color_666));
         textHeight = (int) (mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top);
 
-        int lineWidth = DisplayUtil.dip2px(getContext(), 2);
+        int lineWidth = DisplayUtil.dp2px(2);
         mLowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLowPaint.setStrokeWidth(lineWidth);
         mLowPaint.setColor(Color.parseColor("#00A368"));
@@ -70,7 +70,7 @@ public class TempChart extends View {
         mHighPaint.setStrokeWidth(lineWidth);
         mHighPaint.setColor(Color.parseColor("#FF7200"));
 
-        pntRadius = DisplayUtil.dip2px(getContext(), 3);
+        pntRadius = DisplayUtil.dp2px(3);
     }
 
     private Daily mPrev, mNext;

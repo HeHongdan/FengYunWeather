@@ -32,7 +32,24 @@
 - [x] 太阳和月亮
 - [x] 城市管理（定位添加）
 
+## 第三方数据
+
+### 天气数据
+
+**风云天气** 的天气数据来源于 [和风天气](https://www.heweather.com)。
+
+当你使用这个APP时需要自行注册一个 **免费KEY** 访问 https://www.heweather.com
+
+### 定位服务
+
+**风云天气** 使用 [高德](https://www.amap.com) 定位服务。
+
+你同样需要一个高德地图的 **KEY** 去使用定位API或SDK, 请访问 https://lbs.amap.com
+
+你也可以用原生定位或其他第三方定位SDK。
+
 ## 下载体验
+
  - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://wangsj.oss-cn-shanghai.aliyuncs.com/fengyun/fengyun-weather-1.0.3.apk)
  - 下方二维码下载(每日上限100次，如达到上限，还是 clone 源码吧！✧(≖ ◡ ≖✿))）<br/>
    <img src="https://www.pgyer.com/app/qrcode/ENha"/>

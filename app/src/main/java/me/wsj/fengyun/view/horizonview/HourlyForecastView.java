@@ -158,27 +158,26 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         DisplayMetrics dm = getResources().getDisplayMetrics();
         screenWidth = dm.widthPixels;
 
-        itemWidth = DisplayUtil.dip2px(mContext, 30);
+        itemWidth = DisplayUtil.dp2px(30);
 
         defWidthPixel = itemWidth * (ITEM_SIZE - 1);
-        defHeightPixel = DisplayUtil.dip2px(mContext, 80);
+        defHeightPixel = DisplayUtil.dp2px(80);
 
-        lowestTempHeight = DisplayUtil.dip2px(mContext, 40);//长度  非y轴值
-        highestTempHeight = DisplayUtil.dip2px(mContext, 70);
+        lowestTempHeight = DisplayUtil.dp2px(40);//长度  非y轴值
+        highestTempHeight = DisplayUtil.dp2px(70);
         //defPadding
-        paddingT = DisplayUtil.dip2px(mContext, 9);
-        paddingL = DisplayUtil.dip2px(mContext, 10);
-        paddingR = DisplayUtil.dip2px(mContext, 15);
+        paddingT = DisplayUtil.dp2px(9);
+        paddingL = DisplayUtil.dp2px(10);
+        paddingR = DisplayUtil.dp2px(15);
 
         bitmapTop = 1 / 2f * (2 * defHeightPixel - lowestTempHeight);//- 给文字留地方
 
-        bitmapSize = DisplayUtil.dip2px(mContext, 20);
+        bitmapSize = DisplayUtil.dp2px(20);
     }
 
     private TextPaint textLinePaint;
 
     private void initPaint() {
-//        setLayerType(View.LAYER_TYPE_SOFTWARE, null);//关闭硬件加速
 
         paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint1.setColor(mContext.getResources().getColor(R.color.line_back_dark));
@@ -186,7 +185,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
         foldLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         foldLinePaint.setStyle(Paint.Style.STROKE);
-        foldLinePaint.setStrokeWidth(DisplayUtil.dip2px(mContext, 2));
+        foldLinePaint.setStrokeWidth(DisplayUtil.dp2px(2));
         foldLinePaint.setColor(mContext.getResources().getColor(R.color.line_color));
 
         backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -195,11 +194,14 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         dashPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         dashPaint.setColor(mContext.getResources().getColor(R.color.back_white));
 
-        int effect = DisplayUtil.dip2px(mContext, 4);
+        int effect = DisplayUtil.dp2px(4);
         DashPathEffect pathEffect = new DashPathEffect(new float[]{effect, effect, effect, effect}, 0);
         dashPaint.setPathEffect(pathEffect);
-        dashPaint.setStrokeWidth(DisplayUtil.dip2px(mContext, 1));
+        dashPaint.setStrokeWidth(DisplayUtil.dp2px(1));
         dashPaint.setStyle(Paint.Style.STROKE);
+
+        // 关闭硬件加速,否则画虚线无效
+//        setLayerType(View.LAYER_TYPE_SOFTWARE, dashPaint);
 
         int textSize = DisplayUtil.sp2px(mContext, 12);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -260,8 +262,8 @@ public class HourlyForecastView extends View implements ScrollWatcher {
                 int Y = (int) (tempHeightPixel(temp) + paddingT);
                 //画出温度提示
                 int offset = itemWidth / 4;
-                Rect targetRect = new Rect(getScrollBarX(), Y - DisplayUtil.dip2px(getContext(), 24)
-                        , getScrollBarX() + offset, Y - DisplayUtil.dip2px(getContext(), 4));
+                Rect targetRect = new Rect(getScrollBarX(), Y - DisplayUtil.dp2px(24)
+                        , getScrollBarX() + offset, Y - DisplayUtil.dp2px(4));
                 Paint.FontMetricsInt fontMetrics = textLinePaint.getFontMetricsInt();
                 int baseline = (targetRect.bottom + targetRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
                 textLinePaint.setTextAlign(Paint.Align.LEFT);
@@ -340,7 +342,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
     private void drawBitmap(Canvas canvas, Bitmap bitmap, float left, float top) {
         canvas.save();
-        canvas.drawBitmap(bitmap, left - bitmap.getWidth() / 2, top, bitmapPaint);
+        canvas.drawBitmap(bitmap, left - bitmap.getWidth() / 2f, top, bitmapPaint);
         canvas.restore();
     }
 
@@ -551,7 +553,7 @@ public class HourlyForecastView extends View implements ScrollWatcher {
 
     private int getScrollBarX() {
         int x = (ITEM_SIZE - 1) * itemWidth * scrollOffset / maxScrollOffset;
-        x = x - DisplayUtil.dip2px(mContext, 3);
+        x = x - DisplayUtil.dp2px(3);
         return x;
     }
 

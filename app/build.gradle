@@ -15,8 +15,8 @@ android {
         applicationId "me.wsj.fengyun"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0.1"
+        versionCode 4
+        versionName "1.0.4"
 
         multiDexEnabled true
 
@@ -44,11 +44,15 @@ android {
             zipAlignEnabled true
             shrinkResources true
             minifyEnabled true
+            manifestPlaceholders = [amap_app_key: localProperties.get("gao_de_app_key")]
+            buildConfigField('String', 'HeFengKey', localProperties.get("he_feng_app_key"))
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
+            manifestPlaceholders = [amap_app_key: localProperties.get("gao_de_app_key")]
+            buildConfigField('String', 'HeFengKey', localProperties.get("he_feng_app_key"))
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -62,6 +66,31 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            /*output.processResources.doFirst { pm ->
+                String manifestPath = output.processResources.manifestFile
+                println "=====test manifestPath=====$manifestPath"
+                def manifestContent = file(manifestPath).getText()
+                def xml = new XmlParser().parseText(manifestContent)
+//                println "=====test xml=====$xml"
+                // 增加一个meta-data节点
+//                xml.application[0].appendNode("meta-data", ['android:name': 'channel', 'android:value': 'yingyongbao'])
+                // 增加一个属性
+//                xml.application[0].attributes().put("android:persistent", "true")
+
+                def serialize = groovy.xml.XmlUtil.serialize(xml)
+                file(manifestPath).write(serialize)
+            }*/
+            if (variant.buildType.name == 'release') {
+                def fileName = "fengyun-weather-release-" + defaultConfig.versionName + ".apk"
+                outputFileName = new File("", fileName)
+            } else if (variant.buildType.name == 'debug') {
+//                fileName = "fengyun-weather-debug-" + ".apk"
+            }
+        }
     }
 }
 

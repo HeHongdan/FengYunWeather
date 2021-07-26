@@ -2,10 +2,10 @@ package me.wsj.fengyun.ui.fragment
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import me.wsj.fengyun.BuildConfig
 import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.ui.base.BaseViewModel
-import me.wsj.lib.Constants
 import me.wsj.lib.net.HttpUtils
 
 const val CACHE_WEATHER_NOW = "now_"
@@ -31,7 +31,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
     fun loadData(cityId: String) {
         val param = HashMap<String, Any>()
         param["location"] = cityId
-        param["key"] = Constants.APK_KEY
+        param["key"] = BuildConfig.HeFengKey
 
         // 实时天气
         launch {

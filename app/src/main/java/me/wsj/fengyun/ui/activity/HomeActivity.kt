@@ -104,8 +104,8 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         mBinding.llRound.removeAllViews()
         // 宽高参数
         val layoutParams = LinearLayout.LayoutParams(
-            DisplayUtil.dip2px(this, 4f),
-            DisplayUtil.dip2px(this, 4f)
+            DisplayUtil.dp2px(4f),
+            DisplayUtil.dp2px(4f)
         )
         //设置间隔
         layoutParams.rightMargin = 12

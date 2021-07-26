@@ -100,7 +100,7 @@ public class SunView extends View {
 
     private void initView(Context context, @Nullable AttributeSet attrs) {
         mContext = context;
-        marginTop = DisplayUtil.dip2px(context, 12);
+        marginTop = DisplayUtil.dp2px(12);
 
         TypedArray type = context.obtainStyledAttributes(attrs, R.styleable.SunAnimationView);
         mCircleColor = type.getColor(R.styleable.SunAnimationView_sun_circle_color, getContext().getResources().getColor(R.color.sun_line_color));
@@ -141,14 +141,14 @@ public class SunView extends View {
         mCirclePaint.setStyle(Paint.Style.STROKE);
         mCirclePaint.setColor(mCircleColor);
 
-        iconSize = DisplayUtil.dip2px(mContext, 18);
+        iconSize = DisplayUtil.dp2px(18);
         if (isSun) {
             mSunIcon = BitmapUtil.compressBySize(getContext(), R.mipmap.icon_sun, iconSize, iconSize);
         } else {
             mSunIcon = BitmapUtil.compressBySize(getContext(), R.mipmap.icon_moon, iconSize, iconSize);
         }
 
-        lineBias = DisplayUtil.dip2px(mContext, 10);
+        lineBias = DisplayUtil.dp2px(10);
     }
 
     public void setTimes(String startTime, String endTime, String currentTime) {
@@ -193,13 +193,13 @@ public class SunView extends View {
 
         mHalfWidth = getMeasuredWidth() >> 1;
         // start x of sun
-        positionX = mHalfWidth - mRadius - DisplayUtil.dip2px(mContext, 9);
+        positionX = mHalfWidth - mRadius - DisplayUtil.dp2px(9);
         // start y of sun
         positionY = mRadius + marginTop - (mSunIcon.getHeight() >> 1);
 
         mRectF.set(mHalfWidth - mRadius, marginTop, mHalfWidth + mRadius, mRadius * 2 + marginTop);
 
-        int height = mRadius + marginTop + DisplayUtil.dip2px(mContext, 40);
+        int height = mRadius + marginTop + DisplayUtil.dp2px(40);
 
         setMeasuredDimension(getMeasuredWidth(), height);
     }
@@ -239,12 +239,12 @@ public class SunView extends View {
             sunrise = "月出";
             sunset = "月落";
         }
-        int dp8 = DisplayUtil.dip2px(mContext, 8);
+        int dp8 = DisplayUtil.dp2px(8);
 
-        canvas.drawText(sunrise, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dip2px(mContext, 21) + marginTop, mTextPaint);
-        canvas.drawText(startTime, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dip2px(mContext, 37) + marginTop, mTimePaint);
-        canvas.drawText(sunset, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dip2px(mContext, 21) + marginTop, mTextPaint);
-        canvas.drawText(endTime, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dip2px(mContext, 37) + marginTop, mTimePaint);
+        canvas.drawText(sunrise, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dp2px(21) + marginTop, mTextPaint);
+        canvas.drawText(startTime, mHalfWidth - mRadius + dp8, mRadius + DisplayUtil.dp2px(37) + marginTop, mTimePaint);
+        canvas.drawText(sunset, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dp2px(21) + marginTop, mTextPaint);
+        canvas.drawText(endTime, mHalfWidth + mRadius - dp8, mRadius + DisplayUtil.dp2px(37) + marginTop, mTimePaint);
     }
 
     /**
