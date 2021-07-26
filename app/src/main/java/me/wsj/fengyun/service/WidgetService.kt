@@ -1,8 +1,10 @@
 package me.wsj.fengyun.service
 
+import android.app.Notification
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
 import androidx.lifecycle.LifecycleService
@@ -33,6 +35,9 @@ class WidgetService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         LogUtil.e("onCreate: ---------------------")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1, Notification())
+        }
         lifecycleScope.launch(Dispatchers.IO) {
             while (true) {
                 updateWidget()

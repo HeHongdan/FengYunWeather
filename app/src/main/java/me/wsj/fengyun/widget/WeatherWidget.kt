@@ -25,7 +25,11 @@ class WeatherWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        context.startService(Intent(context, WidgetService::class.java))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(Intent(context, WidgetService::class.java))
+        } else {
+            context.startService(Intent(context, WidgetService::class.java))
+        }
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -39,7 +43,11 @@ class WeatherWidget : AppWidgetProvider() {
     override fun onEnabled(context: Context) {
         // todo add tip: add boot start
         LogUtil.e("widget enable-------------------")
-        context.startService(Intent(context, WidgetService::class.java))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(Intent(context, WidgetService::class.java))
+        } else {
+            context.startService(Intent(context, WidgetService::class.java))
+        }
     }
 
     override fun onDisabled(context: Context) {
@@ -66,11 +74,12 @@ internal fun updateAppWidget(
     views.setOnClickPendingIntent(R.id.tvLunarDate, calendarPI)
 
     val clockIntent = Intent()
-    clockIntent.component = ComponentName("com.android.deskclock", "com.android.deskclock.DeskClock")
+    clockIntent.component =
+        ComponentName("com.android.deskclock", "com.android.deskclock.DeskClock")
     val timePI = PendingIntent.getActivity(context, 0, clockIntent, 0)
     views.setOnClickPendingIntent(R.id.clockTime, timePI)
 
-    val weatherIntent = Intent(context,HomeActivity::class.java)
+    val weatherIntent = Intent(context, HomeActivity::class.java)
     val weatherPI = PendingIntent.getActivity(context, 0, weatherIntent, 0)
     views.setOnClickPendingIntent(R.id.llWeather, weatherPI)
 
