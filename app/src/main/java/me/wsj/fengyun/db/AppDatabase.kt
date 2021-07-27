@@ -12,6 +12,10 @@ import me.wsj.fengyun.db.entity.CacheEntity
 import me.wsj.fengyun.db.entity.CityEntity
 import per.wsj.commonlib.utils.LogUtil
 
+/**
+ * auto migrate
+ * https://mp.weixin.qq.com/s/SMw22_jUphQ8ee49ck3cmg
+ */
 @Database(
     entities = [CacheEntity::class, CityEntity::class],
     version = 1,

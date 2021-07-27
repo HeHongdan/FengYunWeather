@@ -200,8 +200,10 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         dashPaint.setStrokeWidth(DisplayUtil.dp2px(1));
         dashPaint.setStyle(Paint.Style.STROKE);
 
-        // 关闭硬件加速,否则画虚线无效
-//        setLayerType(View.LAYER_TYPE_SOFTWARE, dashPaint);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            // 关闭硬件加速,否则画虚线无效
+            setLayerType(View.LAYER_TYPE_SOFTWARE, dashPaint);
+        }
 
         int textSize = DisplayUtil.sp2px(mContext, 12);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -246,8 +248,10 @@ public class HourlyForecastView extends View implements ScrollWatcher {
         super.onDraw(canvas);
 
         if (hourlyWeatherList != null && hourlyWeatherList.size() != 0) {
-            drawLines(canvas);
+
             drawBitmaps(canvas);
+
+            drawLines(canvas);
             drawTemp(canvas);
         }
     }

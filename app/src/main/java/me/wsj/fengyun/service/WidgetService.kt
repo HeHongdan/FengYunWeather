@@ -1,6 +1,5 @@
 package me.wsj.fengyun.service
 
-import android.app.Notification
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -10,10 +9,10 @@ import android.os.IBinder
 import android.widget.RemoteViews
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import me.wsj.fengyun.BuildConfig
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Now
@@ -45,40 +44,64 @@ class WidgetService : LifecycleService() {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         startForeground(Notify_Id, NotificationUtil.createNotification(this, Notify_Id))
 //        }
-        lifecycleScope.launch(Dispatchers.IO) {
-            while (true) {
-                val cities = AppRepo.getInstance().getCities()
-                if (cities.isNotEmpty()) {
-                    var cityId = cities[0].cityId
-                    var cityName = cities[0].cityName
-                    cities.forEach {
-                        if (it.isLocal) {
-                            cityId = it.cityId
-                            cityName = it.cityName
+
+        updateRemote()
+    }
+
+    private suspend fun getWeather(cityId: String) {
+        flow {
+            val url = "https://devapi.qweather.com/v7/weather/now"
+            val param = HashMap<String, Any>()
+            param["location"] = cityId
+            param["key"] = BuildConfig.HeFengKey
+
+            HttpUtils.get<WeatherNow>(url, param, null)?.now?.let { emit(it) }
+        }.flowOn(Dispatchers.Main).collect {
+
+        }
+    }
+
+    private fun updateRemote() {
+
+        lifecycleScope.launch(CoroutineExceptionHandler { _, _ ->
+            updateRemote()
+        }) {
+            withContext(Dispatchers.IO) {
+                while (true) {
+                    delay(5_000)
+                    val cities = AppRepo.getInstance().getCities()
+                    if (cities.isNotEmpty()) {
+                        var cityId = cities[0].cityId
+                        var cityName = cities[0].cityName
+                        cities.forEach {
+                            if (it.isLocal) {
+                                cityId = it.cityId
+                                cityName = it.cityName
+                            }
+                            return@forEach
                         }
-                        return@forEach
+
+                        val url = "https://devapi.qweather.com/v7/weather/now"
+                        val param = HashMap<String, Any>()
+                        param["location"] = cityId
+                        param["key"] = BuildConfig.HeFengKey
+
+                        var now: Now? = null
+                        HttpUtils.get<WeatherNow>(url, param) { _, result ->
+                            now = result.now
+                        }
+
+                        NotificationUtil.updateNotification(
+                            this@WidgetService,
+                            Notify_Id,
+                            cityName,
+                            now
+                        )
+
+                        updateWidget(cityId, cityName, now)
                     }
-
-                    val url = "https://devapi.qweather.com/v7/weather/now"
-                    val param = HashMap<String, Any>()
-                    param["location"] = cityId
-                    param["key"] = BuildConfig.HeFengKey
-
-                    var now: Now? = null
-                    HttpUtils.get<WeatherNow>(url, param) { _, result ->
-                        now = result.now
-                    }
-
-                    NotificationUtil.updateNotification(
-                        this@WidgetService,
-                        Notify_Id,
-                        cityName,
-                        now
-                    )
-
-                    updateWidget(cityId, cityName, now)
+                    delay(1800_000)
                 }
-                delay(1800_000)
             }
         }
     }
@@ -122,7 +145,7 @@ class WidgetService : LifecycleService() {
 
         // 时钟
         val clockIntent = Intent()
-        LogUtil.e("brand: " + Build.BOARD)
+//        LogUtil.e("brand: " + Build.BOARD)
         val cls = if (RomUtil.isEmui()) "com.android.deskclock.AlarmsMainActivity"
         else "com.android.deskclock.DeskClock"
 

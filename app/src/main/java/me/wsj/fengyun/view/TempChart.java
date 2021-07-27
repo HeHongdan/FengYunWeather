@@ -64,10 +64,12 @@ public class TempChart extends View {
         int lineWidth = DisplayUtil.dp2px(2);
         mLowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLowPaint.setStrokeWidth(lineWidth);
+        mLowPaint.setStrokeCap(Paint.Cap.SQUARE);
         mLowPaint.setColor(Color.parseColor("#00A368"));
 
         mHighPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mHighPaint.setStrokeWidth(lineWidth);
+        mHighPaint.setStrokeCap(Paint.Cap.SQUARE);
         mHighPaint.setColor(Color.parseColor("#FF7200"));
 
         pntRadius = DisplayUtil.dp2px(3);
