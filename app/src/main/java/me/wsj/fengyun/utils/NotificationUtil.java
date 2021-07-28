@@ -17,13 +17,14 @@ import androidx.core.app.NotificationCompat;
 import me.wsj.fengyun.R;
 import me.wsj.fengyun.bean.Now;
 import me.wsj.fengyun.ui.activity.HomeActivity;
+import me.wsj.fengyun.ui.activity.SplashActivity;
 import me.wsj.lib.utils.IconUtils;
 
 
 public class NotificationUtil {
 
     private static final String CHANNEL_ID = "fengyun_notify_id";
-    private static final String CHANNEL_NAME = "fengyun_notify";
+    private static final String CHANNEL_NAME = "天气实况";
 
     private static SparseArray<NotificationCompat.Builder> notificationMap = new SparseArray<>();
 
@@ -43,7 +44,7 @@ public class NotificationUtil {
         if (builder == null) {
             builder = initBaseBuilder(context, "", "", R.mipmap.ic_launcher_round);
             // 点击事件
-            Intent intent = new Intent(context, HomeActivity.class);
+            Intent intent = new Intent(context, SplashActivity.class);
             PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
             builder.setContentIntent(contentIntent);
             notificationMap.put(notifyId, builder);
@@ -95,7 +96,8 @@ public class NotificationUtil {
             channel.enableLights(true); // 闪光
             channel.setLightColor(Color.RED);   // 闪光时的灯光颜色
 //            channel.canShowBadge();         // 桌面launcher显示角标
-//            channel.enableVibration(true);  // 是否震动
+            channel.enableVibration(false);  // 是否震动
+            channel.setShowBadge(false);
             channel.shouldShowLights();//是否会闪光
 
             getNotificationManager(context).createNotificationChannel(channel);
@@ -105,6 +107,7 @@ public class NotificationUtil {
                 .setContentText(content)
                 // 是否常驻,true为常驻
                 .setOngoing(true)
+                .setNotificationSilent()
                 .setSmallIcon(icon)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), icon))
                 .setDefaults(Notification.DEFAULT_ALL)

@@ -23,7 +23,7 @@ class Forecast3dAdapter(val context: Context, val datas: List<Daily>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = datas[position]
         holder.tvTemp.text = "${item.tempMin}~${item.tempMax}°C"
-        holder.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
+
         var desc = item.textDay
         if (item.textDay != item.textNight) {
             desc += "转" + item.textNight
@@ -33,12 +33,19 @@ class Forecast3dAdapter(val context: Context, val datas: List<Daily>) :
         when (position) {
             0 -> {
                 holder.tvWeek.text = context.getString(R.string.today)
+                if (IconUtils.isDay()) {
+                    holder.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
+                } else {
+                    holder.ivDay.setImageResource(IconUtils.getNightIconDark(context, item.iconDay))
+                }
             }
             1 -> {
                 holder.tvWeek.text = context.getString(R.string.tomorrow)
+                holder.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
             }
             else -> {
                 holder.tvWeek.text = context.getString(R.string.after_t)
+                holder.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
             }
         }
     }

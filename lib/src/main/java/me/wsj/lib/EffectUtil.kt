@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import me.wsj.lib.specialeffects.Effect1Drawable
 import me.wsj.lib.specialeffects.Effect1NDrawable
 import me.wsj.lib.specialeffects.Effect2Drawable
+import me.wsj.lib.specialeffects.Effect5Drawable
 import me.wsj.lib.utils.ConvertUtil
 import me.wsj.lib.utils.DateUtil
 
@@ -33,6 +34,12 @@ class EffectUtil {
                             context.resources.getDrawable(R.drawable.cloudy_day_2),
                             context.resources.getDrawable(R.drawable.cloudy_day_1)
                         )
+                }
+                5 -> {
+                    Effect5Drawable(
+                        context.resources.getDrawable(R.drawable.lightning_1),
+                        context.resources.getDrawable(R.drawable.lightning_2)
+                    )
                 }
                 else -> {
                     null

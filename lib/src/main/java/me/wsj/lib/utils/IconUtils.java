@@ -12,34 +12,51 @@ public class IconUtils {
      * 获取白天深色天气图标
      */
     public static int getDayIconDark(Context context, String weather) {
-        return getMipmapRes(context, "icon_" + weather + "d", R.mipmap.icon_100d);
+        int code = parseCode(weather);
+        return getMipmapRes(context, "icon_" + code + "d", R.mipmap.icon_100d);
+    }
+
+    private static int parseCode(String weather) {
+        if (weather.isEmpty()) {
+            weather = "0";
+        }
+        int code = Integer.parseInt(weather);
+        if (code > 200 && code < 300) {
+            code = 200;
+        }
+        if (code == 154 || code == 153) {
+            code = 101;
+        }
+        return code;
     }
 
     /**
      * 获取白天深色天气图标
      */
     public static int getNightIconDark(Context context, String weather) {
-        return getMipmapRes(context, "icon_" + weather + "n", R.mipmap.icon_100n);
+        int code = parseCode(weather);
+        return getMipmapRes(context, "icon_" + code + "n", R.mipmap.icon_100n);
     }
 
     /**
      * 获取白天背景
      */
     public static int getDefaultBg() {
-        int now = DateUtil.getNowHour();
-        boolean isDay = now >= 7 && now <= 18;
-        if (isDay) return R.drawable.bg_0_d;
+        if (isDay()) return R.drawable.bg_0_d;
         else return R.drawable.bg_0_n;
     }
 
+    public static boolean isDay() {
+        int now = DateUtil.getNowHour();
+        boolean isDay = now >= 7 && now <= 18;
+        return isDay;
+    }
 
     /**
      * 获取白天背景
      */
     public static int getBg(Context context, int code) {
-        int now = DateUtil.getNowHour();
-        boolean isDay = now >= 7 && now <= 18;
-        if (isDay) return getDayBg(context, code);
+        if (isDay()) return getDayBg(context, code);
         else return getNightBg(context, code);
     }
 

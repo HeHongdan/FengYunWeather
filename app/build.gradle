@@ -15,8 +15,8 @@ android {
         applicationId "me.wsj.fengyun"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.0.5"
+        versionCode 4
+        versionName "1.0.4"
 
         multiDexEnabled true
 

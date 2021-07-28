@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import me.wsj.fengyun.BuildConfig
 import per.wsj.commonlib.utils.LogUtil
+import java.lang.Exception
 import java.util.concurrent.atomic.AtomicInteger
 
 open class BaseViewModel(app: Application) : AndroidViewModel(app) {
@@ -50,7 +51,7 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
      */
     private fun launchRequest(loadingType: Int = 0, block: suspend CoroutineScope.() -> Unit) {
         viewModelScope.launch(
-            CoroutineExceptionHandler { _, throwable ->
+            /*CoroutineExceptionHandler { _, throwable ->
                 run {
                     // handle error
                     val error = ExceptionUtils.parseException(throwable)
@@ -66,7 +67,7 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
                         loadState.value = LoadState.Finish
                     }
                 }
-            }
+            }*/
         ) {
             try {
                 if (loadingType == 0) {
@@ -76,6 +77,20 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
                 }
                 withContext(Dispatchers.IO) {
                     block.invoke(this)
+                }
+            } catch (e: Exception) {
+                // handle error
+                val error = ExceptionUtils.parseException(e)
+                if (BuildConfig.DEBUG) {
+                    LogUtil.e("$loadingType -> 异常：$e")
+                }
+                if (loadingType == 0) {
+                    loadState.value = LoadState.Error(error)
+                    if (runningCount.get() > 0) {
+                        runningCount.getAndDecrement()
+                    }
+                    LogUtil.d("runningCount - : $runningCount")
+                    loadState.value = LoadState.Finish
                 }
             } finally {
                 if (loadingType == 0) {
