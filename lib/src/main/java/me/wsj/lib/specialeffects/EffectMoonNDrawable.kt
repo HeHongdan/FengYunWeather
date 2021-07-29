@@ -8,7 +8,7 @@ import per.wsj.commonlib.utils.LogUtil
  * create by shiju.wang
  * moon
  */
-class Effect1NDrawable(private val mMoonDrawable: Drawable) : Drawable(), ICancelable {
+class EffectMoonNDrawable(private val mMoonDrawable: Drawable) : Drawable(), ICancelable {
 
     private val mCenterPoint = PointF()
 

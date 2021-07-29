@@ -15,7 +15,7 @@ import kotlin.math.sin
  * create by shiju.wang
  * cloud
  */
-class Effect2Drawable(val cloud1: Drawable, val cloud2: Drawable, var cloud3: Drawable? = null) :
+class EffectCloudDrawable(val cloud1: Drawable, val cloud2: Drawable, var cloud3: Drawable? = null) :
     Drawable(), ICancelable {
 
     private var mAnimator: ValueAnimator? = null

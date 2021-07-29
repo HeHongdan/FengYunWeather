@@ -2,11 +2,13 @@ package me.wsj.fengyun.service
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
-import android.content.ComponentName
-import android.content.Intent
+import android.content.*
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
@@ -18,7 +20,6 @@ import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Now
 import me.wsj.fengyun.bean.WeatherNow
 import me.wsj.fengyun.db.AppRepo
-import me.wsj.fengyun.ui.activity.HomeActivity
 import me.wsj.fengyun.ui.activity.SplashActivity
 import me.wsj.fengyun.ui.fragment.CACHE_WEATHER_NOW
 import me.wsj.fengyun.utils.Lunar
@@ -34,6 +35,8 @@ const val Notify_Id = 999
 
 class WidgetService : LifecycleService() {
 
+    lateinit var connManager: ConnectivityManager
+
     override fun onBind(intent: Intent): IBinder? {
         super.onBind(intent)
         return null
@@ -46,7 +49,44 @@ class WidgetService : LifecycleService() {
         startForeground(Notify_Id, NotificationUtil.createNotification(this, Notify_Id))
 //        }
 
-        updateRemote()
+        connManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            connManager.registerDefaultNetworkCallback(callback)
+        } else {
+            val intentFilter = IntentFilter()
+            intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
+            registerReceiver(netWorkStateReceiver, intentFilter)
+        }
+    }
+
+    val callback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            LogUtil.d("network available。。。。")
+            updateRemote()
+        }
+
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            LogUtil.d("network unavailable。。。。")
+            intervalJob?.cancel()
+            intervalJob = null
+        }
+    }
+
+    val netWorkStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val activeNetworkInfo = connManager.activeNetworkInfo
+            if (activeNetworkInfo != null && activeNetworkInfo.isAvailable) {
+                LogUtil.d("network available。。。。")
+                updateRemote()
+            } else {
+                LogUtil.d("network unavailable。。。。")
+                intervalJob?.cancel()
+                intervalJob = null
+            }
+        }
     }
 
     private suspend fun getWeather(cityId: String) {
@@ -62,14 +102,19 @@ class WidgetService : LifecycleService() {
         }
     }
 
-    private fun updateRemote() {
+    private var intervalJob: Job? = null
 
-        lifecycleScope.launch(CoroutineExceptionHandler { _, _ ->
-            updateRemote()
+    private fun updateRemote() {
+        if (intervalJob != null) {
+            return
+        }
+        intervalJob = lifecycleScope.launch(CoroutineExceptionHandler { _, _ ->
+            LogUtil.e("异常...")
+//            updateRemote()
         }) {
             withContext(Dispatchers.IO) {
                 while (true) {
-                    delay(5_000)
+                    LogUtil.d("intervalJob run")
                     val cities = AppRepo.getInstance().getCities()
                     if (cities.isNotEmpty()) {
                         var cityId = cities[0].cityId
@@ -108,7 +153,6 @@ class WidgetService : LifecycleService() {
     }
 
     private suspend fun updateWidget(cityId: String, cityName: String, now: Now?) {
-        LogUtil.e("update....")
 
         val views = RemoteViews(packageName, R.layout.weather_widget)
         val location = if (cityName.contains("-")) cityName.split("-")[1] else cityName
@@ -179,6 +223,11 @@ class WidgetService : LifecycleService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            connManager.unregisterNetworkCallback(callback)
+        } else {
+            unregisterReceiver(netWorkStateReceiver)
+        }
         LogUtil.e("onDestroy: ---------------------")
     }
 }

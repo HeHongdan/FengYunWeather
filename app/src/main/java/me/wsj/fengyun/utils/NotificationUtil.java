@@ -16,7 +16,6 @@ import androidx.core.app.NotificationCompat;
 
 import me.wsj.fengyun.R;
 import me.wsj.fengyun.bean.Now;
-import me.wsj.fengyun.ui.activity.HomeActivity;
 import me.wsj.fengyun.ui.activity.SplashActivity;
 import me.wsj.lib.utils.IconUtils;
 

@@ -65,6 +65,9 @@ public class IconUtils {
      */
     public static int getDayBg(Context context, int code) {
         int newCode = ConvertUtil.convert(code);
+        if (newCode > 10) {
+            newCode = newCode / 10;
+        }
         return getDrawableRes(context, "bg_" + newCode + "_d", R.drawable.bg_0_d);
     }
 
@@ -73,6 +76,9 @@ public class IconUtils {
      */
     public static int getNightBg(Context context, int code) {
         int newCode = ConvertUtil.convert(code);
+        if (newCode > 10) {
+            newCode = newCode / 10;
+        }
         return getDrawableRes(context, "bg_" + newCode + "_n", R.drawable.bg_0_n);
     }
 

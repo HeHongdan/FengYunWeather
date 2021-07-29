@@ -9,7 +9,7 @@ import per.wsj.commonlib.utils.LogUtil
  * create by shiju.wang
  * lightning
  */
-class Effect5Drawable(val lightning1: Drawable, val lightning2: Drawable) :
+class EffectLightningDrawable(val lightning1: Drawable, val lightning2: Drawable) :
     Drawable(), ICancelable {
 
     private val scope by lazy { CoroutineScope(Job() + Dispatchers.Main) }

@@ -11,7 +11,7 @@ import per.wsj.commonlib.utils.LogUtil
  * create by shiju.wang
  * sun
  */
-class Effect1Drawable(private val mSunDrawable: Drawable) : Drawable(), ICancelable {
+class EffectSunDrawable(private val mSunDrawable: Drawable) : Drawable(), ICancelable {
 
     private val mCenterPoint = PointF()
 

@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.bg.R
 import me.wsj.bg.bean.WeatherBean
-import me.wsj.lib.utils.IconUtils
 
 class AllAdapter(
     val context: Context,
