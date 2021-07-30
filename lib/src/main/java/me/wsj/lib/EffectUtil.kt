@@ -22,14 +22,21 @@ class EffectUtil {
                 2 -> {
                     if (isDay) {
                         EffectCloudDrawable(
-                            context.resources.getDrawable(R.drawable.cloudy_day_2),
-                            context.resources.getDrawable(R.drawable.cloudy_day_1),
-                            context.resources.getDrawable(R.drawable.cloudy_day_3)
+                            1,
+                            arrayOf(
+                                context.resources.getDrawable(R.drawable.cloudy_day_1),
+                                context.resources.getDrawable(R.drawable.cloudy_day_2),
+                                context.resources.getDrawable(R.drawable.cloudy_day_3),
+                                context.resources.getDrawable(R.drawable.cloudy_day_4)
+                            )
                         )
                     } else
                         EffectCloudDrawable(
-                            context.resources.getDrawable(R.drawable.cloudy_day_2),
-                            context.resources.getDrawable(R.drawable.cloudy_day_1)
+                            1,
+                            arrayOf(
+                                context.resources.getDrawable(R.drawable.cloudy_night1),
+                                context.resources.getDrawable(R.drawable.cloudy_night2)
+                            )
                         )
                 }
                 4 -> {  // 中雨

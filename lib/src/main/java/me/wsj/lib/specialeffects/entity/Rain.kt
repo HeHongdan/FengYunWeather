@@ -1,4 +1,4 @@
-package me.wsj.lib.specialeffects.rain
+package me.wsj.lib.specialeffects.entity
 
 class Rain(
     var x: Float,

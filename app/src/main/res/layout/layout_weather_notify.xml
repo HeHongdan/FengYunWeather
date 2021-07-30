@@ -19,7 +19,8 @@
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/ivWeather"
         android:text="浦东新区"
-        android:textColor="@color/color_666" />
+        android:textColor="@color/color_666"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvWeather"
@@ -29,7 +30,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
         android:layout_toRightOf="@+id/ivWeather"
-        android:text="晴" />
+        android:text="晴"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvTemp"
@@ -39,7 +41,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
         android:layout_toRightOf="@+id/tvWeather"
-        android:text="25°C" />
+        android:text="25°C"
+        android:textSize="14sp" />
 
     <ImageView
         android:layout_width="45dp"

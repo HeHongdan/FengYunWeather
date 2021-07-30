@@ -4,7 +4,7 @@ import android.animation.ValueAnimator
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.view.animation.AccelerateInterpolator
-import me.wsj.lib.specialeffects.rain.Rain
+import me.wsj.lib.specialeffects.entity.Rain
 import per.wsj.commonlib.utils.LogUtil
 import java.util.*
 import kotlin.collections.ArrayList
@@ -52,17 +52,17 @@ class EffectRainDrawable(val type: Int, val rains: Array<Drawable>) :
         animator.repeatCount = -1
         animator.interpolator = AccelerateInterpolator()
         animator.addUpdateListener {
-            updateParticle()
+            updatePosition()
         }
     }
 
-    private fun updateParticle() {
+    private fun updatePosition() {
         rainList.forEach {
             it.y += it.speed
             val drawable = rains[it.type]
             if (it.y > mHeight + drawable.intrinsicHeight) {
                 it.y = 0f
-                it.speed = random.nextInt(speed) + speed
+                it.speed = random.nextInt(speed + 1) + speed
                 it.type = random.nextInt(rains.size)
             }
         }
@@ -78,7 +78,7 @@ class EffectRainDrawable(val type: Int, val rains: Array<Drawable>) :
             val nextY = random.nextInt(mHeight)
             rainList.add(
                 Rain(
-                    nextX.toFloat(), nextY.toFloat(), random.nextInt(speed) + speed,
+                    nextX.toFloat(), nextY.toFloat(), random.nextInt(speed + 1) + speed,
                     random.nextInt(rains.size)
                 )
             )
@@ -115,6 +115,7 @@ class EffectRainDrawable(val type: Int, val rains: Array<Drawable>) :
     }
 
     override fun cancel() {
+        animator.removeAllListeners()
         animator.cancel()
         LogUtil.d("Effect4Drawable cancel ---------------------------> ")
     }

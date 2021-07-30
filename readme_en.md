@@ -16,11 +16,14 @@
 
 ## Preview
 
-![weather_info](/img/home.gif) ![hourly](/img/hourly.gif)
+![weather_info](img/home.gif) ![effect](img/effect.gif)
 
-![15dforecast](/img/15d.gif) ![sun_moon](/img/sun.gif)
+![hourly](img/hourly.gif) ![15dforecast](img/15d.gif)
 
-![add_city](/img/add_city.png) ![settings](/img/settings.png)
+![sun_moon](img/sun.gif) ![widget](img/widget.gif)
+
+![add_city](img/add_city.png) ![settings](img/settings.png)
+
 
 
 

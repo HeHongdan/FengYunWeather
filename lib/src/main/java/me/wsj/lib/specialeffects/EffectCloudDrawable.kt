@@ -7,7 +7,10 @@ import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.animation.LinearInterpolator
+import me.wsj.lib.specialeffects.entity.Cloud
+import me.wsj.lib.specialeffects.entity.Rain
 import per.wsj.commonlib.utils.LogUtil
+import java.util.*
 import kotlin.math.PI
 import kotlin.math.sin
 
@@ -15,67 +18,78 @@ import kotlin.math.sin
  * create by shiju.wang
  * cloud
  */
-class EffectCloudDrawable(val cloud1: Drawable, val cloud2: Drawable, var cloud3: Drawable? = null) :
+class EffectCloudDrawable(val type: Int, val clouds: Array<Drawable>) :
     Drawable(), ICancelable {
+
+    val random = Random()
+
+    val speed = 1
 
     private var mAnimator: ValueAnimator? = null
 
     private var mWidth = 0
 
-    private var rate1 = 0f
-    private var y1 = 0
-
-    private var y2 = 0
-
-    private var y3 = 0
-
-    init {
-        startAnim()
-    }
+    val cloudList = ArrayList<Cloud>()
 
     override fun onBoundsChange(bounds: Rect) {
         super.onBoundsChange(bounds)
 
         mWidth = bounds.right - bounds.left
 
-        y1 = (mWidth * 0.05).toInt()
-        y2 = (mWidth * 0.3).toInt()
-        y3 = (mWidth * 0.54).toInt()
+        for (i in 0 until 3) {
+            val nextX = random.nextInt(mWidth)
+            val nextY = random.nextInt((mWidth * 0.7).toInt())
+            cloudList.add(
+                Cloud(
+                    nextX.toFloat(),
+                    nextY.toFloat(),
+                    random.nextFloat() * speed + speed,
+                    random.nextInt(clouds.size)
+                )
+            )
+        }
 
+        startAnim()
     }
 
     private fun startAnim() {
         if (mAnimator == null) {
             mAnimator = ValueAnimator.ofFloat(0f, 1f)
             mAnimator?.repeatCount = ValueAnimator.INFINITE
-            mAnimator?.duration = 30000
+            mAnimator?.duration = 3000
             mAnimator?.interpolator = LinearInterpolator()
             mAnimator?.addUpdateListener {
-                rate1 = it.animatedValue as Float
-
-                invalidateSelf()
+                updatePosition()
             }
             mAnimator?.start()
         }
     }
 
+    private fun updatePosition() {
+        cloudList.forEach {
+            it.x += it.speed
+            val drawable = clouds[it.type]
+            if (it.x > mWidth + drawable.intrinsicWidth) {
+                it.x = 0f
+                it.y = random.nextInt((mWidth * 0.7).toInt()).toFloat()
+                it.speed = random.nextFloat() * speed + speed
+                it.type = random.nextInt(clouds.size)
+            }
+        }
+        invalidateSelf()
+    }
+
     override fun draw(canvas: Canvas) {
-        val total1 = cloud1.intrinsicWidth + mWidth
-        val curX1 = (-cloud1.intrinsicWidth + total1 * rate1).toInt()
+        for (cloud in cloudList) {
+            val drawable = clouds[cloud.type]
+            drawable.setBounds(
+                (cloud.x - drawable.intrinsicWidth).toInt(),
+                (cloud.y).toInt(),
+                cloud.x.toInt(),
+                (cloud.y + drawable.intrinsicHeight).toInt()
+            )
 
-        cloud1.setBounds(curX1, y1, curX1 + cloud1.intrinsicWidth, y1 + cloud1.intrinsicHeight)
-        cloud1.draw(canvas)
-
-        val total2 = cloud2.intrinsicWidth * 4 + mWidth
-        val curX2 = (-cloud2.intrinsicWidth * 2 + total2 * rate1).toInt()
-        cloud2.setBounds(curX2, y2, curX2 + cloud2.intrinsicWidth, y2 + cloud2.intrinsicHeight)
-        cloud2.draw(canvas)
-
-        cloud3?.let {
-            val total3 = it.intrinsicWidth * 3 + mWidth
-            val curX3 = (-it.intrinsicWidth * 2 + total3 * rate1).toInt()
-            it.setBounds(curX3, y3, curX3 + it.intrinsicWidth, y3 + it.intrinsicHeight)
-            it.draw(canvas)
+            drawable.draw(canvas)
         }
     }
 
