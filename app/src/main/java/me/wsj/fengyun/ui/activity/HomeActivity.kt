@@ -29,7 +29,7 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun bindView() = ActivityMainBinding.inflate(layoutInflater)
 
-    override fun prepareData(intent: Intent) {}
+    override fun prepareData(intent: Intent?) {}
 
     override fun initView() {
         hideTitleBar()

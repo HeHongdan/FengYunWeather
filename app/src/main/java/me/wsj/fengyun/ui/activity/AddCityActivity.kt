@@ -43,8 +43,10 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
 
     override fun bindView() = inflate(layoutInflater)
 
-    override fun prepareData(intent: Intent) {
-        fromSplash = intent.getBooleanExtra("fromSplash", false)
+    override fun prepareData(intent: Intent?) {
+        intent?.let {
+            fromSplash = it.getBooleanExtra("fromSplash", false)
+        }
     }
 
     override fun initView() {
