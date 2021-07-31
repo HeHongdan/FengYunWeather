@@ -91,6 +91,10 @@ class EffectSunDrawable(private val mSunDrawable: Drawable) : Drawable(), ICance
         return PixelFormat.TRANSLUCENT
     }
 
+    override fun start() {
+        //To do sth.
+    }
+
     override fun cancel() {
         mAnimatorSet?.cancel()
         LogUtil.d("Effect1Drawable cancel ---------------------------> ")

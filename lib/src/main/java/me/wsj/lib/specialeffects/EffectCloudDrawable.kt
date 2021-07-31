@@ -105,6 +105,10 @@ class EffectCloudDrawable(val type: Int, val clouds: Array<Drawable>) :
         return PixelFormat.TRANSLUCENT
     }
 
+    override fun start() {
+        //To do sth.
+    }
+
     override fun cancel() {
         mAnimator?.removeAllListeners()
         mAnimator?.cancel()

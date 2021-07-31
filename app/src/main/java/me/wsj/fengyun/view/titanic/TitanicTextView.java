@@ -16,26 +16,19 @@ import android.view.animation.LinearInterpolator;
 import androidx.core.content.res.ResourcesCompat;
 
 import me.wsj.fengyun.R;
+import me.wsj.lib.specialeffects.ICancelable;
 
 /**
  * Titanic
  * romainpiel
  * 13/03/2014
  */
-public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView {
+public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView implements ICancelable {
 
-    public interface AnimationSetupCallback {
-        public void onSetupAnimation(TitanicTextView titanicTextView);
-    }
-
-    // callback fired at first onSizeChanged
-    private AnimationSetupCallback animationSetupCallback;
     // wave shader coordinates
     private float maskX, maskY;
     // if true, the shader will display the wave
     private boolean sinking;
-    // true after the first onSizeChanged
-    private boolean setUp;
 
     // shader containing a repeated wave
     private BitmapShader shader;
@@ -65,42 +58,12 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
         shaderMatrix = new Matrix();
     }
 
-    public AnimationSetupCallback getAnimationSetupCallback() {
-        return animationSetupCallback;
-    }
-
-    public void setAnimationSetupCallback(AnimationSetupCallback animationSetupCallback) {
-        this.animationSetupCallback = animationSetupCallback;
-    }
-
-    public float getMaskX() {
-        return maskX;
-    }
-
-    public void setMaskX(float maskX) {
-        this.maskX = maskX;
-        invalidate();
-    }
-
-    public float getMaskY() {
-        return maskY;
-    }
-
-    public void setMaskY(float maskY) {
-        this.maskY = maskY;
-        invalidate();
-    }
-
     public boolean isSinking() {
         return sinking;
     }
 
     public void setSinking(boolean sinking) {
         this.sinking = sinking;
-    }
-
-    public boolean isSetUp() {
-        return setUp;
     }
 
     @Override
@@ -120,13 +83,12 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
         super.onSizeChanged(w, h, oldw, oldh);
 
         createShader();
+        play();
+    }
 
-        if (!setUp) {
-            setUp = true;
-            if (animationSetupCallback != null) {
-                animationSetupCallback.onSetupAnimation(TitanicTextView.this);
-            }
-        }
+
+    @Override
+    public void start() {
         play();
     }
 
@@ -188,6 +150,10 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
     private AnimatorSet animatorSet;
 
     public void play() {
+        int h = getMeasuredHeight();
+        if (h == 0) {
+            return;
+        }
         if (animatorSet == null) {
             setSinking(true);
 
@@ -196,12 +162,9 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
             maskXAnimator.setDuration(1000);
             maskXAnimator.setStartDelay(0);
             maskXAnimator.addUpdateListener(animation -> {
-                int value = (int) animation.getAnimatedValue();
-                maskX = value;
+                maskX = (int) animation.getAnimatedValue();
                 invalidate();
             });
-
-            int h = getMeasuredHeight();
 
             ValueAnimator maskYAnimator = ValueAnimator.ofInt(h / 2, -h / 2);
             maskYAnimator.setRepeatCount(ValueAnimator.INFINITE);
@@ -209,8 +172,7 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
             maskYAnimator.setDuration(10000);
             maskYAnimator.setStartDelay(0);
             maskYAnimator.addUpdateListener(animation -> {
-                int value = (int) animation.getAnimatedValue();
-                maskY = value;
+                maskY = (int) animation.getAnimatedValue();
                 invalidate();
             });
 
@@ -219,6 +181,12 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
             animatorSet.setInterpolator(new LinearInterpolator());
             animatorSet.start();
         }
+    }
+
+
+    @Override
+    public void cancel() {
+        destory();
     }
 
     public void destory() {

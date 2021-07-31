@@ -45,6 +45,10 @@ class EffectMoonNDrawable(private val mMoonDrawable: Drawable) : Drawable(), ICa
         return PixelFormat.TRANSLUCENT
     }
 
+    override fun start() {
+
+    }
+
     override fun cancel() {
         LogUtil.d("Effect1NDrawable cancel ---------------------------> ")
     }

@@ -106,6 +106,10 @@ class EffectLightningDrawable(val lightning1: Drawable, val lightning2: Drawable
         return PixelFormat.TRANSLUCENT
     }
 
+    override fun start() {
+        //To do sth.
+    }
+
     override fun cancel() {
         isRunning = false
         scope.cancel()

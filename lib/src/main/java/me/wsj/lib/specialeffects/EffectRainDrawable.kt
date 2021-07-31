@@ -114,6 +114,10 @@ class EffectRainDrawable(val type: Int, val rains: Array<Drawable>) :
         return PixelFormat.TRANSLUCENT
     }
 
+    override fun start() {
+        //To do sth.
+    }
+
     override fun cancel() {
         animator.removeAllListeners()
         animator.cancel()

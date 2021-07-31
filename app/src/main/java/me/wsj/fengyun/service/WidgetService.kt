@@ -59,6 +59,11 @@ class WidgetService : LifecycleService() {
         }
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        updateRemote()
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     val callback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {

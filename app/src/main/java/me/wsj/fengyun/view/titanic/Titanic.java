@@ -89,16 +89,7 @@ public class Titanic {
             }
         };
 
-        if (!textView.isSetUp()) {
-            textView.setAnimationSetupCallback(new TitanicTextView.AnimationSetupCallback() {
-                @Override
-                public void onSetupAnimation(final TitanicTextView target) {
-                    animate.run();
-                }
-            });
-        } else {
-            animate.run();
-        }
+        animate.run();
     }
 
     public void cancel() {
