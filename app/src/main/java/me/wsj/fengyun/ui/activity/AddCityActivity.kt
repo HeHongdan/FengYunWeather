@@ -55,7 +55,9 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
             this@AddCityActivity,
             searchCities,
             mBinding.etSearch.text.toString()
-        )
+        ) {
+            viewModel.addCity(it)
+        }
         mBinding.rvSearch.adapter = searchAdapter
 
         topCityAdapter = TopCityAdapter(topCities) {
@@ -84,10 +86,6 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         mBinding.tvGetPos.setOnClickListener {
             hideKeyboard()
             checkAndOpenGPS()
-        }
-
-        searchAdapter?.setOnCityCheckedListener {
-            viewModel.addCity(it)
         }
     }
 
