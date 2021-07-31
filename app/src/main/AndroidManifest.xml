@@ -64,11 +64,6 @@
             android:value="${amap_app_key}" />
 
         <service android:name="com.amap.api.location.APSService" />
-        <service
-            android:name=".service.LocationService"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.ACCESS_FINE_LOCATION" />
 
         <activity
             android:name=".ui.activity.SettingsActivity"

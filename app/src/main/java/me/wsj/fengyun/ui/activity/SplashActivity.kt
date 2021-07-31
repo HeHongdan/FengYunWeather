@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.os.MessageQueue
 import android.view.ViewPropertyAnimator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -59,7 +58,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun startIntent() {
         lifecycleScope.launch {
-            var citySize = 0
+            var citySize: Int
 
 //            DensityUtil.setDensity(application, 418f)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -69,7 +68,7 @@ class SplashActivity : AppCompatActivity() {
             }
 
             withContext(Dispatchers.IO) {
-                val start = System.currentTimeMillis()
+//                val start = System.currentTimeMillis()
                 val cities = AppRepo.getInstance().getCities()
 //                LogUtil.e("time use: " + (System.currentTimeMillis() - start))
                 citySize = cities.size

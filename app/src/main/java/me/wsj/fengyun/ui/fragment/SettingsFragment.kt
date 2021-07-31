@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.preference.*
 import me.wsj.fengyun.R
-import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.ui.activity.AboutActivity
 import me.wsj.fengyun.ui.activity.CityManagerActivity
+import me.wsj.fengyun.utils.ContentUtil
 
 class SettingsFragment : PreferenceFragmentCompat() {
 

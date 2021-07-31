@@ -8,9 +8,9 @@ import me.wsj.fengyun.adapter.CityManagerAdapter
 import me.wsj.fengyun.adapter.MyItemTouchCallback
 import me.wsj.fengyun.databinding.ActivityCityManagerBinding
 import me.wsj.fengyun.db.entity.CityEntity
-import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.ui.activity.vm.CityManagerViewModel
 import me.wsj.fengyun.ui.base.BaseVmActivity
+import me.wsj.fengyun.utils.ContentUtil
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,7 +46,7 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
             override fun onCityRemove(pos: Int) {
                 viewModel.removeCity(datas[pos].cityId)
                 datas.removeAt(pos)
-                adapter?.notifyDataSetChanged()
+                adapter?.notifyItemRemoved(pos)
                 ContentUtil.CITY_CHANGE = true
             }
         }

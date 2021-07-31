@@ -15,12 +15,12 @@ import me.wsj.fengyun.adapter.Forecast15dAdapter
 import me.wsj.fengyun.adapter.Forecast3dAdapter
 import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.databinding.*
-import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.Lunar
 import me.wsj.fengyun.utils.WeatherUtil
 import me.wsj.fengyun.ui.activity.vm.MainViewModel
 import me.wsj.fengyun.ui.base.BaseVmFragment
 import me.wsj.fengyun.ui.base.LoadState
+import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.lib.extension.notEmpty
 import me.wsj.lib.extension.toastCenter
 import me.wsj.lib.utils.DateUtil

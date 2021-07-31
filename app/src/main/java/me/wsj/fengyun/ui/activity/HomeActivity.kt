@@ -9,11 +9,11 @@ import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ViewPagerAdapter
 import me.wsj.fengyun.databinding.ActivityMainBinding
 import me.wsj.fengyun.db.entity.CityEntity
-import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.expand
 import me.wsj.fengyun.ui.activity.vm.MainViewModel
 import me.wsj.fengyun.ui.base.BaseVmActivity
 import me.wsj.fengyun.ui.fragment.WeatherFragment
+import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.lib.EffectUtil
 import me.wsj.lib.extension.startActivity
 import me.wsj.lib.specialeffects.ICancelable
@@ -60,10 +60,10 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun initEvent() {
-        mBinding.ivSetting.setOnClickListener { v ->
+        mBinding.ivSetting.setOnClickListener { _ ->
             startActivity<SettingsActivity>()
         }
-        mBinding.ivAddCity.setOnClickListener { v ->
+        mBinding.ivAddCity.setOnClickListener { _ ->
             startActivity<AddCityActivity>()
         }
 
