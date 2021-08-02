@@ -71,7 +71,11 @@ public class NotificationUtil {
         if (now != null) {
             views.setTextViewText(R.id.tvWeather, now.getText());
             views.setTextViewText(R.id.tvTemp, now.getTemp() + "°C");
-            views.setImageViewResource(R.id.ivWeather, IconUtils.getDayIconDark(context, now.getIcon()));
+            if (IconUtils.isDay()) {
+                views.setImageViewResource(R.id.ivWeather, IconUtils.getDayIconDark(context, now.getIcon()));
+            } else {
+                views.setImageViewResource(R.id.ivWeather, IconUtils.getNightIconDark(context, now.getIcon()));
+            }
         }
 
         getNotificationManager(context).notify(notifyId, builder.build());

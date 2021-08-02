@@ -156,9 +156,9 @@ public class SunView extends View {
         mEndTime = endTime;
         mCurrentTime = currentTime;
 
-        String currentTimes[] = currentTime.split(":");
-        String startTimes[] = startTime.split(":");
-        String endTimes[] = endTime.split(":");
+        String[] currentTimes = currentTime.split(":");
+        String[] startTimes = startTime.split(":");
+        String[] endTimes = endTime.split(":");
         float currentHour = Float.parseFloat(currentTimes[0]);
         float currentMinute = Float.parseFloat(currentTimes[1]);
 
@@ -255,8 +255,8 @@ public class SunView extends View {
      * @return
      */
     private float calculateTime(String startTime, String endTime, boolean isCurrent) {
-        String startTimes[] = startTime.split(":");
-        String endTimes[] = endTime.split(":");
+        String[] startTimes = startTime.split(":");
+        String[] endTimes = endTime.split(":");
         float startHour = Float.parseFloat(startTimes[0]);
         float startMinute = Float.parseFloat(startTimes[1]);
 
@@ -306,8 +306,8 @@ public class SunView extends View {
             return false;
         }
 
-        String startTimes[] = startTime.split(":");
-        String endTimes[] = endTime.split(":");
+        String[] startTimes = startTime.split(":");
+        String[] endTimes = endTime.split(":");
         float startHour = Float.parseFloat(startTimes[0]);
         float startMinute = Float.parseFloat(startTimes[1]);
 
