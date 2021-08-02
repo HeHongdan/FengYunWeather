@@ -8,6 +8,7 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.animation.LinearInterpolator
 import androidx.collection.ArraySet
+import kotlinx.coroutines.*
 import me.wsj.lib.specialeffects.entity.Cloud
 import me.wsj.lib.specialeffects.entity.Rain
 import per.wsj.commonlib.utils.LogUtil
@@ -22,11 +23,11 @@ import kotlin.math.sin
 class EffectCloudDrawable(val clouds: Array<Drawable>) :
     Drawable(), ICancelable {
 
+    private val scope by lazy { CoroutineScope(Job() + Dispatchers.Main) }
+
     val random = Random()
 
     val speed = 1
-
-    private var mAnimator: ValueAnimator? = null
 
     private var mWidth = 0
 
@@ -54,21 +55,20 @@ class EffectCloudDrawable(val clouds: Array<Drawable>) :
         startAnim()
     }
 
-    var counter = 0
+    @Volatile
+    var isRunning = false
 
     private fun startAnim() {
-        if (mAnimator == null) {
-            mAnimator = ValueAnimator.ofFloat(0f, 1f)
-            mAnimator?.repeatCount = ValueAnimator.INFINITE
-            mAnimator?.duration = 6000
-            mAnimator?.interpolator = LinearInterpolator()
-            mAnimator?.addUpdateListener {
-                counter++
-                if (counter % 2 == 0) {
+        if (!isRunning) {
+            isRunning = true
+            scope.launch {
+                while (isRunning) {
+                    withContext(Dispatchers.Default) {
+                        delay(25)
+                    }
                     updatePosition()
                 }
             }
-            mAnimator?.start()
         }
     }
 
@@ -116,8 +116,8 @@ class EffectCloudDrawable(val clouds: Array<Drawable>) :
     }
 
     override fun cancel() {
-        mAnimator?.removeAllListeners()
-        mAnimator?.cancel()
+        isRunning = false
+        scope.cancel()
         LogUtil.d("Effect2Drawable cancel ---------------------------> ")
     }
 }
