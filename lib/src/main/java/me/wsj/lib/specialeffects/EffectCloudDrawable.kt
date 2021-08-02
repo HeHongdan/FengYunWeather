@@ -7,6 +7,7 @@ import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.animation.LinearInterpolator
+import androidx.collection.ArraySet
 import me.wsj.lib.specialeffects.entity.Cloud
 import me.wsj.lib.specialeffects.entity.Rain
 import per.wsj.commonlib.utils.LogUtil
@@ -18,7 +19,7 @@ import kotlin.math.sin
  * create by shiju.wang
  * cloud
  */
-class EffectCloudDrawable(val type: Int, val clouds: Array<Drawable>) :
+class EffectCloudDrawable(val clouds: Array<Drawable>) :
     Drawable(), ICancelable {
 
     val random = Random()
@@ -36,15 +37,16 @@ class EffectCloudDrawable(val type: Int, val clouds: Array<Drawable>) :
 
         mWidth = bounds.right - bounds.left
 
-        for (i in 0 until 3) {
+        for (i in clouds.indices) {
             val nextX = random.nextInt(mWidth)
             val nextY = random.nextInt((mWidth * 0.7).toInt())
+
             cloudList.add(
                 Cloud(
                     nextX.toFloat(),
                     nextY.toFloat(),
                     random.nextFloat() * speed + speed,
-                    random.nextInt(clouds.size)
+                    i
                 )
             )
         }
@@ -52,14 +54,19 @@ class EffectCloudDrawable(val type: Int, val clouds: Array<Drawable>) :
         startAnim()
     }
 
+    var counter = 0
+
     private fun startAnim() {
         if (mAnimator == null) {
             mAnimator = ValueAnimator.ofFloat(0f, 1f)
             mAnimator?.repeatCount = ValueAnimator.INFINITE
-            mAnimator?.duration = 3000
+            mAnimator?.duration = 6000
             mAnimator?.interpolator = LinearInterpolator()
             mAnimator?.addUpdateListener {
-                updatePosition()
+                counter++
+                if (counter % 2 == 0) {
+                    updatePosition()
+                }
             }
             mAnimator?.start()
         }
@@ -73,7 +80,6 @@ class EffectCloudDrawable(val type: Int, val clouds: Array<Drawable>) :
                 it.x = 0f
                 it.y = random.nextInt((mWidth * 0.7).toInt()).toFloat()
                 it.speed = random.nextFloat() * speed + speed
-                it.type = random.nextInt(clouds.size)
             }
         }
         invalidateSelf()
