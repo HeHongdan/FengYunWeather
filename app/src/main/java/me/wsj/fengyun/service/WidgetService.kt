@@ -60,7 +60,9 @@ class WidgetService : LifecycleService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        updateRemote()
+        lifecycleScope.launch(CoroutineExceptionHandler { _, _ -> }) {
+            updateRemoteOnce()
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -115,45 +117,48 @@ class WidgetService : LifecycleService() {
         }
         intervalJob = lifecycleScope.launch(CoroutineExceptionHandler { _, _ ->
             LogUtil.e("异常...")
-//            updateRemote()
         }) {
             withContext(Dispatchers.IO) {
                 while (true) {
                     LogUtil.d("intervalJob run")
-                    val cities = AppRepo.getInstance().getCities()
-                    if (cities.isNotEmpty()) {
-                        var cityId = cities[0].cityId
-                        var cityName = cities[0].cityName
-                        cities.forEach {
-                            if (it.isLocal) {
-                                cityId = it.cityId
-                                cityName = it.cityName
-                            }
-                            return@forEach
-                        }
-
-                        val url = "https://devapi.qweather.com/v7/weather/now"
-                        val param = HashMap<String, Any>()
-                        param["location"] = cityId
-                        param["key"] = BuildConfig.HeFengKey
-
-                        var now: Now? = null
-                        HttpUtils.get<WeatherNow>(url, param) { _, result ->
-                            now = result.now
-                        }
-
-                        NotificationUtil.updateNotification(
-                            this@WidgetService,
-                            Notify_Id,
-                            cityName,
-                            now
-                        )
-
-                        updateWidget(cityId, cityName, now)
-                    }
+                    updateRemoteOnce()
                     delay(1800_000)
                 }
             }
+        }
+    }
+
+    private suspend fun updateRemoteOnce() {
+        val cities = AppRepo.getInstance().getCities()
+        if (cities.isNotEmpty()) {
+            var cityId = cities[0].cityId
+            var cityName = cities[0].cityName
+            cities.forEach {
+                if (it.isLocal) {
+                    cityId = it.cityId
+                    cityName = it.cityName
+                }
+                return@forEach
+            }
+
+            val url = "https://devapi.qweather.com/v7/weather/now"
+            val param = HashMap<String, Any>()
+            param["location"] = cityId
+            param["key"] = BuildConfig.HeFengKey
+
+            var now: Now? = null
+            HttpUtils.get<WeatherNow>(url, param) { _, result ->
+                now = result.now
+            }
+
+            NotificationUtil.updateNotification(
+                this@WidgetService,
+                Notify_Id,
+                cityName,
+                now
+            )
+
+            updateWidget(cityId, cityName, now)
         }
     }
 
