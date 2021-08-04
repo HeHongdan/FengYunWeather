@@ -38,7 +38,7 @@
 - [x] city manager
 
 ## Download
- - click me[![](https://img.shields.io/badge/Download-apk-green.svg)](https://wangsj.oss-cn-shanghai.aliyuncs.com/fengyun/fengyun-weather-1.0.3.apk)
+ - click me[![](https://img.shields.io/badge/Download-apk-green.svg)](https://github.com/wsj1024/FengYunWeather/blob/master/app/release/fengyun-weather-1.0.6.apk)
 
 ## License
 
