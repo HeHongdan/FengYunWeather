@@ -21,7 +21,7 @@ import me.wsj.fengyun.bean.Now
 import me.wsj.fengyun.bean.WeatherNow
 import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.ui.activity.SplashActivity
-import me.wsj.fengyun.ui.fragment.CACHE_WEATHER_NOW
+import me.wsj.fengyun.ui.fragment.vm.CACHE_WEATHER_NOW
 import me.wsj.fengyun.utils.Lunar
 import me.wsj.fengyun.utils.NotificationUtil
 import me.wsj.fengyun.utils.RomUtil

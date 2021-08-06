@@ -19,10 +19,11 @@ import me.wsj.fengyun.utils.Lunar
 import me.wsj.fengyun.utils.WeatherUtil
 import me.wsj.fengyun.ui.activity.vm.MainViewModel
 import me.wsj.fengyun.ui.base.BaseVmFragment
-import me.wsj.fengyun.ui.base.LoadState
+import me.wsj.fengyun.ui.fragment.vm.WeatherViewModel
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.lib.extension.notEmpty
 import me.wsj.lib.extension.toastCenter
+import me.wsj.lib.net.LoadState
 import me.wsj.lib.utils.DateUtil
 import per.wsj.commonlib.utils.LogUtil
 import per.wsj.commonlib.utils.Typefaces

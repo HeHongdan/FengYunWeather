@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.util.MalformedJsonException
 import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.TimeoutCancellationException
+import me.wsj.lib.net.exception.RequestException
 import org.json.JSONException
 import java.net.ConnectException
 import java.net.SocketTimeoutException

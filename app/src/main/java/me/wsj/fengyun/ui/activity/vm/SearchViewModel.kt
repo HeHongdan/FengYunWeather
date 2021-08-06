@@ -12,8 +12,8 @@ import me.wsj.fengyun.bean.SearchCity
 import me.wsj.fengyun.db.AppRepo
 import me.wsj.fengyun.db.entity.CityEntity
 import me.wsj.fengyun.ui.base.BaseViewModel
-import me.wsj.fengyun.ui.base.LoadState
 import me.wsj.lib.net.HttpUtils
+import me.wsj.lib.net.LoadState
 import java.util.*
 import kotlin.collections.HashMap
 

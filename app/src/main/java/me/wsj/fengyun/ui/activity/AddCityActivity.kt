@@ -18,12 +18,12 @@ import me.wsj.fengyun.databinding.ActivityAddCityBinding
 import me.wsj.fengyun.databinding.ActivityAddCityBinding.*
 import me.wsj.fengyun.ui.activity.vm.SearchViewModel
 import me.wsj.fengyun.ui.base.BaseVmActivity
-import me.wsj.fengyun.ui.base.LoadState
 import me.wsj.fengyun.ui.fragment.PermissionFragment
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.fengyun.utils.expand
 import me.wsj.lib.extension.startActivity
 import me.wsj.lib.extension.toast
+import me.wsj.lib.net.LoadState
 import per.wsj.commonlib.permission.PermissionUtil
 import java.util.*
 

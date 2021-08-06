@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import me.wsj.fengyun.BuildConfig
+import me.wsj.lib.net.LoadState
+import me.wsj.lib.net.exception.ExceptionUtils
 import per.wsj.commonlib.utils.LogUtil
 import java.lang.Exception
 import java.util.concurrent.atomic.AtomicInteger

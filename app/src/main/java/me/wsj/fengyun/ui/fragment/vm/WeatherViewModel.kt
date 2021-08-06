@@ -1,4 +1,4 @@
-package me.wsj.fengyun.ui.fragment
+package me.wsj.fengyun.ui.fragment.vm
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
