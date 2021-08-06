@@ -19,6 +19,7 @@ import me.wsj.lib.extension.startActivity
 import me.wsj.lib.specialeffects.ICancelable
 import me.wsj.lib.utils.IconUtils
 import per.wsj.commonlib.utils.DisplayUtil
+import per.wsj.commonlib.utils.LogUtil
 import java.util.*
 
 class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
@@ -80,8 +81,6 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         viewModel.mCurCondCode.observe(this) {
             changeBg(it)
         }
-
-
     }
 
     override fun initData() {
@@ -102,21 +101,20 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         mBinding.tvLocation.text = cityList[mCurIndex].cityName
 
         mBinding.llRound.removeAllViews()
+
         // 宽高参数
-        val layoutParams = LinearLayout.LayoutParams(
-            DisplayUtil.dp2px(4f),
-            DisplayUtil.dp2px(4f)
-        )
-        //设置间隔
+        val size = DisplayUtil.dp2px(4f)
+        val layoutParams = LinearLayout.LayoutParams(size, size)
+        // 设置间隔
         layoutParams.rightMargin = 12
 
         for (i in cityList.indices) {
-            //创建底部指示器(小圆点)
+            // 创建底部指示器(小圆点)
             val view = View(this@HomeActivity)
             view.setBackgroundResource(R.drawable.background)
             view.isEnabled = false
 
-            //添加到LinearLayout
+            // 添加到LinearLayout
             mBinding.llRound.addView(view, layoutParams)
         }
         // 小白点
@@ -126,11 +124,13 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         fragments.clear()
         for (city in cityList) {
             val cityId = city.cityId
+            LogUtil.i("cityId: " + cityId)
             val weatherFragment = WeatherFragment.newInstance(cityId)
             fragments.add(weatherFragment)
         }
 
-        mBinding.viewPager.adapter?.notifyDataSetChanged()
+//        mBinding.viewPager.adapter?.notifyDataSetChanged()
+        mBinding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager, fragments)
         mBinding.viewPager.currentItem = mCurIndex
     }
 
