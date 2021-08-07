@@ -58,6 +58,10 @@ class CityManagerAdapter(val mData: List<CityEntity>,
         notifyItemMoved(fromPosition, toPosition)
     }
 
+    override fun onDelete(pos: Int) {
+
+    }
+
     override fun dragFinish() {
         onSort?.let { it(mData) }
     }

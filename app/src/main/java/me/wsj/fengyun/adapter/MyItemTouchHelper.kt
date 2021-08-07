@@ -2,17 +2,28 @@ package me.wsj.fengyun.adapter
 
 import android.app.Service
 import android.content.Context
+import android.graphics.Canvas
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
+import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.qualifiers.ActivityContext
+import per.wsj.commonlib.utils.LogUtil
 import javax.inject.Inject
+import android.widget.FrameLayout
+
+
+
 
 class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Context) :
     ItemTouchHelper.Callback() {
+
+    val rotateAngle = -6f
+
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
@@ -39,6 +50,11 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
         // 侧滑删除可以使用
     }
 
+    fun getSlideLimitation(viewHolder: RecyclerView.ViewHolder): Int {
+        val viewGroup: ViewGroup = viewHolder.itemView as ViewGroup
+        return viewGroup.getChildAt(1).layoutParams.width
+    }
+
     override fun isLongPressDragEnabled(): Boolean {
         return true
     }
@@ -48,9 +64,10 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
      * 可实现高亮
      */
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+//        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
 
-//            viewHolder?.itemView?.setBackgroundColor(context.getColor(R.color.color_item_high_light_drag))
+            viewHolder?.itemView?.rotation = rotateAngle
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 viewHolder?.itemView?.elevation = 100f
             }
@@ -70,21 +87,26 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
      */
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            viewHolder.itemView.elevation = 0f
-        }
+        if (viewHolder.itemView.rotation == rotateAngle) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                viewHolder.itemView.elevation = 0f
+            }
+            viewHolder.itemView.rotation = 0f
 //        val ints = intArrayOf(android.R.attr.selectableItemBackground)
 //        val typedArray = context.obtainStyledAttributes(ints)
 //        val drawable = typedArray.getDrawable(0)
 //        viewHolder.itemView.background = context.getDrawable(R.drawable.ripple_item_bg)
 
-        (recyclerView.adapter as IDragSort).dragFinish()
+            (recyclerView.adapter as IDragSort).dragFinish()
+        }
     }
 }
 
 
 interface IDragSort {
     fun move(from: Int, to: Int)
+
+    fun onDelete(pos: Int)
 
     fun dragFinish()
 }
