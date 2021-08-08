@@ -1,6 +1,7 @@
 package me.wsj.fengyun.ui.activity
 
 import android.content.Intent
+import android.view.MotionEvent
 import androidx.recyclerview.widget.ItemTouchHelper
 import dagger.hilt.android.AndroidEntryPoint
 import me.wsj.fengyun.R
@@ -36,9 +37,11 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
             ContentUtil.CITY_CHANGE = true
         }
 
-        mBinding.recycleControl.adapter = adapter
+        mBinding.recycleView.adapter = adapter
 
-        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(mBinding.recycleControl)
+        ItemTouchHelper(itemTouchCallback).attachToRecyclerView(mBinding.recycleView)
+
+        mBinding.recycleView.setItemTouchCallback(itemTouchCallback)
     }
 
     override fun initEvent() {
@@ -48,6 +51,7 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
                 datas.removeAt(pos)
                 adapter?.notifyItemRemoved(pos)
                 ContentUtil.CITY_CHANGE = true
+                itemTouchCallback.closeMenuDirect()
             }
         }
 

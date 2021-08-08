@@ -3,15 +3,19 @@ package me.wsj.fengyun.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
 import me.wsj.fengyun.db.entity.CityEntity
+import per.wsj.commonlib.utils.LogUtil
 import java.util.*
 
-class CityManagerAdapter(val mData: List<CityEntity>,
-                         var onSort: ((List<CityEntity>) -> Unit)? = null) :
+class CityManagerAdapter(
+    val mData: List<CityEntity>,
+    var onSort: ((List<CityEntity>) -> Unit)? = null
+) :
     RecyclerView.Adapter<CityManagerAdapter.ViewHolder>(), IDragSort {
 
     var listener: OnCityRemoveListener? = null
@@ -26,19 +30,19 @@ class CityManagerAdapter(val mData: List<CityEntity>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mData[position]
+        val item = mData[holder.adapterPosition]
         holder.tvItemCity.text = item.cityName
 
-        holder.itemView.setOnClickListener {
-            listener?.onCityRemove(position)
+        holder.flDelete.setOnClickListener {
+            listener?.onCityRemove(holder.adapterPosition)
         }
     }
 
     override fun getItemCount() = mData.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val ivDelete = itemView.findViewById<ImageView>(R.id.iv_item_delete)
-        val tvItemCity = itemView.findViewById<TextView>(R.id.tv_item_city)
+        val tvItemCity = itemView.findViewById<TextView>(R.id.tvItemCity)
+        val flDelete = itemView.findViewById<FrameLayout>(R.id.flDelete)
     }
 
     public interface OnCityRemoveListener {
@@ -56,10 +60,6 @@ class CityManagerAdapter(val mData: List<CityEntity>,
             }
         }
         notifyItemMoved(fromPosition, toPosition)
-    }
-
-    override fun onDelete(pos: Int) {
-
     }
 
     override fun dragFinish() {
