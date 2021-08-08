@@ -10,9 +10,9 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 6,
-      "versionName": "1.0.6",
-      "outputFile": "fengyun-weather-1.0.6.apk"
+      "versionCode": 7,
+      "versionName": "1.0.7",
+      "outputFile": "fengyun-weather-1.0.7.apk"
     }
   ]
 }

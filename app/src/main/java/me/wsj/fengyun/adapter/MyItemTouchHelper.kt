@@ -17,6 +17,7 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import per.wsj.commonlib.utils.LogUtil
 import javax.inject.Inject
 import android.view.animation.OvershootInterpolator
+import me.wsj.fengyun.R
 
 
 class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Context) :
@@ -48,7 +49,6 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         // 侧滑删除可以使用
-
     }
 
     fun getSlideLimitation(viewHolder: RecyclerView.ViewHolder): Int {
@@ -128,6 +128,7 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 viewHolder?.itemView?.elevation = 100f
             }
+            viewHolder?.itemView?.background = context.resources.getDrawable(R.drawable.shadow_bg)
             //获取系统震动服务//震动70毫秒
             val vib = context.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -153,6 +154,7 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
 //        val typedArray = context.obtainStyledAttributes(ints)
 //        val drawable = typedArray.getDrawable(0)
 //        viewHolder.itemView.background = context.getDrawable(R.drawable.ripple_item_bg)
+            viewHolder.itemView.background = context.resources.getDrawable(R.drawable.shape_rect_r8_white)
 
             (recyclerView.adapter as IDragSort).dragFinish()
         } else {

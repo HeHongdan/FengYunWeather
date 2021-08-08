@@ -53,7 +53,7 @@
 
 ## 下载体验
 
- - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://github.com/wsj1024/FengYunWeather/blob/master/app/release/fengyun-weather-1.0.6.apk)
+ - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://github.com/wsj1024/FengYunWeather/blob/master/app/release/fengyun-weather-1.0.7.apk)
  - 下方二维码下载(每日上限100次，如达到上限，还是 clone 源码吧！✧(≖ ◡ ≖✿))）<br/>
    <img src="https://www.pgyer.com/app/qrcode/ENha"/>
 

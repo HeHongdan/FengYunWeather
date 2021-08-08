@@ -10,7 +10,7 @@ class EffectUtil {
 
     companion object {
         fun getEffect(context: Context, code: Int): Drawable? {
-            val isDay = DateUtil.getNowHour() in 7..18
+            val isDay = DateUtil.getNowHour() in 7 until 18
             val type = ConvertUtil.convert(code)
             return when (type) {
                 1 -> {
