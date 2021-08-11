@@ -12,6 +12,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var mBinding: ActivityMainBinding
     val mData by lazy { ArrayList<WeatherBean>() }
 
+    lateinit var adapter: AllAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -19,11 +21,13 @@ class MainActivity : AppCompatActivity() {
 
         initData()
 
-        val adapter = AllAdapter(this, mData) {
-            startActivity<ShowActivity>("code" to it.code)
+
+        adapter = AllAdapter(this, mData, { startActivity<ShowActivity>("code" to it.code) }) {
+            mData.removeAt(it)
+            adapter.notifyItemRemoved(it)
+            mBinding.rvAll.closeMenu()
         }
         mBinding.rvAll.adapter = adapter
-
     }
 
     private fun initData() {

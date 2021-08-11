@@ -21,7 +21,7 @@ class MyRecyclerView : RecyclerView {
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         // close menu while it's open
         if (ev.action == MotionEvent.ACTION_DOWN) {
-            itemTouchCallback!!.forceClose(ev.x, ev.y)
+//            itemTouchCallback!!.forceClose(ev.x, ev.y)
         }
         return super.dispatchTouchEvent(ev)
     }

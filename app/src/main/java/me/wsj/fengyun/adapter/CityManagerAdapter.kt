@@ -33,8 +33,12 @@ class CityManagerAdapter(
         val item = mData[holder.adapterPosition]
         holder.tvItemCity.text = item.cityName
 
-        holder.flDelete.setOnClickListener {
+        holder.tvDelete.setOnClickListener {
             listener?.onCityRemove(holder.adapterPosition)
+        }
+
+        holder.itemView.setOnClickListener {
+
         }
     }
 
@@ -42,7 +46,7 @@ class CityManagerAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvItemCity = itemView.findViewById<TextView>(R.id.tvItemCity)
-        val flDelete = itemView.findViewById<FrameLayout>(R.id.flDelete)
+        val tvDelete = itemView.findViewById<TextView>(R.id.tvDelete)
     }
 
     public interface OnCityRemoveListener {

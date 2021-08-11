@@ -52,25 +52,7 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
      * @param loadingType 0: 默认 1: silent
      */
     private fun launchRequest(loadingType: Int = 0, block: suspend CoroutineScope.() -> Unit) {
-        viewModelScope.launch(
-            /*CoroutineExceptionHandler { _, throwable ->
-                run {
-                    // handle error
-                    val error = ExceptionUtils.parseException(throwable)
-                    if (BuildConfig.DEBUG) {
-                        LogUtil.e("$loadingType -> 异常：$throwable")
-                    }
-                    if (loadingType == 0) {
-                        loadState.value = LoadState.Error(error)
-                        if (runningCount.get() > 0) {
-                            runningCount.getAndDecrement()
-                        }
-                        LogUtil.d("runningCount - : $runningCount")
-                        loadState.value = LoadState.Finish
-                    }
-                }
-            }*/
-        ) {
+        viewModelScope.launch() {
             try {
                 if (loadingType == 0) {
                     runningCount.getAndIncrement()
@@ -80,11 +62,12 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
                 withContext(Dispatchers.IO) {
                     block.invoke(this)
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 // handle error
                 val error = ExceptionUtils.parseException(e)
                 if (BuildConfig.DEBUG) {
                     LogUtil.e("$loadingType -> 异常：$e")
+                    e.printStackTrace()
                 }
                 if (loadingType == 0) {
                     loadState.value = LoadState.Error(error)

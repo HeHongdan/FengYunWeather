@@ -116,7 +116,7 @@ class WidgetService : LifecycleService() {
             return
         }
         intervalJob = lifecycleScope.launch(CoroutineExceptionHandler { _, _ ->
-            LogUtil.e("异常...")
+            LogUtil.e("WidgetService: 异常...")
         }) {
             withContext(Dispatchers.IO) {
                 while (true) {

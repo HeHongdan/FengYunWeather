@@ -14,7 +14,8 @@ import me.wsj.lib.utils.IconUtils
 class AllAdapter(
     val context: Context,
     val mData: List<WeatherBean>,
-    val onClick: (WeatherBean) -> Unit
+    val onClick: (WeatherBean) -> Unit,
+    val onDelete: (Int) -> Unit
 ) :
     RecyclerView.Adapter<AllAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,6 +31,10 @@ class AllAdapter(
         holder.itemView.setOnClickListener {
             onClick(item)
         }
+
+        holder.tvDelete.setOnClickListener {
+            onDelete(holder.adapterPosition)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -39,5 +44,6 @@ class AllAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvWeather = itemView.findViewById<TextView>(R.id.tvWeather)
         val icon = itemView.findViewById<ImageView>(R.id.icon)
+        val tvDelete = itemView.findViewById<TextView>(R.id.tvDelete)
     }
 }

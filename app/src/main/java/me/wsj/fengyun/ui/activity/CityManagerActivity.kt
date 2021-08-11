@@ -40,8 +40,6 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
         mBinding.recycleView.adapter = adapter
 
         ItemTouchHelper(itemTouchCallback).attachToRecyclerView(mBinding.recycleView)
-
-        mBinding.recycleView.setItemTouchCallback(itemTouchCallback)
     }
 
     override fun initEvent() {
@@ -51,7 +49,7 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
                 datas.removeAt(pos)
                 adapter?.notifyItemRemoved(pos)
                 ContentUtil.CITY_CHANGE = true
-                itemTouchCallback.closeMenuDirect()
+
             }
         }
 
@@ -64,6 +62,5 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
 
     override fun initData() {
         viewModel.getCities()
-
     }
 }

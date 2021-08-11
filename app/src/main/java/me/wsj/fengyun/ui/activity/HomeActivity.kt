@@ -124,7 +124,7 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         fragments.clear()
         for (city in cityList) {
             val cityId = city.cityId
-            LogUtil.i("cityId: " + cityId)
+//            LogUtil.i("cityId: " + cityId)
             val weatherFragment = WeatherFragment.newInstance(cityId)
             fragments.add(weatherFragment)
         }
