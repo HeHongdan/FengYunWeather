@@ -126,6 +126,9 @@ object HttpUtils {
                         getResult(code, result)
                     }
                 }
+                "401" -> {
+                    throw RequestException("请求异常异常：401 鉴权错误，请确认key是否正确")
+                }
                 else -> {
                     throw RequestException("请求异常异常：code=$code")
                 }
@@ -162,6 +165,10 @@ object HttpUtils {
                 "200" -> {
                     val result: T = Gson().fromJson(body, T::class.java)
                     return result
+                }
+                "401" -> {
+                    throw RequestException("请求异常异常：401 鉴权错误，请确认key是否正确")
+                    return null
                 }
                 else -> {
                     throw RequestException("请求异常异常：code=$code")

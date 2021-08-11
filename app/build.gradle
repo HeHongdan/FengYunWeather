@@ -32,10 +32,12 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file(localProperties.get("filename"))
-            storePassword localProperties.get("storePassword")
-            keyAlias localProperties.get("keyAlias")
-            keyPassword localProperties.get("keyPassword")
+            if (configProperties != null && configProperties.get("filename") != null){
+                storeFile file(configProperties.get("filename"))
+                storePassword configProperties.get("storePassword")
+                keyAlias configProperties.get("keyAlias")
+                keyPassword configProperties.get("keyPassword")
+            }
         }
     }
 
@@ -44,15 +46,16 @@ android {
             zipAlignEnabled true
             shrinkResources true
             minifyEnabled true
-            manifestPlaceholders = [amap_app_key: localProperties.get("gao_de_app_key")]
-            buildConfigField('String', 'HeFengKey', localProperties.get("he_feng_app_key"))
+            manifestPlaceholders = [amap_app_key: configProperties.get("gao_de_app_key")]
+            buildConfigField('String', 'HeFengKey', configProperties.get("he_feng_app_key"))
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
-            manifestPlaceholders = [amap_app_key: localProperties.get("gao_de_app_key")]
-            buildConfigField('String', 'HeFengKey', localProperties.get("he_feng_app_key"))
+            // todo 请在config.properties中配置天气定位api key
+            manifestPlaceholders = [amap_app_key: configProperties.get("gao_de_app_key")]
+            buildConfigField('String', 'HeFengKey', configProperties.get("he_feng_app_key"))
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

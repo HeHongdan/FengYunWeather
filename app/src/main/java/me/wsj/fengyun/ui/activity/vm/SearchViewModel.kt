@@ -132,7 +132,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
             if (aMapLocation.errorCode == 0) {
                 curLocation.value = aMapLocation.district
             } else {
-                loadState.value = LoadState.Error("获取定位失败,请重试")
+                loadState.value = LoadState.Error("获取定位失败,请确认key是否正确")
             }
             loadState.value = LoadState.Finish
             mLocationClient.onDestroy()
