@@ -53,7 +53,7 @@ android {
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
-            // todo 请在config.properties中配置天气定位api key
+            // todo 请在local.properties中配置天气及定位的api key
             manifestPlaceholders = [amap_app_key: configProperties.get("gao_de_app_key")]
             buildConfigField('String', 'HeFengKey', configProperties.get("he_feng_app_key"))
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

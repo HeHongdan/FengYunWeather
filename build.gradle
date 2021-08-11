@@ -5,7 +5,7 @@ buildscript {
         room_version = '2.2.6'
     }
     ext.configProperties = new Properties()
-    ext.configProperties.load(project.rootProject.file('config.properties').newReader("UTF-8"))
+    ext.configProperties.load(project.rootProject.file('local.properties').newReader("UTF-8"))
 
     repositories {
         google()
