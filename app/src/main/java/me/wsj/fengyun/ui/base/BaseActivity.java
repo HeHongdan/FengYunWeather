@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewbinding.ViewBinding;
 
 import me.wsj.fengyun.R;
+import me.wsj.lib.dialog.LoadingDialog;
 
 public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActivity implements CreateInit<T> {
 
@@ -26,7 +27,7 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
 
     protected Context context;
 
-    private ProgressDialog loadingDialog;
+    private LoadingDialog loadingDialog;
 
     protected T mBinding;
 
@@ -116,13 +117,13 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
 
     protected void showLoading(boolean show, String tip) {
         if (loadingDialog == null) {
-            loadingDialog = new ProgressDialog(this);
+            loadingDialog = new LoadingDialog(this);
         }
         if (show) {
             if (tip != null && !tip.isEmpty()) {
-                loadingDialog.setTitle(tip);
+                loadingDialog.setTip(tip);
             } else {
-                loadingDialog.setTitle("请稍后...");
+                loadingDialog.setTip("请稍后...");
             }
             loadingDialog.show();
         } else {

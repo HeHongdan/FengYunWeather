@@ -38,7 +38,7 @@ class EffectUtil {
                             )
                         )
                 }
-                3->{
+                3 -> {
                     EffectCloudDrawable(
                         arrayOf(
                             context.resources.getDrawable(R.drawable.fog_cloud_1),

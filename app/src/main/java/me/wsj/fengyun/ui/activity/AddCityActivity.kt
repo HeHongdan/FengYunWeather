@@ -127,7 +127,9 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
                     toast(it.msg)
                 }
                 is LoadState.Finish -> {
-                    showLoading(false)
+                    if (viewModel.isStopped()) {
+                        showLoading(false)
+                    }
                 }
             }
         }

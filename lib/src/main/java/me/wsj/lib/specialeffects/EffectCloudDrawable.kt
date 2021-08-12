@@ -1,20 +1,14 @@
 package me.wsj.lib.specialeffects
 
-import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.view.animation.LinearInterpolator
-import androidx.collection.ArraySet
 import kotlinx.coroutines.*
 import me.wsj.lib.specialeffects.entity.Cloud
-import me.wsj.lib.specialeffects.entity.Rain
 import per.wsj.commonlib.utils.LogUtil
 import java.util.*
-import kotlin.math.PI
-import kotlin.math.sin
 
 /**
  * create by shiju.wang
