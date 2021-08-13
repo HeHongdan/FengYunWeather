@@ -3,6 +3,7 @@ package me.wsj.lib.specialeffects
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.graphics.*
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.view.animation.LinearInterpolator
 import per.wsj.commonlib.utils.LogUtil
@@ -11,7 +12,7 @@ import per.wsj.commonlib.utils.LogUtil
  * create by shiju.wang
  * sun
  */
-class EffectSunDrawable(private val mSunDrawable: Drawable) : Drawable(), ICancelable {
+class EffectSunDrawable(private val mSunDrawable: Drawable) : Drawable(), Animatable {
 
     private val mCenterPoint = PointF()
 
@@ -24,7 +25,7 @@ class EffectSunDrawable(private val mSunDrawable: Drawable) : Drawable(), ICance
 
     private var currentAlpha = 0
 
-    private var mAnimatorSet: AnimatorSet? = null
+    private val mAnimatorSet = AnimatorSet()
 
     /*constructor(drawable: Drawable) : this() {
 
@@ -44,27 +45,24 @@ class EffectSunDrawable(private val mSunDrawable: Drawable) : Drawable(), ICance
     }
 
     private fun startAnim() {
-        if (mAnimatorSet == null) {
-            val rotateAnimator = ValueAnimator.ofFloat(0f, 360f)
-            rotateAnimator.repeatCount = ValueAnimator.INFINITE
-            rotateAnimator.duration = 15000
-            rotateAnimator.addUpdateListener {
-                currentAngel = (it.animatedValue) as Float
+        val rotateAnimator = ValueAnimator.ofFloat(0f, 360f)
+        rotateAnimator.repeatCount = ValueAnimator.INFINITE
+        rotateAnimator.duration = 15000
+        rotateAnimator.addUpdateListener {
+            currentAngel = (it.animatedValue) as Float
 //                LogUtil.e("currentAngel: $currentAngel")
-                invalidateSelf()
-            }
-            val alphaAnimator = ValueAnimator.ofInt(10, 255)
-            alphaAnimator.repeatMode = ValueAnimator.REVERSE
-            alphaAnimator.repeatCount = ValueAnimator.INFINITE
-            alphaAnimator.duration = 5000
-            alphaAnimator.addUpdateListener {
-                currentAlpha = (it.animatedValue) as Int
-            }
-            mAnimatorSet = AnimatorSet()
-            mAnimatorSet?.playTogether(rotateAnimator, alphaAnimator)
-            mAnimatorSet?.interpolator = LinearInterpolator()
-            mAnimatorSet?.start()
+            invalidateSelf()
         }
+        val alphaAnimator = ValueAnimator.ofInt(10, 255)
+        alphaAnimator.repeatMode = ValueAnimator.REVERSE
+        alphaAnimator.repeatCount = ValueAnimator.INFINITE
+        alphaAnimator.duration = 5000
+        alphaAnimator.addUpdateListener {
+            currentAlpha = (it.animatedValue) as Int
+        }
+        mAnimatorSet.playTogether(rotateAnimator, alphaAnimator)
+        mAnimatorSet.interpolator = LinearInterpolator()
+        mAnimatorSet.start()
     }
 
     override fun draw(canvas: Canvas) {
@@ -95,8 +93,12 @@ class EffectSunDrawable(private val mSunDrawable: Drawable) : Drawable(), ICance
         //To do sth.
     }
 
-    override fun cancel() {
-        mAnimatorSet?.cancel()
+    override fun stop() {
+        mAnimatorSet.cancel()
         LogUtil.d("Effect1Drawable cancel ---------------------------> ")
+    }
+
+    override fun isRunning(): Boolean {
+        return mAnimatorSet.isRunning
     }
 }

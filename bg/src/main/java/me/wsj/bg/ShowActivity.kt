@@ -1,10 +1,10 @@
 package me.wsj.bg
 
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import me.wsj.lib.EffectUtil
-import me.wsj.lib.specialeffects.ICancelable
 import me.wsj.lib.utils.IconUtils
 
 class ShowActivity : AppCompatActivity() {
@@ -24,7 +24,7 @@ class ShowActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         findViewById<ImageView>(R.id.ivEffect).drawable?.let {
-            (it as ICancelable).cancel()
+            (it as Animatable).stop()
         }
     }
 }

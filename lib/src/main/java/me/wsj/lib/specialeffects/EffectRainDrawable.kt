@@ -2,6 +2,7 @@ package me.wsj.lib.specialeffects
 
 import android.animation.ValueAnimator
 import android.graphics.*
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.view.animation.AccelerateInterpolator
 import me.wsj.lib.specialeffects.entity.Rain
@@ -13,8 +14,7 @@ import kotlin.collections.ArrayList
  * create by shiju.wang
  * Rain
  */
-class EffectRainDrawable(val type: Int, val rains: Array<Drawable>) :
-    Drawable(), ICancelable {
+class EffectRainDrawable(val type: Int, val rains: Array<Drawable>) : Drawable(), Animatable {
 
     var rainScale = 60
 
@@ -118,9 +118,13 @@ class EffectRainDrawable(val type: Int, val rains: Array<Drawable>) :
         //To do sth.
     }
 
-    override fun cancel() {
+    override fun stop() {
         animator.removeAllListeners()
         animator.cancel()
         LogUtil.d("Effect4Drawable cancel ---------------------------> ")
+    }
+
+    override fun isRunning(): Boolean {
+        return animator.isRunning
     }
 }

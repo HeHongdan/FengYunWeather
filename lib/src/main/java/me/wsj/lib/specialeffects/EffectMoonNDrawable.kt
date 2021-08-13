@@ -1,6 +1,7 @@
 package me.wsj.lib.specialeffects
 
 import android.graphics.*
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import per.wsj.commonlib.utils.LogUtil
 
@@ -8,7 +9,7 @@ import per.wsj.commonlib.utils.LogUtil
  * create by shiju.wang
  * moon
  */
-class EffectMoonNDrawable(private val mMoonDrawable: Drawable) : Drawable(), ICancelable {
+class EffectMoonNDrawable(private val mMoonDrawable: Drawable) : Drawable(), Animatable {
 
     private val mCenterPoint = PointF()
 
@@ -49,7 +50,11 @@ class EffectMoonNDrawable(private val mMoonDrawable: Drawable) : Drawable(), ICa
 
     }
 
-    override fun cancel() {
+    override fun stop() {
         LogUtil.d("Effect1NDrawable cancel ---------------------------> ")
+    }
+
+    override fun isRunning(): Boolean {
+        return true
     }
 }

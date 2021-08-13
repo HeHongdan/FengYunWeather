@@ -36,14 +36,15 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     private lateinit var mCityId: String
 
-    private var sunrise: String? = null
-    private var sunset: String? = null
-    private var moonRise: String? = null
-    private var moonSet: String? = null
-    private var hasAni = false
+    //    private var sunrise: String? = null
+//    private var sunset: String? = null
+//    private var moonRise: String? = null
+//    private var moonSet: String? = null
+//    private var todayMaxTmp: String? = null
+//    private var todayMinTmp: String? = null
+    private var todayWeather: Daily? = null
 
-    private var todayMaxTmp: String? = null
-    private var todayMinTmp: String? = null
+    private var hasAni = false
 
     private var nowTmp: String? = null
 
@@ -212,14 +213,10 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     private fun showForecast(dailyForecast: List<Daily>) {
         val currentTime = DateUtil.getNowTime()
         val forecastBase = dailyForecast[0]
-        todayMinTmp = forecastBase.tempMin
-        todayMaxTmp = forecastBase.tempMax
-        sunrise = forecastBase.sunrise
-        sunset = forecastBase.sunset
-        moonRise = forecastBase.moonrise
-        moonSet = forecastBase.moonset
-        sunMoonBinding.sunView.setTimes(sunrise, sunset, currentTime)
-        sunMoonBinding.moonView.setTimes(moonRise, moonSet, currentTime)
+        todayWeather = forecastBase
+
+        sunMoonBinding.sunView.setTimes(todayWeather?.sunrise, todayWeather?.sunset, currentTime)
+        sunMoonBinding.moonView.setTimes(todayWeather?.moonrise, todayWeather?.moonset, currentTime)
 
         mForecastList.clear()
         mForecastList.addAll(dailyForecast)
@@ -348,10 +345,10 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      * 设置view的时间
      */
     private fun setViewTime() {
-        if (!hasAni && sunrise.notEmpty() && sunset.notEmpty() && moonRise.notEmpty() && moonSet.notEmpty()) {
+        if (!hasAni && todayWeather?.sunrise.notEmpty() && todayWeather?.sunset.notEmpty() && todayWeather?.moonrise.notEmpty() && todayWeather?.moonset.notEmpty()) {
             val currentTime = DateUtil.getNowTime()
-            sunMoonBinding.sunView.setTimes(sunrise, sunset, currentTime)
-            sunMoonBinding.moonView.setTimes(moonRise, moonSet, currentTime)
+            sunMoonBinding.sunView.setTimes(todayWeather?.sunrise, todayWeather?.sunset, currentTime)
+            sunMoonBinding.moonView.setTimes(todayWeather?.moonrise, todayWeather?.moonset, currentTime)
             hasAni = true
         }
     }

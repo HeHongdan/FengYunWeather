@@ -152,7 +152,7 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
      */
     private boolean mEnableLegacyRequestDisallowInterceptTouch;
 
-    private Animation.AnimationListener mRefreshListener = new Animation.AnimationListener() {
+    private AnimationListener mRefreshListener = new AnimationListener() {
         @Override
         public void onAnimationStart(Animation animation) {
         }
@@ -181,7 +181,7 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
 
     void reset() {
         mCircleView.clearAnimation();
-        mProgress.cancel();
+        mProgress.stop();
         mCircleView.setVisibility(View.GONE);
         setColorViewAlpha(MAX_ALPHA);
         // Return the circle to its start position
@@ -201,7 +201,7 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
         }
     }
 
-    static class SavedState extends View.BaseSavedState {
+    static class SavedState extends BaseSavedState {
         final boolean mRefreshing;
 
         /**
@@ -226,8 +226,8 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
             out.writeByte(mRefreshing ? (byte) 1 : (byte) 0);
         }
 
-        public static final Parcelable.Creator<SavedState> CREATOR =
-                new Parcelable.Creator<SavedState>() {
+        public static final Creator<SavedState> CREATOR =
+                new Creator<SavedState>() {
                     @Override
                     public SavedState createFromParcel(Parcel in) {
                         return new SavedState(in);
@@ -505,7 +505,7 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
         }
     }
 
-    void startScaleDownAnimation(Animation.AnimationListener listener) {
+    void startScaleDownAnimation(AnimationListener listener) {
         mScaleDownAnimation = new Animation() {
             @Override
             public void applyTransformation(float interpolatedTime, Transformation t) {
@@ -1165,9 +1165,9 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
             // cancel refresh
             mRefreshing = false;
 //            mProgress.setStartEndTrim(0f, 0f);
-            Animation.AnimationListener listener = null;
+            AnimationListener listener = null;
             if (!mScale) {
-                listener = new Animation.AnimationListener() {
+                listener = new AnimationListener() {
 
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -1341,7 +1341,7 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
     };
 
     private void startScaleDownReturnToStartAnimation(int from,
-                                                      Animation.AnimationListener listener) {
+                                                      AnimationListener listener) {
         mFrom = from;
         mStartingScale = mCircleView.getScaleX();
         mScaleDownToStartAnimation = new Animation() {

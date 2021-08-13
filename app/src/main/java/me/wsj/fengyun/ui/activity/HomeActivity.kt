@@ -1,6 +1,7 @@
 package me.wsj.fengyun.ui.activity
 
 import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
@@ -16,10 +17,8 @@ import me.wsj.fengyun.ui.fragment.WeatherFragment
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.lib.EffectUtil
 import me.wsj.lib.extension.startActivity
-import me.wsj.lib.specialeffects.ICancelable
 import me.wsj.lib.utils.IconUtils
 import per.wsj.commonlib.utils.DisplayUtil
-import per.wsj.commonlib.utils.LogUtil
 import java.util.*
 
 class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
@@ -27,6 +26,11 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     private val fragments: MutableList<Fragment> by lazy { ArrayList() }
     private val cityList = ArrayList<CityEntity>()
     private var mCurIndex = 0
+
+    /**
+     * 当前的天气code
+     */
+    var currentCode = ""
 
     override fun bindView() = ActivityMainBinding.inflate(layoutInflater)
 
@@ -143,7 +147,11 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         }
     }
 
-    fun changeBg(condCode: String) {
+    private fun changeBg(condCode: String) {
+        if (currentCode == condCode) {
+            return
+        }
+        currentCode = condCode
         // 获取背景
         val bgDrawable = IconUtils.getBg(this@HomeActivity, condCode.toInt())
         mBinding.ivBg.setImageResource(bgDrawable)
@@ -156,7 +164,7 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     override fun onDestroy() {
         super.onDestroy()
         mBinding.ivEffect.drawable?.let {
-            (it as ICancelable).cancel()
+            (it as Animatable).stop()
         }
     }
 }

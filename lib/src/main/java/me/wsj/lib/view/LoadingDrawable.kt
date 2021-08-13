@@ -1,18 +1,16 @@
 package me.wsj.lib.view
 
 import android.graphics.*
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import kotlinx.coroutines.*
-import me.wsj.lib.specialeffects.ICancelable
 import per.wsj.commonlib.utils.LogUtil
 
 /**
  * create by shiju.wang
  * cloud
  */
-class LoadingDrawable(val sun: Drawable, val cloud: Drawable) :
-    Drawable(), ICancelable {
-//    todo chang ICancelable to Animatable
+class LoadingDrawable(val sun: Drawable, val cloud: Drawable) : Drawable(), Animatable {
 
     private var scope: CoroutineScope? = null
 
@@ -33,19 +31,12 @@ class LoadingDrawable(val sun: Drawable, val cloud: Drawable) :
         )
     }
 
-    @Volatile
-    var isRunning = false
-
     private fun startAnim() {
-        if (!isRunning) {
-            LogUtil.e("startAnim() --------> ")
-            isRunning = true
-            if (scope == null) {
-                scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-            }
+        if (scope == null) {
+            scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
             scope?.launch {
-                LogUtil.e("launch() --------> ")
-                while (isRunning) {
+                while (isActive) {
+                    LogUtil.e("running() --------> ")
                     withContext(Dispatchers.Default) {
                         delay(20)
                     }
@@ -98,10 +89,17 @@ class LoadingDrawable(val sun: Drawable, val cloud: Drawable) :
         startAnim()
     }
 
-    override fun cancel() {
-        isRunning = false
+    override fun stop() {
         scope?.cancel()
         scope = null
         LogUtil.e("ICancelable cancel ---------------------------> ")
+    }
+
+    override fun isRunning(): Boolean {
+        scope?.let {
+            return it.isActive
+        } ?: run {
+            return false
+        }
     }
 }

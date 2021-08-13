@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.PixelFormat
 import android.graphics.Rect
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import kotlinx.coroutines.*
 import me.wsj.lib.specialeffects.entity.Cloud
@@ -14,8 +15,7 @@ import java.util.*
  * create by shiju.wang
  * cloud
  */
-class EffectCloudDrawable(val clouds: Array<Drawable>) :
-    Drawable(), ICancelable {
+class EffectCloudDrawable(val clouds: Array<Drawable>) : Drawable(), Animatable {
 
     private val scope by lazy { CoroutineScope(Job() + Dispatchers.Main) }
 
@@ -49,19 +49,14 @@ class EffectCloudDrawable(val clouds: Array<Drawable>) :
         startAnim()
     }
 
-    @Volatile
-    var isRunning = false
-
     private fun startAnim() {
-        if (!isRunning) {
-            isRunning = true
-            scope.launch {
-                while (isRunning) {
-                    withContext(Dispatchers.Default) {
-                        delay(25)
-                    }
-                    updatePosition()
+        LogUtil.e("isActive: "+scope.isActive)
+        scope.launch {
+            while (isActive) {
+                withContext(Dispatchers.Default) {
+                    delay(25)
                 }
+                updatePosition()
             }
         }
     }
@@ -109,9 +104,12 @@ class EffectCloudDrawable(val clouds: Array<Drawable>) :
         //To do sth.
     }
 
-    override fun cancel() {
-        isRunning = false
+    override fun stop() {
         scope.cancel()
         LogUtil.d("Effect2Drawable cancel ---------------------------> ")
+    }
+
+    override fun isRunning(): Boolean {
+        return scope.isActive
     }
 }

@@ -1,6 +1,7 @@
 package me.wsj.lib.specialeffects
 
 import android.graphics.*
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import kotlinx.coroutines.*
 import per.wsj.commonlib.utils.LogUtil
@@ -10,13 +11,11 @@ import per.wsj.commonlib.utils.LogUtil
  * lightning
  */
 class EffectLightningDrawable(val lightning1: Drawable, val lightning2: Drawable) :
-    Drawable(), ICancelable {
+    Drawable(), Animatable {
 
     private val scope by lazy { CoroutineScope(Job() + Dispatchers.Main) }
 
     private var mWidth = 0
-
-    private var isRunning = true
 
     private var size1 = Point()
     private var size2 = Point()
@@ -27,7 +26,7 @@ class EffectLightningDrawable(val lightning1: Drawable, val lightning2: Drawable
 
     init {
         scope.launch {
-            while (isRunning) {
+            while (scope.isActive) {
                 withContext(Dispatchers.Default) {
                     delay(1500)
                 }
@@ -110,9 +109,12 @@ class EffectLightningDrawable(val lightning1: Drawable, val lightning2: Drawable
         //To do sth.
     }
 
-    override fun cancel() {
-        isRunning = false
+    override fun stop() {
         scope.cancel()
         LogUtil.d("Effect5Drawable cancel ---------------------------> ")
+    }
+
+    override fun isRunning(): Boolean {
+        return scope.isActive
     }
 }

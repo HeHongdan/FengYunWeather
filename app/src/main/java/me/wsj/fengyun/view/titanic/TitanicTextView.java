@@ -9,6 +9,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Shader;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.animation.LinearInterpolator;
@@ -16,14 +17,13 @@ import android.view.animation.LinearInterpolator;
 import androidx.core.content.res.ResourcesCompat;
 
 import me.wsj.fengyun.R;
-import me.wsj.lib.specialeffects.ICancelable;
 
 /**
  * Titanic
  * romainpiel
  * 13/03/2014
  */
-public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView implements ICancelable {
+public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView implements Animatable {
 
     // wave shader coordinates
     private float maskX, maskY;
@@ -185,8 +185,17 @@ public class TitanicTextView extends androidx.appcompat.widget.AppCompatTextView
 
 
     @Override
-    public void cancel() {
+    public void stop() {
         destory();
+    }
+
+    @Override
+    public boolean isRunning() {
+        if (animatorSet != null) {
+            return animatorSet.isRunning();
+        } else {
+            return false;
+        }
     }
 
     public void destory() {

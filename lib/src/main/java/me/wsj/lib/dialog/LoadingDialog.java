@@ -1,15 +1,14 @@
 package me.wsj.lib.dialog;
 
 import android.content.Context;
+import android.graphics.drawable.Animatable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import me.wsj.lib.R;
-import me.wsj.lib.specialeffects.ICancelable;
 import me.wsj.lib.view.LoadingDrawable;
-import per.wsj.commonlib.utils.LogUtil;
 
 /**
  * 自定义加载进度对话框
@@ -58,7 +57,7 @@ public class LoadingDialog extends BaseDialog {
     public void show() {
         super.show();
         if (loadingDrawable != null) {
-            ((ICancelable) loadingDrawable).start();
+            ((Animatable) loadingDrawable).start();
         }
     }
 
@@ -66,7 +65,7 @@ public class LoadingDialog extends BaseDialog {
     public void dismiss() {
         super.dismiss();
         if (loadingDrawable != null) {
-            ((ICancelable) loadingDrawable).cancel();
+            ((Animatable) loadingDrawable).stop();
         }
     }
 }
