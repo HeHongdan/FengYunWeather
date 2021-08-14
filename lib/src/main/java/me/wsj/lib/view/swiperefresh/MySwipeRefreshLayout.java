@@ -41,6 +41,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import me.wsj.lib.R;
 import me.wsj.lib.view.LoadingDrawable;
+import per.wsj.commonlib.utils.LogUtil;
 
 public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingParent3,
         NestedScrollingParent2, NestedScrollingChild3, NestedScrollingChild2, NestedScrollingParent,
@@ -73,7 +74,8 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
     private static final int ANIMATE_TO_START_DURATION = 200;
 
     // Default offset in dips from the top of the view to where the progress spinner should stop
-    private static final int DEFAULT_CIRCLE_TARGET = 64;
+//    private static final int DEFAULT_CIRCLE_TARGET = 64;
+    private static final int DEFAULT_CIRCLE_TARGET = 76;
 
     private View mTarget; // the target of the gesture
     OnRefreshListener mListener;
@@ -329,7 +331,7 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
 
     /**
      * Sets the distance that the refresh indicator can be pulled beyond its resting position during
-     * a swipe gesture. The default is {@link #DEFAULT_SLINGSHOT_DISTANCE}.
+     * a swipe gesture. The default is { DEFAULT_SLINGSHOT_DISTANCE}.
      *
      * @param slingshotDistance The distance in pixels that the refresh indicator can be pulled
      *                          beyond its resting position.
@@ -1153,12 +1155,17 @@ public class MySwipeRefreshLayout extends ViewGroup implements NestedScrollingPa
 //        mProgress.setStartEndTrim(0f, Math.min(MAX_PROGRESS_ANGLE, strokeStart));
 //        mProgress.setArrowScale(Math.min(1f, adjustedPercent));
 
+        if (targetY >= 0) {
+            ((ViewGroup) mTarget).getChildAt(0).scrollTo(0, -targetY / 2);
+        }
+
         float rotation = (-0.25f + .4f * adjustedPercent + tensionPercent * 2) * .5f;
         mProgress.setProgressRotation(rotation);
         setTargetOffsetTopAndBottom(targetY - mCurrentTargetOffsetTop);
     }
 
     private void finishSpinner(float overscrollTop) {
+        ((ViewGroup) mTarget).getChildAt(0).scrollTo(0, 0);
         if (overscrollTop > mTotalDragDistance) {
             setRefreshing(true, true /* notify */);
         } else {

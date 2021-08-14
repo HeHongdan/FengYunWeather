@@ -33,10 +33,10 @@ class LoadingDrawable(val sun: Drawable, val cloud: Drawable) : Drawable(), Anim
 
     private fun startAnim() {
         if (scope == null) {
-            scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+            scope = CoroutineScope(Job() + Dispatchers.Main)
             scope?.launch {
                 while (isActive) {
-                    LogUtil.e("running() --------> ")
+//                    LogUtil.e("running() --------> ")
                     withContext(Dispatchers.Default) {
                         delay(20)
                     }
@@ -68,7 +68,9 @@ class LoadingDrawable(val sun: Drawable, val cloud: Drawable) : Drawable(), Anim
     }
 
     override fun setAlpha(alpha: Int) {
-
+//        LogUtil.e("alpha: " + alpha)
+//        this.mAlpha = alpha
+//        invalidateSelf()
     }
 
     override fun setColorFilter(colorFilter: ColorFilter?) {
