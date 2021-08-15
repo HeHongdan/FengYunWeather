@@ -12,7 +12,7 @@
         <activity
             android:name=".ShowActivity"
             android:theme="@style/Theme.FengYunWeather.NoActionBar"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".Main2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
