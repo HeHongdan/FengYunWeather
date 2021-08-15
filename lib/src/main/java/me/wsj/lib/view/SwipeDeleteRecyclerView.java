@@ -32,7 +32,7 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
     private float mFirstX, mFirstY; // 首次触碰范围
     private boolean mIsSlide;   // 是否滑动子View
     private ViewGroup mFlingView;   // 触碰的子View
-    private int mPosition;  // 触碰的view的位置
+    private int mPosition;  // 触碰的view在可见item中的位置
     private int mMenuViewWidth;    // 菜单按钮宽度
 
     public SwipeDeleteRecyclerView(Context context) {
@@ -66,7 +66,8 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
                 if (mPosition != INVALID_POSITION) {
                     View view = mFlingView;
                     // 获取触碰点所在的view
-                    mFlingView = (ViewGroup) getChildAt(mPosition - ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition());
+//                    mFlingView = (ViewGroup) getChildAt(mPosition - ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition());
+                    mFlingView = (ViewGroup) getChildAt(mPosition);
                     // 这里判断一下如果之前触碰的view已经打开，而当前碰到的view不是那个view则立即关闭之前的view，此处并不需要担动画没完成冲突，因为之前已经abortAnimation
                     if (view != null && mFlingView != view && view.getScrollX() != 0) {
                         view.scrollTo(0, 0);
@@ -185,7 +186,7 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
     }
 
     public int pointToPosition(int x, int y) {
-        int firstPosition = ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition();
+//        int firstPosition = ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition();
         Rect frame = mTouchFrame;
         if (frame == null) {
             mTouchFrame = new Rect();
@@ -199,7 +200,7 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
                 child.getHitRect(frame);
 //                Log.e("wsjLib", "check: " + i);
                 if (frame.contains(x, y)) {
-                    return firstPosition + i;
+                    return i;
                 }
             }
         }

@@ -2,6 +2,7 @@ package me.wsj.bg
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import me.wsj.bg.adapter.AllAdapter
 import me.wsj.bg.bean.WeatherBean
 import me.wsj.bg.databinding.ActivityMainBinding
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             adapter.notifyItemRemoved(it)
             mBinding.rvAll.closeMenu()
         }
+        mBinding.rvAll.layoutManager = GridLayoutManager(this, 2)
         mBinding.rvAll.adapter = adapter
     }
 
