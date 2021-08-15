@@ -28,7 +28,7 @@ class SwipeAdapter(
         val item = mData[position]
         holder.tvWeather.text = item.name
         holder.icon.setImageResource(IconUtils.getDayIconDark(context, item.code.toString()))
-        holder.itemView.setOnClickListener {
+        holder.itemContent.setOnClickListener {
             onClick(item)
         }
 
@@ -43,6 +43,7 @@ class SwipeAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvWeather = itemView.findViewById<TextView>(R.id.tvWeather)
+        val itemContent = itemView.findViewById<ViewGroup>(R.id.itemContent)
         val icon = itemView.findViewById<ImageView>(R.id.icon)
         val tvDelete = itemView.findViewById<TextView>(R.id.tvDelete)
     }

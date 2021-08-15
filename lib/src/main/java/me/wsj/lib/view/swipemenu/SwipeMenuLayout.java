@@ -1,62 +1,36 @@
 package me.wsj.lib.view.swipemenu;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Scroller;
+
+import per.wsj.commonlib.utils.LogUtil;
 
 
 public class SwipeMenuLayout extends ViewGroup {
 
-    private int mScaleTouchSlop;//为了处理单击事件的冲突
-    private int mMaxVelocity;//计算滑动速度用
-    private int mPointerId;//多点触摸只算第一根手指的速度
+    private int mTouchSlop;//为了处理单击事件的冲突
     private int mHeight;//自己的高度
     //右侧菜单宽度总和(最大滑动距离)
-    private int mRightMenuWidths;
-
-    //滑动判定临界值（右侧菜单宽度的40%） 手指抬起时，超过了展开，没超过收起menu
-    private int mLimit;
-
-    private View mContentView;// 存储contentView(第一个View)
+    private int mMenuViewWidth;
 
     private Scroller mScroller;
-    //上一次的xy
-    private PointF mLastP = new PointF();
-    //2016 10 22 add , 仿QQ，侧滑菜单展开时，点击除侧滑菜单之外的区域，关闭侧滑菜单。
-    //增加一个布尔值变量，dispatch函数里，每次down时，为true，move时判断，如果是滑动动作，设为false。
-    //在Intercept函数的up时，判断这个变量，如果仍为true 说明是点击事件，则关闭菜单。 
-    private boolean isUnMoved = true;
 
     //2016 11 03 add,判断手指起始落点，如果距离属于滑动了，就屏蔽一切点击事件。
     //up-down的坐标，判断是否是滑动，如果是，则屏蔽一切点击事件
     private PointF mFirstP = new PointF();
-    private boolean isUserSwiped;
 
     //存储的是当前正在展开的View
     private static SwipeMenuLayout mViewCache;
 
-    //防止多只手指一起滑我的flag 在每次down里判断， touch事件结束清空
-    private static boolean isTouching;
-
     private VelocityTracker mVelocityTracker;//滑动速度变量
-
-    private boolean iosInterceptFlag;//IOS类型下，是否拦截事件的flag
-
-    /**
-     * 20160929add 左滑右滑的开关,默认左滑打开菜单
-     */
-    private boolean isLeftSwipe;
 
     public SwipeMenuLayout(Context context) {
         this(context, null);
@@ -81,13 +55,9 @@ public class SwipeMenuLayout extends ViewGroup {
     }
 
     private void init(Context context) {
-        mScaleTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        mMaxVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         //初始化滑动帮助类对象
         mScroller = new Scroller(context);
-
-        //左滑右滑的开关,默认左滑打开菜单
-        isLeftSwipe = true;
     }
 
     @Override
@@ -97,7 +67,7 @@ public class SwipeMenuLayout extends ViewGroup {
 
         setClickable(true);//令自己可点击，从而获取触摸事件
 
-        mRightMenuWidths = 0;//由于ViewHolder的复用机制，每次这里要手动恢复初始值
+        mMenuViewWidth = 0;//由于ViewHolder的复用机制，每次这里要手动恢复初始值
         mHeight = 0;
         int contentWidth = 0;//2016 11 09 add,适配GridLayoutManager，将以第一个子Item(即ContentItem)的宽度为控件宽度
         int childCount = getChildCount();
@@ -110,7 +80,6 @@ public class SwipeMenuLayout extends ViewGroup {
                 if (i == 0) {
                     // 测量ContentView
                     measureChildWithMargins(childView, widthMeasureSpec, 0, heightMeasureSpec, 0);
-                    mContentView = childView;
                     contentWidth = childView.getMeasuredWidth();
                     mHeight = Math.max(mHeight, childView.getMeasuredHeight());
                 } else {
@@ -119,11 +88,11 @@ public class SwipeMenuLayout extends ViewGroup {
                     int widthSpec = MeasureSpec.makeMeasureSpec(layoutParams.width, MeasureSpec.EXACTLY);
                     int heightSpec = MeasureSpec.makeMeasureSpec(mHeight, MeasureSpec.EXACTLY);
                     childView.measure(widthSpec, heightSpec);
-                    mRightMenuWidths += childView.getMeasuredWidth();
+                    mMenuViewWidth += childView.getMeasuredWidth();
                 }
             }
         }
-        mLimit = mRightMenuWidths / 2;//滑动判断的临界值
+
         setMeasuredDimension(getPaddingLeft() + getPaddingRight() + contentWidth,
                 mHeight + getPaddingTop() + getPaddingBottom());//宽度取第一个Item(Content)的宽度
     }
@@ -132,7 +101,6 @@ public class SwipeMenuLayout extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childCount = getChildCount();
         int left = getPaddingLeft();
-        int right = getPaddingLeft();
         for (int i = 0; i < childCount; i++) {
             View childView = getChildAt(i);
             if (childView.getVisibility() != GONE) {
@@ -140,202 +108,111 @@ public class SwipeMenuLayout extends ViewGroup {
                     childView.layout(left, getPaddingTop(), left + childView.getMeasuredWidth(), getPaddingTop() + childView.getMeasuredHeight());
                     left = left + childView.getMeasuredWidth();
                 } else {
-                    if (isLeftSwipe) {
-                        childView.layout(left, getPaddingTop(), left + childView.getMeasuredWidth(), getPaddingTop() + childView.getMeasuredHeight());
-                        left = left + childView.getMeasuredWidth();
-                    } else {
-                        childView.layout(right - childView.getMeasuredWidth(), getPaddingTop(), right, getPaddingTop() + childView.getMeasuredHeight());
-                        right = right - childView.getMeasuredWidth();
-                    }
+                    childView.layout(left, getPaddingTop(), left + childView.getMeasuredWidth(), getPaddingTop() + childView.getMeasuredHeight());
+                    left = left + childView.getMeasuredWidth();
                 }
             }
         }
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        //LogUtils.d(TAG, "dispatchTouchEvent() called with: " + "ev = [" + ev + "]");
-        acquireVelocityTracker(ev);
-        final VelocityTracker verTracker = mVelocityTracker;
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                isUserSwiped = false;//2016 11 03 add,判断手指起始落点，如果距离属于滑动了，就屏蔽一切点击事件。
-                isUnMoved = true;//2016 10 22 add , 仿QQ，侧滑菜单展开时，点击内容区域，关闭侧滑菜单。
-                iosInterceptFlag = false;//add by 2016 09 11 ，每次DOWN时，默认是不拦截的
-                if (isTouching) {//如果有别的指头摸过了，那么就return false。这样后续的move..等事件也不会再来找这个View了。
-                    return false;
-                } else {
-                    isTouching = true;//第一个摸的指头，赶紧改变标志，宣誓主权。
-                }
-                mLastP.set(ev.getRawX(), ev.getRawY());
-                mFirstP.set(ev.getRawX(), ev.getRawY());//2016 11 03 add,判断手指起始落点，如果距离属于滑动了，就屏蔽一切点击事件。
-
-                //如果down，view和cacheview不一样，则立马让它还原。且把它置为null
-                if (mViewCache != null) {
-                    if (mViewCache != this) {
-                        mViewCache.smoothClose();
-
-                        iosInterceptFlag = true;//add by 2016 09 11 ，IOS模式开启的话，且当前有侧滑菜单的View，且不是自己的，就该拦截事件咯。
-                    }
-                    //只要有一个侧滑菜单处于打开状态， 就不给外层布局上下滑动了
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                }
-                //求第一个触点的id， 此时可能有多个触点，但至少一个，计算滑动速率用
-                mPointerId = ev.getPointerId(0);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                //add by 2016 09 11 ，IOS模式开启的话，且当前有侧滑菜单的View，且不是自己的，就该拦截事件咯。滑动也不该出现
-                if (iosInterceptFlag) {
-                    break;
-                }
-                float gap = mLastP.x - ev.getRawX();
-                //为了在水平滑动中禁止父类ListView等再竖直滑动
-                if (Math.abs(gap) > 10 || Math.abs(getScrollX()) > 10) {//2016 09 29 修改此处，使屏蔽父布局滑动更加灵敏，
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                }
-                //2016 10 22 add , 仿QQ，侧滑菜单展开时，点击内容区域，关闭侧滑菜单。begin
-                if (Math.abs(gap) > mScaleTouchSlop) {
-                    isUnMoved = false;
-                }
-                //2016 10 22 add , 仿QQ，侧滑菜单展开时，点击内容区域，关闭侧滑菜单。end
-
-                scrollBy((int) (gap), 0);//滑动使用scrollBy
-                //越界修正
-                if (isLeftSwipe) {//左滑
-                    if (getScrollX() < 0) {
-                        scrollTo(0, 0);
-                    }
-                    if (getScrollX() > mRightMenuWidths) {
-                        scrollTo(mRightMenuWidths, 0);
-                    }
-                } else {//右滑
-                    if (getScrollX() < -mRightMenuWidths) {
-                        scrollTo(-mRightMenuWidths, 0);
-                    }
-                    if (getScrollX() > 0) {
-                        scrollTo(0, 0);
-                    }
-                }
-
-                mLastP.set(ev.getRawX(), ev.getRawY());
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                //2016 11 03 add,判断手指起始落点，如果距离属于滑动了，就屏蔽一切点击事件。
-                if (Math.abs(ev.getRawX() - mFirstP.x) > mScaleTouchSlop) {
-                    isUserSwiped = true;
-                }
-
-                //add by 2016 09 11 ，IOS模式开启的话，且当前有侧滑菜单的View，且不是自己的，就该拦截事件咯。滑动也不该出现
-                if (!iosInterceptFlag) {//且滑动了 才判断是否要收起、展开menu
-                    //求伪瞬时速度
-                    verTracker.computeCurrentVelocity(1000, mMaxVelocity);
-                    final float velocityX = verTracker.getXVelocity(mPointerId);
-                    if (Math.abs(velocityX) > 1000) {//滑动速度超过阈值
-                        if (velocityX < -1000) {
-                            if (isLeftSwipe) {//左滑
-                                //平滑展开Menu
-                                smoothExpand();
-
-                            } else {
-                                //平滑关闭Menu
-                                smoothClose();
-                            }
-                        } else {
-                            if (isLeftSwipe) {//左滑
-                                // 平滑关闭Menu
-                                smoothClose();
-                            } else {
-                                //平滑展开Menu
-                                smoothExpand();
-                            }
-                        }
-                    } else {
-                        if (Math.abs(getScrollX()) > mLimit) {//否则就判断滑动距离
-                            //平滑展开Menu
-                            smoothExpand();
-                        } else {
-                            // 平滑关闭Menu
-                            smoothClose();
-                        }
-                    }
-                }
-                //释放
-                releaseVelocityTracker();
-                //LogUtils.i(TAG, "onTouch A ACTION_UP ACTION_CANCEL:velocityY:" + velocityX);
-                isTouching = false;//没有手指在摸我了
-                break;
-            default:
-                break;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        //Log.d(TAG, "onInterceptTouchEvent() called with: ev = [" + ev + "]");
-        //add by zhangxutong 2016 12 07 begin:
-        //禁止侧滑时，点击事件不受干扰。
+        obtainVelocity(ev);
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 // 如果scroller还没有滑动结束 停止滑动动画
                 if (!mScroller.isFinished()) {
                     mScroller.abortAnimation();
                 }
+                mLastX = ev.getX();
+                mFirstP.set(ev.getX(), ev.getY());
+                //如果down，view和cacheview不一样，则立马让它还原。且把它置为null
+                if (mViewCache != null) {
+                    if (mViewCache != this) {
+                        mViewCache.smoothClose();
+                        return true;
+                    }
+                    // 只要有一个侧滑菜单处于打开状态， 就不给外层布局上下滑动了
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                //屏蔽滑动时的事件y
-                if (Math.abs(ev.getRawX() - mFirstP.x) > mScaleTouchSlop) {
+                getParent().requestDisallowInterceptTouchEvent(true);
+                mVelocityTracker.computeCurrentVelocity(1000);
+                float xVelocity = mVelocityTracker.getXVelocity();
+                float yVelocity = mVelocityTracker.getYVelocity();
+                float x = ev.getX();
+                float y = ev.getY();
+                if (Math.abs(xVelocity) > SNAP_VELOCITY && Math.abs(xVelocity) > Math.abs(yVelocity)
+                        || Math.abs(x - mFirstP.x) >= mTouchSlop
+                        && Math.abs(x - mFirstP.x) > Math.abs(y - mFirstP.y)) {
+                    LogUtil.e("拦截。。。。");
                     return true;
+                } else {
+                    getParent().requestDisallowInterceptTouchEvent(false);
                 }
+                releaseVelocity();
                 break;
-            //add by zhangxutong 2016 11 04 end
             case MotionEvent.ACTION_UP:
-                //为了在侧滑时，屏蔽子View的点击事件
-                if (isLeftSwipe) {
-                    if (getScrollX() > mScaleTouchSlop) {
-                        //add by 2016 09 10 解决一个智障问题~ 居然不给点击侧滑菜单 我跪着谢罪
-                        //这里判断落点在内容区域屏蔽点击，内容区域外，允许传递事件继续向下的的。。。
-                        if (ev.getX() < getWidth() - getScrollX()) {
-                            //2016 10 22 add , 仿QQ，侧滑菜单展开时，点击内容区域，关闭侧滑菜单。
-                            if (isUnMoved) {
-                                smoothClose();
-                            }
-                            return true;//true表示拦截
-                        }
+                // 点击区域在展开的Itemview的contentView区域，则关闭Menu
+                if (this == mViewCache) {
+                    if (ev.getX() < getWidth() - getScrollX()) {
+                        smoothClose();
+                        return true;//true表示拦截
                     }
                 } else {
-                    if (-getScrollX() > mScaleTouchSlop) {
-                        if (ev.getX() > -getScrollX()) {//点击范围在菜单外 屏蔽
-                            //2016 10 22 add , 仿QQ，侧滑菜单展开时，点击内容区域，关闭侧滑菜单。
-                            if (isUnMoved) {
-                                smoothClose();
-                            }
-                            return true;
-                        }
+                    Rect rect = new Rect();
+                    getHitRect(rect);
+                    if (rect.contains((int) ev.getX(), (int) ev.getY())) {
+                        return true;
                     }
                 }
-                //add by zhangxutong 2016 11 03 begin:
-                // 判断手指起始落点，如果距离属于滑动了，就屏蔽一切点击事件。
-                if (isUserSwiped) {
-                    return true;
-                }
-                //add by zhangxutong 2016 11 03 end
-
                 break;
-        }
-        //模仿IOS 点击其他区域关闭：
-        if (iosInterceptFlag) {
-            //IOS模式开启，且当前有菜单的View，且不是自己的 拦截点击事件给子View
-            return true;
         }
         return super.onInterceptTouchEvent(ev);
     }
 
-    public void smoothExpand() {
+    private float mLastX;   // 滑动过程中记录上次触碰点X
+
+    private static final int SNAP_VELOCITY = 600;   // 最小滑动速度
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        float x = ev.getX();
+        obtainVelocity(ev);
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+//                getParent().requestDisallowInterceptTouchEvent(true);
+                float dx = mLastX - x;
+                if (getScrollX() + dx > 0 && getScrollX() + dx < mMenuViewWidth) {
+                    scrollBy((int) dx, 0);
+                }
+                mLastX = x;
+                break;
+            case MotionEvent.ACTION_UP:
+                mVelocityTracker.computeCurrentVelocity(1000);
+                int scrollX = getScrollX();
+                if (mVelocityTracker.getXVelocity() < -SNAP_VELOCITY) {    // 向左侧滑达到侧滑最低速度，则打开
+                    int delt = Math.abs(mMenuViewWidth - scrollX);
+                    int t = (int) (delt / mVelocityTracker.getXVelocity() * 1000);
+                    smoothExpand(t);
+                } else if (mVelocityTracker.getXVelocity() >= SNAP_VELOCITY) {  // 向右侧滑达到侧滑最低速度，则关闭
+                    smoothClose();
+                } else if (scrollX >= mMenuViewWidth / 2) { // 如果超过删除按钮一半，则打开
+                    smoothExpand(100);
+                } else {    // 其他情况则关闭
+                    smoothClose();
+                }
+                releaseVelocity();
+                break;
+        }
+        return super.onTouchEvent(ev);
+    }
+
+    public void smoothExpand(int time) {
         // 展开就加入ViewCache：
         mViewCache = SwipeMenuLayout.this;
-        mScroller.startScroll(getScrollX(), 0, mRightMenuWidths - getScrollX(), 0, 100);
+        mScroller.startScroll(getScrollX(), 0, mMenuViewWidth - getScrollX(), 0, time);
         invalidate();
     }
 
@@ -365,7 +242,7 @@ public class SwipeMenuLayout extends ViewGroup {
      * @see VelocityTracker#obtain()
      * @see VelocityTracker#addMovement(MotionEvent)
      */
-    private void acquireVelocityTracker(final MotionEvent event) {
+    private void obtainVelocity(MotionEvent event) {
         if (null == mVelocityTracker) {
             mVelocityTracker = VelocityTracker.obtain();
         }
@@ -378,7 +255,7 @@ public class SwipeMenuLayout extends ViewGroup {
      * @see VelocityTracker#clear()
      * @see VelocityTracker#recycle()
      */
-    private void releaseVelocityTracker() {
+    private void releaseVelocity() {
         if (null != mVelocityTracker) {
             mVelocityTracker.clear();
             mVelocityTracker.recycle();
