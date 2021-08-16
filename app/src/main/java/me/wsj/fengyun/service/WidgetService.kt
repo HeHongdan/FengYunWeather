@@ -37,6 +37,11 @@ class WidgetService : LifecycleService() {
 
     lateinit var connManager: ConnectivityManager
 
+    /**
+     * 防止Service首次启动时执行onStartCommand()中的updateRemoteOnce()
+     */
+    private var isFirst = true
+
     override fun onBind(intent: Intent): IBinder? {
         super.onBind(intent)
         return null
@@ -44,6 +49,7 @@ class WidgetService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
+        isFirst = true
         LogUtil.e("onCreate: ---------------------")
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         startForeground(Notify_Id, NotificationUtil.createNotification(this, Notify_Id))
@@ -60,8 +66,12 @@ class WidgetService : LifecycleService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        lifecycleScope.launch(CoroutineExceptionHandler { _, _ -> }) {
-            updateRemoteOnce()
+        if (isFirst) {
+            isFirst = false
+        } else {
+            lifecycleScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ -> }) {
+                updateRemoteOnce()
+            }
         }
         return super.onStartCommand(intent, flags, startId)
     }
@@ -115,15 +125,13 @@ class WidgetService : LifecycleService() {
         if (intervalJob != null) {
             return
         }
-        intervalJob = lifecycleScope.launch(CoroutineExceptionHandler { _, _ ->
+        intervalJob = lifecycleScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
             LogUtil.e("WidgetService: 异常...")
         }) {
-            withContext(Dispatchers.IO) {
-                while (true) {
-                    LogUtil.d("intervalJob run")
-                    updateRemoteOnce()
-                    delay(1800_000)
-                }
+            while (isActive) {
+                LogUtil.d("intervalJob run")
+                updateRemoteOnce()
+                delay(1800_000)
             }
         }
     }
@@ -163,6 +171,7 @@ class WidgetService : LifecycleService() {
     }
 
     private suspend fun updateWidget(cityId: String, cityName: String, now: Now?) {
+        LogUtil.d("updateWidget.............")
 
         val views = RemoteViews(packageName, R.layout.weather_widget)
         val location = if (cityName.contains("-")) cityName.split("-")[1] else cityName

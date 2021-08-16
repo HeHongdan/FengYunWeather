@@ -23,14 +23,14 @@ public class SwipeMenuLayout extends ViewGroup {
 
     private Scroller mScroller;
 
+    private VelocityTracker mVelocityTracker;//滑动速度变量
+
     //2016 11 03 add,判断手指起始落点，如果距离属于滑动了，就屏蔽一切点击事件。
     //up-down的坐标，判断是否是滑动，如果是，则屏蔽一切点击事件
     private PointF mFirstP = new PointF();
 
     //存储的是当前正在展开的View
     private static SwipeMenuLayout mViewCache;
-
-    private VelocityTracker mVelocityTracker;//滑动速度变量
 
     public SwipeMenuLayout(Context context) {
         this(context, null);
@@ -62,10 +62,7 @@ public class SwipeMenuLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //Log.d(TAG, "onMeasure() called with: " + "widthMeasureSpec = [" + widthMeasureSpec + "], heightMeasureSpec = [" + heightMeasureSpec + "]");
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        setClickable(true);//令自己可点击，从而获取触摸事件
 
         mMenuViewWidth = 0;//由于ViewHolder的复用机制，每次这里要手动恢复初始值
         mHeight = 0;
@@ -74,8 +71,6 @@ public class SwipeMenuLayout extends ViewGroup {
 
         for (int i = 0; i < childCount; i++) {
             View childView = getChildAt(i);
-            //令每一个子View可点击，从而获取触摸事件
-            childView.setClickable(true);
             if (childView.getVisibility() != GONE) {
                 if (i == 0) {
                     // 测量ContentView
@@ -92,9 +87,9 @@ public class SwipeMenuLayout extends ViewGroup {
                 }
             }
         }
-
+        //宽度取第一个Item(Content)的宽度
         setMeasuredDimension(getPaddingLeft() + getPaddingRight() + contentWidth,
-                mHeight + getPaddingTop() + getPaddingBottom());//宽度取第一个Item(Content)的宽度
+                mHeight + getPaddingTop() + getPaddingBottom());
     }
 
     @Override
@@ -104,13 +99,8 @@ public class SwipeMenuLayout extends ViewGroup {
         for (int i = 0; i < childCount; i++) {
             View childView = getChildAt(i);
             if (childView.getVisibility() != GONE) {
-                if (i == 0) {//第一个子View是内容 宽度设置为全屏
-                    childView.layout(left, getPaddingTop(), left + childView.getMeasuredWidth(), getPaddingTop() + childView.getMeasuredHeight());
-                    left = left + childView.getMeasuredWidth();
-                } else {
-                    childView.layout(left, getPaddingTop(), left + childView.getMeasuredWidth(), getPaddingTop() + childView.getMeasuredHeight());
-                    left = left + childView.getMeasuredWidth();
-                }
+                childView.layout(left, getPaddingTop(), left + childView.getMeasuredWidth(), getPaddingTop() + childView.getMeasuredHeight());
+                left = left + childView.getMeasuredWidth();
             }
         }
     }
@@ -159,12 +149,6 @@ public class SwipeMenuLayout extends ViewGroup {
                     if (ev.getX() < getWidth() - getScrollX()) {
                         smoothClose();
                         return true;//true表示拦截
-                    }
-                } else {
-                    Rect rect = new Rect();
-                    getHitRect(rect);
-                    if (rect.contains((int) ev.getX(), (int) ev.getY())) {
-                        return true;
                     }
                 }
                 break;
