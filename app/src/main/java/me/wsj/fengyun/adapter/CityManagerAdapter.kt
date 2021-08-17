@@ -46,7 +46,7 @@ class CityManagerAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvItemCity = itemView.findViewById<TextView>(R.id.tvItemCity)
-        val tvDelete = itemView.findViewById<TextView>(R.id.tvDelete)
+        val tvDelete = itemView.findViewById<ImageView>(R.id.tvDelete)
     }
 
     public interface OnCityRemoveListener {

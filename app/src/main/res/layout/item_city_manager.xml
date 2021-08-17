@@ -40,16 +40,14 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
+    <ImageView
         android:id="@+id/tvDelete"
         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:background="#FFF55030"
         android:gravity="center"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:text="delete"
-        android:textColor="#FFFFFFFF"
+        android:padding="18dp"
+        android:src="@drawable/ic_delete"
         android:textSize="14sp" />
 
 </LinearLayout>

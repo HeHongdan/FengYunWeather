@@ -18,6 +18,8 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
 
     val rotateAngle = -6f
 
+    var dragEnable = false
+
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
@@ -45,7 +47,7 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
     }
 
     override fun isLongPressDragEnabled(): Boolean {
-        return true
+        return dragEnable
     }
 
     /**
@@ -56,11 +58,17 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
 //        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
         if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
 
-            viewHolder?.itemView?.rotation = rotateAngle
+            viewHolder?.itemView?.apply {
+                scaleX = 1.05f
+                scaleY = 1.05f
+                rotation = rotateAngle
+                background = context.resources.getDrawable(R.drawable.shadow_bg)
+            }
+//            viewHolder?.itemView?.rotation = rotateAngle
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 viewHolder?.itemView?.elevation = 100f
             }
-            viewHolder?.itemView?.background = context.resources.getDrawable(R.drawable.shadow_bg)
+//            viewHolder?.itemView?.background = context.resources.getDrawable(R.drawable.shadow_bg)
             //获取系统震动服务//震动70毫秒
             val vib = context.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -81,15 +89,20 @@ class MyItemTouchCallback @Inject constructor(@ActivityContext var context: Cont
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 viewHolder.itemView.elevation = 0f
             }
-            viewHolder.itemView.rotation = 0f
+            viewHolder.itemView.apply {
+                rotation = 0f
+                scaleX= 1f
+                scaleY = 1f
+                background =
+                    context.resources.getDrawable(R.drawable.shape_rect_r8_white)
+            }
+
+            (recyclerView.adapter as IDragSort).dragFinish()
+
 //        val ints = intArrayOf(android.R.attr.selectableItemBackground)
 //        val typedArray = context.obtainStyledAttributes(ints)
 //        val drawable = typedArray.getDrawable(0)
 //        viewHolder.itemView.background = context.getDrawable(R.drawable.ripple_item_bg)
-            viewHolder.itemView.background =
-                context.resources.getDrawable(R.drawable.shape_rect_r8_white)
-
-            (recyclerView.adapter as IDragSort).dragFinish()
         }
     }
 }

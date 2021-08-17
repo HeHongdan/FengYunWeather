@@ -39,6 +39,10 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
 
         mBinding.recycleView.adapter = adapter
 
+        mBinding.recycleView.setStateCallback {
+            itemTouchCallback.dragEnable = it
+        }
+
         ItemTouchHelper(itemTouchCallback).attachToRecyclerView(mBinding.recycleView)
     }
 

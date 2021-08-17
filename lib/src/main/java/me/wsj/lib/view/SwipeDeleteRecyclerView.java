@@ -35,6 +35,8 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
     private int mPosition;  // 触碰的view在可见item中的位置
     private int mMenuViewWidth;    // 菜单按钮宽度
 
+    private StateCallback stateCallback;
+
     public SwipeDeleteRecyclerView(Context context) {
         this(context, null);
     }
@@ -48,6 +50,8 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mScroller = new Scroller(context);
     }
+
+    boolean isTouchOpened = false;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
@@ -64,10 +68,13 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
                 mFirstY = y;
                 mPosition = pointToPosition(x, y);  // 获取触碰点所在的position
                 if (mPosition != INVALID_POSITION) {
+                    stateCallback.dragEnable(false);
                     View view = mFlingView;
                     // 获取触碰点所在的view
 //                    mFlingView = (ViewGroup) getChildAt(mPosition - ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition());
                     mFlingView = (ViewGroup) getChildAt(mPosition);
+                    // 点击的是否是一打开的item
+                    isTouchOpened = mFlingView == view && mFlingView.getScrollX() != 0;
                     // 这里判断一下如果之前触碰的view已经打开，而当前碰到的view不是那个view则立即关闭之前的view，此处并不需要担动画没完成冲突，因为之前已经abortAnimation
                     if (view != null && mFlingView != view && view.getScrollX() != 0) {
                         view.scrollTo(0, 0);
@@ -98,7 +105,12 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
 
                     LogUtil.e("onInterceptTouchEvent() -> ACTION_MOVE true");
                     mIsSlide = true;
+                    stateCallback.dragEnable(false);
                     return true;
+                } else {
+                    if (!isTouchOpened) {
+                        stateCallback.dragEnable(true);
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -224,5 +236,13 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
         if (mFlingView != null && mFlingView.getScrollX() != 0) {
             mFlingView.scrollTo(0, 0);
         }
+    }
+
+    public void setStateCallback(StateCallback stateCallback) {
+        this.stateCallback = stateCallback;
+    }
+
+    public interface StateCallback {
+        void dragEnable(boolean enable);
     }
 }

@@ -9,6 +9,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Scroller;
 
 import per.wsj.commonlib.utils.LogUtil;
@@ -16,20 +17,19 @@ import per.wsj.commonlib.utils.LogUtil;
 
 public class SwipeMenuLayout extends ViewGroup {
 
-    private int mTouchSlop;//为了处理单击事件的冲突
-    private int mHeight;//自己的高度
-    //右侧菜单宽度总和(最大滑动距离)
+    private int mTouchSlop;
+    // content部分高度，也是整个itemview的高度
+    private int mHeight;
+    // 右侧菜单宽度总和(最大滑动距离)
     private int mMenuViewWidth;
 
     private Scroller mScroller;
+    // 滑动速度变量
+    private VelocityTracker mVelocityTracker;
 
-    private VelocityTracker mVelocityTracker;//滑动速度变量
-
-    //2016 11 03 add,判断手指起始落点，如果距离属于滑动了，就屏蔽一切点击事件。
-    //up-down的坐标，判断是否是滑动，如果是，则屏蔽一切点击事件
     private PointF mFirstP = new PointF();
 
-    //存储的是当前正在展开的View
+    // 存储的是当前正在展开的View
     private static SwipeMenuLayout mViewCache;
 
     public SwipeMenuLayout(Context context) {
@@ -90,6 +90,13 @@ public class SwipeMenuLayout extends ViewGroup {
         //宽度取第一个Item(Content)的宽度
         setMeasuredDimension(getPaddingLeft() + getPaddingRight() + contentWidth,
                 mHeight + getPaddingTop() + getPaddingBottom());
+
+        /*int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            if (i > 0) {
+                mMenuViewWidth += getChildAt(i).getMeasuredWidth();
+            }
+        }*/
     }
 
     @Override
@@ -271,7 +278,6 @@ public class SwipeMenuLayout extends ViewGroup {
             mViewCache = null;
         }
     }
-
 
     @Override
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
