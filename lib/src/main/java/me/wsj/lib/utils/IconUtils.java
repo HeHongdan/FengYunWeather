@@ -64,7 +64,7 @@ public class IconUtils {
      * 获取白天背景
      */
     public static int getDayBg(Context context, int code) {
-        int newCode = ConvertUtil.convert(code);
+        int newCode = WeatherUtil.convert(code);
         if (newCode > 10) {
             newCode = newCode / 10;
         }
@@ -75,7 +75,7 @@ public class IconUtils {
      * 获取晚上背景
      */
     public static int getNightBg(Context context, int code) {
-        int newCode = ConvertUtil.convert(code);
+        int newCode = WeatherUtil.convert(code);
         if (newCode > 10) {
             newCode = newCode / 10;
         }

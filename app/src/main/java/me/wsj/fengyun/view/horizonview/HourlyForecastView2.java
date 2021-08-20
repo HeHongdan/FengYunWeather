@@ -31,7 +31,7 @@ import java.util.List;
 import me.wsj.fengyun.R;
 import me.wsj.fengyun.bean.Hourly;
 import me.wsj.fengyun.utils.ContentUtil;
-import me.wsj.fengyun.utils.WeatherUtil;
+import me.wsj.lib.utils.WeatherUtil;
 import me.wsj.lib.utils.IconUtils;
 import per.wsj.commonlib.utils.BitmapUtil;
 import per.wsj.commonlib.utils.DisplayUtil;

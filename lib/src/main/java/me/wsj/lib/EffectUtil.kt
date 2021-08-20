@@ -3,15 +3,15 @@ package me.wsj.lib
 import android.content.Context
 import android.graphics.drawable.Drawable
 import me.wsj.lib.specialeffects.*
-import me.wsj.lib.utils.ConvertUtil
 import me.wsj.lib.utils.DateUtil
+import me.wsj.lib.utils.WeatherUtil
 
 class EffectUtil {
 
     companion object {
         fun getEffect(context: Context, code: Int): Drawable? {
             val isDay = DateUtil.getNowHour() in 7 until 18
-            val type = ConvertUtil.convert(code)
+            val type = WeatherUtil.convert(code)
             return when (type) {
                 1 -> {
                     if (isDay)

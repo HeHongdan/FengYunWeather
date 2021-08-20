@@ -31,8 +31,7 @@ class SplashActivity : AppCompatActivity() {
         Looper.myQueue().addIdleHandler {
             PermissionUtil.with(this).permission(
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.READ_PHONE_STATE
+                Manifest.permission.READ_EXTERNAL_STORAGE
             )
                 .onGranted {
                     startIntent()
@@ -42,8 +41,6 @@ class SplashActivity : AppCompatActivity() {
                 }.start()
             false
         }
-
-//        ContentUtil.visibleHeight = screenSize - statusBarHeight - dp45
 
 //        animate = findViewById<ImageView>(R.id.ivLogo).animate()
 
@@ -88,7 +85,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun getScreenInfo() {
         val screenRealSize = DisplayUtil.getScreenRealSize(this@SplashActivity).y
-//                val navHeight =
+
         val navHeight =
             if (DisplayUtil.isNavigationBarShowing(this@SplashActivity))
                 DisplayUtil.getNavigationBarHeight(this@SplashActivity) else 0
@@ -96,7 +93,6 @@ class SplashActivity : AppCompatActivity() {
         val statusBarHeight = DisplayUtil.getStatusBarHeight2(this@SplashActivity)
         val dp45 = DisplayUtil.dp2px(45f)
         ContentUtil.visibleHeight = screenRealSize - navHeight - statusBarHeight - dp45
-
     }
 
     override fun onDestroy() {

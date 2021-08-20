@@ -87,14 +87,14 @@ class LoadingDrawable(val sun: Drawable, val cloud: Drawable) : Drawable(), Anim
     }
 
     override fun start() {
-        LogUtil.e("start() -------------------> ")
+        LogUtil.d("start() -------------------> ")
         startAnim()
     }
 
     override fun stop() {
         scope?.cancel()
         scope = null
-        LogUtil.e("ICancelable cancel ---------------------------> ")
+        LogUtil.d("ICancelable cancel ---------------------------> ")
     }
 
     override fun isRunning(): Boolean {

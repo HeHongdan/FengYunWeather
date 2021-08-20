@@ -1,10 +1,13 @@
 package me.wsj.fengyun.ui.fragment
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,7 +19,7 @@ import me.wsj.fengyun.adapter.Forecast3dAdapter
 import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.databinding.*
 import me.wsj.fengyun.utils.Lunar
-import me.wsj.fengyun.utils.WeatherUtil
+import me.wsj.lib.utils.WeatherUtil
 import me.wsj.fengyun.ui.activity.vm.MainViewModel
 import me.wsj.fengyun.ui.base.BaseVmFragment
 import me.wsj.fengyun.ui.fragment.vm.WeatherViewModel
@@ -36,12 +39,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     private lateinit var mCityId: String
 
-    //    private var sunrise: String? = null
-//    private var sunset: String? = null
-//    private var moonRise: String? = null
-//    private var moonSet: String? = null
-//    private var todayMaxTmp: String? = null
-//    private var todayMinTmp: String? = null
     private var todayWeather: Daily? = null
 
     private var hasAni = false
@@ -189,7 +186,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         condCode = now.icon
         nowTmp = now.temp
         lifecycleScope.launchWhenResumed {
-            LogUtil.e("showWeatherNow() set cond code: $condCode")
+            LogUtil.d("showWeatherNow() set cond code: $condCode")
             mainViewModel.setCondCode(now.icon)
         }
         mBinding.tvTodayCond.text = now.text
@@ -236,6 +233,26 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      * 空气质量
      */
     private fun showAirNow(airNow: Air) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mBinding.tvAirCondition.text =
+                getString(R.string.air_condition, airNow.aqi, airNow.category)
+
+            TextViewCompat.setCompoundDrawableTintList(
+                mBinding.tvAirCondition, ColorStateList.valueOf(
+                    resources.getColor(
+                        WeatherUtil.getAirColor(
+                            requireContext(),
+                            airNow.aqi
+                        )
+                    )
+                )
+            )
+            mBinding.tvAirCondition.visibility = View.VISIBLE
+        } else {
+            mBinding.tvAirCondition.visibility = View.GONE
+        }
+
         airQualityBinding.gridAir.visibility = View.VISIBLE
         airQualityBinding.rvAir.visibility = View.VISIBLE
         airQualityBinding.airTitle.visibility = View.VISIBLE
@@ -347,8 +364,16 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     private fun setViewTime() {
         if (!hasAni && todayWeather?.sunrise.notEmpty() && todayWeather?.sunset.notEmpty() && todayWeather?.moonrise.notEmpty() && todayWeather?.moonset.notEmpty()) {
             val currentTime = DateUtil.getNowTime()
-            sunMoonBinding.sunView.setTimes(todayWeather?.sunrise, todayWeather?.sunset, currentTime)
-            sunMoonBinding.moonView.setTimes(todayWeather?.moonrise, todayWeather?.moonset, currentTime)
+            sunMoonBinding.sunView.setTimes(
+                todayWeather?.sunrise,
+                todayWeather?.sunset,
+                currentTime
+            )
+            sunMoonBinding.moonView.setTimes(
+                todayWeather?.moonrise,
+                todayWeather?.moonset,
+                currentTime
+            )
             hasAni = true
         }
     }

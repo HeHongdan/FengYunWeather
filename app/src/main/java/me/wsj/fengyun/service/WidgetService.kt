@@ -207,8 +207,8 @@ class WidgetService : LifecycleService() {
         // 日历
         val calendarIntent = Intent()
 
-        calendarIntent.component = ComponentName("com.android.calendar", getCalendarCls())
-
+        val calendarCls = getCalendarCls()
+        calendarIntent.component = ComponentName(calendarCls.first, calendarCls.second)
         val calendarPI = PendingIntent.getActivity(this, 0, calendarIntent, 0)
         views.setOnClickPendingIntent(R.id.llCalendar, calendarPI)
         views.setOnClickPendingIntent(R.id.tvLunarDate, calendarPI)
@@ -216,7 +216,8 @@ class WidgetService : LifecycleService() {
         // 时钟
         val clockIntent = Intent()
 
-        clockIntent.component = ComponentName("com.android.deskclock", getClockCls())
+        val clockComponent = getClockComponent()
+        clockIntent.component = ComponentName(clockComponent.first, clockComponent.second)
         val timePI = PendingIntent.getActivity(this, 0, clockIntent, 0)
         views.setOnClickPendingIntent(R.id.clockTime, timePI)
 
@@ -226,17 +227,20 @@ class WidgetService : LifecycleService() {
         views.setOnClickPendingIntent(R.id.llWeather, weatherPI)
     }
 
-    private fun getCalendarCls(): String {
-        return if (RomUtil.isMiui())
-            "com.android.calendar.homepage.AllInOneActivity"
-        else "com.android.calendar.LaunchActivity"
+    private fun getCalendarCls(): Pair<String, String> {
+        return when {
+            RomUtil.isMiui() -> "com.android.calendar" to "com.android.calendar.homepage.AllInOneActivity"
+            RomUtil.isOppo() -> "com.coloros.calendar" to "com.android.calendar.AllInOneActivity"
+            else -> "com.android.calendar" to "com.android.calendar.LaunchActivity"
+        }
     }
 
-    private fun getClockCls(): String {
+    private fun getClockComponent(): Pair<String, String> {
         return when {
-            RomUtil.isEmui() -> "com.android.deskclock.AlarmsMainActivity"
-            RomUtil.isMiui() -> "com.android.deskclock.DeskClockTabActivity"
-            else -> "com.android.deskclock.DeskClock"
+            RomUtil.isEmui() -> "com.android.deskclock" to "com.android.deskclock.AlarmsMainActivity"
+            RomUtil.isMiui() -> "com.android.deskclock" to "com.android.deskclock.DeskClockTabActivity"
+            RomUtil.isOppo() -> "com.coloros.alarmclock" to "com.coloros.alarmclock.AlarmClock"
+            else -> "com.android.deskclock" to "com.android.deskclock.DeskClock"
         }
     }
 

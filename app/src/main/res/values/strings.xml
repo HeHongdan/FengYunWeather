@@ -44,5 +44,6 @@
     <string name="now">.  现在</string>
 
     <string name="powered">Powered By wangsj</string>
+    <string name="air_condition">%s 空气%s</string>
 
 </resources>

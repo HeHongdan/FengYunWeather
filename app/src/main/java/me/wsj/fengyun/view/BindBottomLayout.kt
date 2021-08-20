@@ -18,10 +18,9 @@ class BindBottomLayout @JvmOverloads constructor(
         mTotalLength = 0
         var top3Height = 0
         var maxWidth = 0
-        val count = childCount
 
         // See how tall everyone is. Also remember max width.
-        for (i in 0 until count) {
+        for (i in 0 until childCount) {
             val child = getChildAt(i)
 
             // Determine how big this child would like to be. If this or
@@ -39,7 +38,7 @@ class BindBottomLayout @JvmOverloads constructor(
             val margin = lp.leftMargin + lp.rightMargin
             val measuredWidth = child.measuredWidth + margin
             maxWidth = Math.max(maxWidth, measuredWidth)
-            if (i < 3) {
+            if (i < 4) {
                 top3Height += childHeight + lp.topMargin + lp.bottomMargin
             }
         }
@@ -48,6 +47,7 @@ class BindBottomLayout @JvmOverloads constructor(
         mTotalLength += paddingTop + paddingBottom
 
         // 计算扩展高度，以保持前两个item保持在屏幕底部
+//        mExtentHeight = (parent as ViewGroup).height - top3Height
         mExtentHeight = ContentUtil.visibleHeight - top3Height
         if (mExtentHeight > 0) {
             mTotalLength += mExtentHeight

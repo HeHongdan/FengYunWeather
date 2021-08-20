@@ -50,7 +50,7 @@ class EffectCloudDrawable(val clouds: Array<Drawable>) : Drawable(), Animatable 
     }
 
     private fun startAnim() {
-        LogUtil.e("isActive: "+scope.isActive)
+        LogUtil.d("isActive: "+scope.isActive)
         scope.launch {
             while (isActive) {
                 withContext(Dispatchers.Default) {

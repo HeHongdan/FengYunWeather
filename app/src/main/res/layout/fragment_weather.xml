@@ -84,6 +84,32 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/tvAirCondition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/air_condition_bg"
+                    android:drawableLeft="@drawable/ic_air_condition"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:text="36 空气优"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
             <include layout="@layout/layout_today_brief_info" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -92,18 +118,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginBottom="3dp"
                 android:layout_marginRight="6dp"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/shape_rect_r8_tcc_white"
-                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:itemCount="3"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:listitem="@layout/item_forecast" />
 
             <include layout="@layout/layout_forecast_hourly" />
 
             <include layout="@layout/layout_forecast_15d" />
-
-            <!--<include layout="@layout/layout_today_detail" />-->
 
             <include layout="@layout/layout_air_quality" />
 
