@@ -21,8 +21,4 @@ class AlarmDialog(context: Context) : BaseDialog<DialogAlarmBinding>(context, 0.
             dismiss()
         }
     }
-
-    override fun initData() {
-
-    }
 }
