@@ -251,12 +251,11 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         }
         airQualityBinding.airConditionView.setValue(airNow.aqi.toInt(), airNow.category)
 
-        airQualityBinding.gridAir.visibility = View.VISIBLE
         airQualityBinding.tvTodayPm25.text = airNow.pm2p5
-        airQualityBinding.tvTodayPm10.text = airNow.pm10
         airQualityBinding.tvTodaySo2.text = airNow.so2
-        airQualityBinding.tvTodayNo2.text = airNow.no2
         airQualityBinding.tvTodayCo.text = airNow.co
+        airQualityBinding.tvTodayPm10.text = airNow.pm10
+        airQualityBinding.tvTodayNo2.text = airNow.no2
         airQualityBinding.tvTodayO3.text = airNow.o3
     }
 
