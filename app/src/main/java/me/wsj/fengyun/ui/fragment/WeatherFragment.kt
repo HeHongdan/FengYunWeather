@@ -18,6 +18,7 @@ import me.wsj.fengyun.adapter.Forecast15dAdapter
 import me.wsj.fengyun.adapter.Forecast3dAdapter
 import me.wsj.fengyun.bean.*
 import me.wsj.fengyun.databinding.*
+import me.wsj.fengyun.dialog.AlarmDialog
 import me.wsj.fengyun.utils.Lunar
 import me.wsj.lib.utils.WeatherUtil
 import me.wsj.fengyun.ui.activity.vm.MainViewModel
@@ -266,7 +267,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         mBinding.alarmFlipper.visibility = View.VISIBLE
         mBinding.alarmFlipper.setInAnimation(requireContext(), R.anim.bottom_in)
         mBinding.alarmFlipper.setOutAnimation(requireContext(), R.anim.top_out)
-        mBinding.alarmFlipper.flipInterval = 3000
+        mBinding.alarmFlipper.flipInterval = 4000
         for (warning in warnings) {
             val level: String = warning.level
             val tip = warning.typeName + level + "预警"
@@ -275,7 +276,11 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             textView.background = warningRes.first
             textView.text = tip
             textView.setOnClickListener {
-                toastCenter(warning.text)
+//                toastCenter(warning.text)
+                AlarmDialog(requireContext()).apply {
+                    setContent(warning.text)
+                    show()
+                }
             }
             textView.setTextColor(warningRes.second)
             mBinding.alarmFlipper.addView(textView)

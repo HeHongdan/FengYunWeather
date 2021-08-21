@@ -1,20 +1,13 @@
-package me.wsj.fengyun.ui.base
+package me.wsj.lib.dialog
 
-import android.content.Intent
 import androidx.viewbinding.ViewBinding
 
 /**
  * Created by shiju.wang on 2018/2/10.
  */
-interface CreateInit<T : ViewBinding?> {
+interface DialogInit <T : ViewBinding?> {
 
     fun bindView(): T
-
-    /**
-     * 接收数据
-     * @param intent
-     */
-    fun prepareData(intent: Intent?)
 
     /**
      * 初始化布局组件
@@ -22,9 +15,9 @@ interface CreateInit<T : ViewBinding?> {
     fun initView()
 
     /**
-     * 处理事件
+     * 增加按钮点击事件
      */
-    fun initEvent()
+    fun initListener()
 
     /**
      * 初始化数据

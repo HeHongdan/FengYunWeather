@@ -40,7 +40,7 @@
 
 **风云天气** 的天气数据来源于 [和风天气](https://www.heweather.com)。
 
-当你使用这个APP时需要自行注册一个 **免费KEY** 访问 https://www.heweather.com
+当你使用这个APP时需要自行注册一个 **免费KEY（web api）** 访问 https://www.heweather.com
 
 ### 定位服务
 

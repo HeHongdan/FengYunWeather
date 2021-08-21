@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialog;
+import androidx.viewbinding.ViewBinding;
 
 import me.wsj.lib.R;
 
@@ -19,12 +20,14 @@ import me.wsj.lib.R;
  * dialog
  */
 
-public abstract class BaseDialog extends AppCompatDialog implements DialogInit {
+public abstract class BaseDialog<T extends ViewBinding> extends AppCompatDialog implements DialogInit<T> {
 
     private int mGravity = Gravity.CENTER;
 
     private float widthBias = 0f;
     private float heightBias = 0f;
+
+    protected T mBinding;
 
     public BaseDialog(@NonNull Context context) {
         this(context, 0, 0);
@@ -69,7 +72,10 @@ public abstract class BaseDialog extends AppCompatDialog implements DialogInit {
      * 初始化
      */
     private void init(Context context, int gravity, float widthBias, float heightBias) {
-        setContentView(LayoutInflater.from(getContext()).inflate(getLayout(), null));
+        mBinding = bindView();
+
+//        setContentView(LayoutInflater.from(getContext()).inflate(getLayout(), null));
+        setContentView(mBinding.getRoot());
 
         mGravity = gravity;
         if (widthBias <= 1f) {

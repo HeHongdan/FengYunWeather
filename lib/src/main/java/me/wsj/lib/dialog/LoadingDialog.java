@@ -2,39 +2,35 @@ package me.wsj.lib.dialog;
 
 import android.content.Context;
 import android.graphics.drawable.Animatable;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import me.wsj.lib.R;
+import me.wsj.lib.databinding.DialogLoadingBinding;
 import me.wsj.lib.view.LoadingDrawable;
 
 /**
  * 自定义加载进度对话框
  */
 
-public class LoadingDialog extends BaseDialog {
-    private ImageView ivLoading;
-    private TextView tvLoadingTip;
+public class LoadingDialog extends BaseDialog<DialogLoadingBinding> {
     LoadingDrawable loadingDrawable;
 
     public LoadingDialog(@NonNull Context context) {
-        super(context, 0.4f, 0);
+        super(context, 0.38f, 0);
     }
 
+
     @Override
-    public int getLayout() {
-        return R.layout.dialog_loading;
+    public DialogLoadingBinding bindView() {
+        return DialogLoadingBinding.inflate(getLayoutInflater());
     }
 
     @Override
     public void initView() {
-        ivLoading = findViewById(R.id.ivLoading);
-        tvLoadingTip = findViewById(R.id.tvLoadingTip);
         loadingDrawable = new LoadingDrawable(getContext().getResources().getDrawable(R.drawable.ic_loading_sun),
                 getContext().getResources().getDrawable(R.drawable.ic_loading_cloud));
-        ivLoading.setImageDrawable(loadingDrawable);
+        mBinding.ivLoading.setImageDrawable(loadingDrawable);
     }
 
     @Override
@@ -43,8 +39,8 @@ public class LoadingDialog extends BaseDialog {
     }
 
     public void setTip(String tip) {
-        if (tip != null && !tip.isEmpty() && tvLoadingTip != null) {
-            tvLoadingTip.setText(tip);
+        if (tip != null && !tip.isEmpty() && mBinding.tvLoadingTip != null) {
+            mBinding.tvLoadingTip.setText(tip);
         }
     }
 
