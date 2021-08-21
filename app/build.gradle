@@ -31,14 +31,13 @@ android {
     }
 
     signingConfigs {
-        debug {
-            if (configProperties != null && configProperties.get("filename") != null){
-                storeFile file(configProperties.get("filename"))
-                storePassword configProperties.get("storePassword")
-                keyAlias configProperties.get("keyAlias")
-                keyPassword configProperties.get("keyPassword")
-            }
-        }
+//        debug {
+////            storeFile file(localProperties.get())
+//            storeFile file("${rootDir.path}/key/keystore.properties")
+//            storePassword localProperties.get("storePassword")
+//            keyAlias localProperties.get("keyAlias")
+//            keyPassword localProperties.get("keyPassword")
+//        }
     }
 
     buildTypes {

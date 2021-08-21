@@ -27,6 +27,13 @@ import me.wsj.lib.net.LoadState
 import per.wsj.commonlib.permission.PermissionUtil
 import java.util.*
 
+/**
+ * 类描述：选择城市。
+ *
+ * @author HeHongdan
+ * @date 2021/8/9
+ * @since v2021/8/9
+ */
 class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>() {
 
     private var searchAdapter: SearchAdapter? = null
