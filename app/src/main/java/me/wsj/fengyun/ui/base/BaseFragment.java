@@ -53,7 +53,8 @@ public abstract class BaseFragment<T extends ViewBinding> extends Fragment {
     }
 
     public void showLoading(boolean show) {
-        /*if (loadingDialog == null) {
+        /*
+        if (loadingDialog == null) {
             loadingDialog = new LoadingDialog(mContext);
         }
         if (show) {

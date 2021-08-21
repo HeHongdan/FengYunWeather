@@ -11,7 +11,7 @@
         android:theme="@style/Theme.FengYunWeather">
         <activity
             android:name=".ShowActivity"
-            android:theme="@style/Theme.FengYunWeather.NoActionBar"></activity>
+            android:theme="@style/Theme.FengYunWeather.NoActionBar" />
         <activity android:name=".Main2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

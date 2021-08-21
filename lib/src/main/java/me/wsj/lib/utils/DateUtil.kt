@@ -14,7 +14,6 @@ object DateUtil {
     /**
      * HH:mm
      */
-    @JvmStatic
     fun getNowTime(): String {
         val simpleDateFormat = SimpleDateFormat("HH:mm")
         // 获取当前时间

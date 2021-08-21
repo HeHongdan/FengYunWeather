@@ -37,7 +37,7 @@
                     android:id="@+id/tv_today_cond"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:textColor="@color/white80"
                     android:textSize="18sp"
                     app:layout_constraintBaseline_toBaselineOf="@+id/tv_today_tmp"
@@ -48,7 +48,7 @@
                     android:id="@+id/tvUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"
                     android:layout_marginTop="16dp"
                     android:text="°C"
                     android:textColor="@color/white"
@@ -75,11 +75,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
-                    android:text="暴雨预警"
                     android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvDate"
+                    tools:text="暴雨预警"
                     tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -93,20 +93,20 @@
                     android:id="@+id/tvAirCondition"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="12dp"
                     android:background="@drawable/air_condition_bg"
-                    android:drawableLeft="@drawable/ic_air_condition"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:paddingStart="8dp"
                     android:paddingTop="5dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="4dp"
-                    android:text="36 空气优"
                     android:textColor="@color/white"
                     android:textSize="14sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:drawableLeftCompat="@drawable/ic_air_condition"
+                    tools:text="36 空气优" />
 
             </RelativeLayout>
 

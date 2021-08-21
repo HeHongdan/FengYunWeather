@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Scroller;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import per.wsj.commonlib.utils.LogUtil;
