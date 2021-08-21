@@ -4,12 +4,12 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
 
-    <color name="color_air_excellent">#95B359</color>
+    <!--<color name="color_air_excellent">#95B359</color>
     <color name="color_air_good">#D9D459</color>
     <color name="color_air_low">#E0991D</color>
     <color name="color_air_mid">#D96161</color>
     <color name="color_air_bad">#CB90F0</color>
-    <color name="color_air_serious">#D9416F</color>
+    <color name="color_air_serious">#D9416F</color>-->
 
     <color name="color_air_leaf_1">#73DC29</color>
     <color name="color_air_leaf_2">#EADD14</color>

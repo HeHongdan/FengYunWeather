@@ -233,18 +233,15 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      * 空气质量
      */
     private fun showAirNow(airNow: Air) {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mBinding.tvAirCondition.text =
                 getString(R.string.air_condition, airNow.aqi, airNow.category)
 
             TextViewCompat.setCompoundDrawableTintList(
                 mBinding.tvAirCondition, ColorStateList.valueOf(
-                    resources.getColor(
-                        WeatherUtil.getAirColor(
-                            requireContext(),
-                            airNow.aqi
-                        )
+                    WeatherUtil.getAirColor(
+                        requireContext(),
+                        airNow.aqi
                     )
                 )
             )
@@ -252,21 +249,15 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         } else {
             mBinding.tvAirCondition.visibility = View.GONE
         }
+        airQualityBinding.airConditionView.setValue(airNow.aqi.toInt(), airNow.category)
 
         airQualityBinding.gridAir.visibility = View.VISIBLE
-        airQualityBinding.rvAir.visibility = View.VISIBLE
-        airQualityBinding.airTitle.visibility = View.VISIBLE
-
-        airQualityBinding.tvAir.text = airNow.category
-        airQualityBinding.tvAirNum.text = airNow.aqi
         airQualityBinding.tvTodayPm25.text = airNow.pm2p5
         airQualityBinding.tvTodayPm10.text = airNow.pm10
         airQualityBinding.tvTodaySo2.text = airNow.so2
         airQualityBinding.tvTodayNo2.text = airNow.no2
         airQualityBinding.tvTodayCo.text = airNow.co
         airQualityBinding.tvTodayO3.text = airNow.o3
-        airQualityBinding.rvAir.background =
-            WeatherUtil.getAirBackground(requireContext(), airNow.aqi)
     }
 
     /**

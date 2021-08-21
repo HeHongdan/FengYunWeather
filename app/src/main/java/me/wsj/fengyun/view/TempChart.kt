@@ -40,10 +40,10 @@ class TempChart @JvmOverloads constructor(
     private var density = 0f
     private var pntRadius = 0f
 
-    // 前一天数�?
+    // 前一天数据
     private var mPrev: Daily? = null
 
-    // 后一天数�?
+    // 后一天数据
     private var mNext: Daily? = null
 
 
@@ -56,7 +56,7 @@ class TempChart @JvmOverloads constructor(
         val lineWidth = DisplayUtil.dp2px(2f)
         mLowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mLowPaint.strokeWidth = lineWidth.toFloat()
-        // 设置线帽，方式折线陡峭时线中间出现裂�?
+        // 设置线帽，方式折线陡峭时线中间出现裂痕
         mLowPaint.strokeCap = Paint.Cap.SQUARE
         mLowPaint.color = Color.parseColor("#00A368")
         mHighPaint = Paint(Paint.ANTI_ALIAS_FLAG)
