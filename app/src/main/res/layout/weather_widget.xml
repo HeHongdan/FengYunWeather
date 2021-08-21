@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,8 +25,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
-            android:format24Hour="HH:mm"
             android:format12Hour="HH:mm"
+            android:format24Hour="HH:mm"
             android:gravity="center_vertical"
             android:textSize="56sp"
             android:textStyle="normal"
@@ -45,8 +44,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:format24Hour="MM月dd日"
                 android:format12Hour="MM月dd日"
+                android:format24Hour="MM月dd日"
                 tools:text="7月24日" />
 
             <TextClock
@@ -54,8 +53,8 @@
                 style="@style/widget_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:format24Hour="EEEE"
                 android:format12Hour="EEEE"
+                android:format24Hour="EEEE"
                 tools:text="星期六" />
 
         </LinearLayout>
@@ -85,7 +84,8 @@
             android:layout_marginTop="13dp"
             android:layout_weight="1"
             android:src="@mipmap/icon_100d"
-            android:tint="?attr/appWidgetTextColor" />
+            android:tint="?attr/appWidgetTextColor"
+            tools:ignore="UseAppTint" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -122,6 +122,7 @@
             android:drawableLeft="@drawable/ic_location"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
+            tools:ignore="UseCompatTextViewDrawableXml"
             tools:text="浦东新区" />
 
     </LinearLayout>

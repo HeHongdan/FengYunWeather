@@ -8,7 +8,6 @@
     <LinearLayout style="@style/HomeCard">
 
         <TextView
-            android:id="@+id/tv_forecast_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
@@ -27,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="8dp"
                 android:text="21°"
                 android:textColor="@color/color_ababab"
@@ -40,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginBottom="8dp"
                 android:text="11°"
                 android:textColor="@color/color_ababab"
@@ -52,7 +51,7 @@
                 android:id="@+id/horizontalScrollView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
                 app:layout_constraintLeft_toRightOf="@+id/tv_line_max_tmp"
                 app:layout_constraintRight_toRightOf="parent">
 

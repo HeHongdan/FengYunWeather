@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable
 import me.wsj.lib.R
 
 object WeatherUtil {
-    @JvmStatic
+
     fun getWarningRes(context: Context, level: String): Pair<Drawable, Int> {
         val result: Pair<Drawable, Int>
         val res = context.resources
@@ -57,7 +57,6 @@ object WeatherUtil {
         }
     }
 
-    @JvmStatic
     fun bitmapResize(src: Bitmap, pxX: Float, pxY: Float): Bitmap {
         //压缩图片
         val matrix = Matrix()
@@ -65,7 +64,6 @@ object WeatherUtil {
         return Bitmap.createBitmap(src, 0, 0, src.width, src.height, matrix, true)
     }
 
-    @JvmStatic
     fun getAirColor(context: Context, aqi: String): Int {
         val num = aqi.toInt()
         val flag = when {
@@ -118,7 +116,6 @@ object WeatherUtil {
      * @param num 0-6
      * @return 星期
      */
-    @JvmStatic
     fun getWeek(num: Int): String {
         var week = " "
         when (num) {

@@ -45,5 +45,9 @@
 
     <string name="powered">Powered By wangsj</string>
     <string name="air_condition">%s 空气%s</string>
+    <string name="disclaimer">免责声明</string>
+    <string name="project_url">项目地址</string>
+    <string name="position_now">立即定位</string>
+    <string name="drag_swipe_tip">提示：长按可以上下拖动排序，左滑动可以删除</string>
 
 </resources>

@@ -15,8 +15,8 @@ android {
         applicationId "me.wsj.fengyun"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 8
-        versionName "1.0.8"
+        versionCode 9
+        versionName "1.0.9"
 
         multiDexEnabled true
 
@@ -110,7 +110,7 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-service:2.2.0'
 
-    implementation files('libs\\AMap_Location_V5.3.1_20210331.jar')
+    implementation files('libs/AMap_Location_V5.3.1_20210331.jar')
 
     implementation 'com.google.dagger:hilt-android:2.36'
     kapt 'com.google.dagger:hilt-compiler:2.36'

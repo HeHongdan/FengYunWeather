@@ -7,7 +7,6 @@
     <LinearLayout style="@style/HomeCard">
 
         <TextView
-            android:id="@+id/tv_forecast_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"

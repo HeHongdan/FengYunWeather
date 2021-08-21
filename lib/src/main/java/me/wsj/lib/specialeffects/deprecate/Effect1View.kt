@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
+import androidx.core.content.res.ResourcesCompat
 import me.wsj.lib.R
 
 /**

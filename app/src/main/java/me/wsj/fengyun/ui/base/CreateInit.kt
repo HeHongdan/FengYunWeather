@@ -16,6 +16,7 @@ import androidx.viewbinding.ViewBinding
  * Created by shiju.wang on 2018/2/10.
  */
 interface CreateInit<T : ViewBinding?> {
+
     fun bindView(): T
 
     /**

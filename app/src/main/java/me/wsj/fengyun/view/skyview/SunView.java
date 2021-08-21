@@ -102,13 +102,13 @@ public class SunView extends View {
         mContext = context;
         marginTop = DisplayUtil.dp2px(12);
 
-        TypedArray type = context.obtainStyledAttributes(attrs, R.styleable.SunAnimationView);
-        mCircleColor = type.getColor(R.styleable.SunAnimationView_sun_circle_color, getContext().getResources().getColor(R.color.sun_line_color));
-        mFontColor = type.getColor(R.styleable.SunAnimationView_sun_font_color, getContext().getResources().getColor(R.color.colorAccent));
-        mRadius = (int) type.getDimension(R.styleable.SunAnimationView_sun_circle_radius, 75);
-        mFontSize = type.getDimension(R.styleable.SunAnimationView_sun_font_size, 13);
+        TypedArray type = context.obtainStyledAttributes(attrs, R.styleable.SunView);
+        mCircleColor = type.getColor(R.styleable.SunView_sun_circle_color, getContext().getResources().getColor(R.color.sun_line_color));
+        mFontColor = type.getColor(R.styleable.SunView_sun_font_color, getContext().getResources().getColor(R.color.colorAccent));
+        mRadius = (int) type.getDimension(R.styleable.SunView_sun_circle_radius, 75);
+        mFontSize = type.getDimension(R.styleable.SunView_sun_font_size, 13);
 
-        isSun = type.getBoolean(R.styleable.SunAnimationView_type, true);
+        isSun = type.getBoolean(R.styleable.SunView_type, true);
         type.recycle();
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

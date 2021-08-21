@@ -71,12 +71,12 @@
                     android:id="@+id/tvCurLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/icon_loc"
                     android:drawablePadding="4dp"
-                    android:drawableTint="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:textColor="@color/color_333"
                     android:visibility="gone"
+                    app:drawableLeftCompat="@mipmap/icon_loc"
+                    app:drawableTint="@color/colorPrimary"
 
                     tools:text="上海市"
                     tools:visibility="visible"
@@ -86,8 +86,8 @@
                     android:id="@+id/tvGetPos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="立即定位"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/position_now"
                     android:textColor="@color/colorPrimaryDark" />
 
             </RelativeLayout>

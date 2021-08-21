@@ -40,7 +40,7 @@
 
 **风云天气** 的天气数据来源于 [和风天气](https://www.heweather.com)。
 
-当你使用这个APP时需要自行注册一个 **免费KEY** 访问 https://www.heweather.com
+当你使用这个APP时需要自行注册一个 **免费KEY（web api）** 访问 https://www.heweather.com
 
 ### 定位服务
 
@@ -52,8 +52,8 @@
 
 ## 下载体验
 
- - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://wangsj.oss-cn-shanghai.aliyuncs.com/fengyun/fengyun-weather-1.0.5.apk)
 
+点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://raw.githubusercontent.com/wsj1024/FengYunWeather/master/app/release/fengyun-weather-1.0.9.apk)
 
 ## License
 

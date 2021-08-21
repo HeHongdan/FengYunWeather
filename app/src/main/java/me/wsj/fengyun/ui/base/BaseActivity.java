@@ -1,5 +1,6 @@
 package me.wsj.fengyun.ui.base;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -32,6 +33,7 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
     protected T mBinding;
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,7 +148,8 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
         }
     }
 
-    /*@Override
+    /*
+    @Override
     public Resources getResources() {
         // 本地语言设置
         String language = Locale.getDefault().getLanguage();
