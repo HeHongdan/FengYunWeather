@@ -52,8 +52,8 @@
 
 ## 下载体验
 
- - 点击[![](https://img.shields.io/badge/Download-apk-green.svg)]https://raw.githubusercontent.com/wsj1024/FengYunWeather/master/app/release/fengyun-weather-1.0.9.apk)
 
+点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://raw.githubusercontent.com/wsj1024/FengYunWeather/master/app/release/fengyun-weather-1.0.9.apk)
 
 ## License
 
