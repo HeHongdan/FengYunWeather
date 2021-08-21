@@ -16,9 +16,8 @@ import androidx.appcompat.app.AppCompatDialog;
 import me.wsj.lib.R;
 
 /**
- * dialog
+ * 对话框基类。
  */
-
 public abstract class BaseDialog extends AppCompatDialog implements DialogInit {
 
     private int mGravity = Gravity.CENTER;

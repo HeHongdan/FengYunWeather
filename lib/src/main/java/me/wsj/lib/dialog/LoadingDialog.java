@@ -11,10 +11,10 @@ import me.wsj.lib.R;
 import me.wsj.lib.view.LoadingDrawable;
 
 /**
- * 自定义加载进度对话框
+ * (自定义加载进度)对话框。
  */
-
 public class LoadingDialog extends BaseDialog {
+
     private ImageView ivLoading;
     private TextView tvLoadingTip;
     LoadingDrawable loadingDrawable;

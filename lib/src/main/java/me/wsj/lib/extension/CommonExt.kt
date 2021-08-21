@@ -8,6 +8,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import me.wsj.lib.databinding.CustomToastBinding
 
+/**
+ * 自定义吐司。
+ *
+ * @receiver Context 上下文。
+ * @param content 显示的内容。
+ */
 fun Context.toast(content: String) {
     showToast(this, content)
 }
@@ -27,10 +33,21 @@ fun Fragment.toastCenter(content: String) {
     toast.show()
 }
 
+/**
+ * 显示吐司。
+ *
+ * @param context 上下文。
+ * @param content 显示的内容。
+ */
 private fun showToast(context: Context, content: String) {
     Toast.makeText(context, content, Toast.LENGTH_LONG).show()
 }
 
+/**
+ * 跳转 Activity。
+ *
+ * @receiver 目标 Activity。
+ */
 inline fun <reified T : Activity> Activity.startActivity() {
     startActivity(Intent(this, T::class.java))
 }

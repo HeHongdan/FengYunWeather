@@ -14,7 +14,13 @@ import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.CityBean
 
 /**
- * 最近搜索
+ * 最近搜索城市(区，城市，省，国家)的适配器。
+ *
+ * @property mContext 上下文。
+ * @property data 搜索城市的集合。
+ * @property searchText 搜索的文本。
+ * @property onCityChecked 选中城市时回调。
+ * @constructor 搜索城市对象。
  */
 class SearchAdapter(
     private val mContext: Context,

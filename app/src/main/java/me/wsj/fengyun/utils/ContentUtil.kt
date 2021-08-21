@@ -15,6 +15,7 @@ object ContentUtil {
         PreferenceManager.getDefaultSharedPreferences(context).getString("unit", "she")
     @JvmField
     var UNIT_CHANGE = false
+    /** 城市是否改变。 */
     @JvmField
     var CITY_CHANGE = false
     @JvmField

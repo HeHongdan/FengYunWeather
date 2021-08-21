@@ -21,6 +21,24 @@ import java.io.Serializable
     "fxLink": "http://hfx.link/2bc1"
     }
  */
+/**
+ * 定位对象。
+ *
+ * @property adm1 String
+ * @property adm2 String
+ * @property country String
+ * @property fxLink String
+ * @property id String
+ * @property isDst String
+ * @property lat String
+ * @property lon String
+ * @property name String
+ * @property rank String
+ * @property type String
+ * @property tz String
+ * @property utcOffset String
+ * @constructor
+ */
 //@Parcelize
 data class Location(
         val adm1: String,

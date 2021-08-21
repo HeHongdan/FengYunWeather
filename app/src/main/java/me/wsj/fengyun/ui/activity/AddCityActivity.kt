@@ -36,29 +36,41 @@ import java.util.*
  */
 class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>() {
 
+    /** 搜索城市适配器。 */
     private var searchAdapter: SearchAdapter? = null
-
+    /** 热门城市适配器。 */
     private var topCityAdapter: TopCityAdapter? = null
-
+    /** 搜索城市的集合。 */
     private val searchCities by lazy { ArrayList<CityBean>() }
-
+    /** 热门城市的集合。 */
     private val topCities by lazy { ArrayList<String>() }
-
+    /** 从闪屏页跳转过来。 */
     private var fromSplash = false
-
+    /** 是否需要请求定位。 */
     private var requestedGPS = false
 
+
+    /**
+     * 绑定视图。
+     *
+     * @return [@androidx.annotation.NonNull] ActivityAddCityBinding
+     */
     override fun bindView() = inflate(layoutInflater)
 
+    /**
+     * 准备好数据。
+     *
+     * @param intent 意图(可空)。
+     */
     override fun prepareData(intent: Intent?) {
         intent?.let {
-            fromSplash = it.getBooleanExtra("fromSplash", false)
+            fromSplash = it.getBooleanExtra("fromSplash", false)//初始化是否 闪屏页 跳转过来
         }
     }
 
     override fun initView() {
         setTitle("添加城市")
-        mBinding.etSearch.threshold = 2
+        mBinding.etSearch.threshold = 2//输入2个字开始自动提示
 
         searchAdapter = SearchAdapter(
             this@AddCityActivity,
@@ -67,41 +79,42 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         ) {
             viewModel.addCity(it)
         }
-        mBinding.rvSearch.adapter = searchAdapter
+        mBinding.rvSearch.adapter = searchAdapter//赋值(搜索城市)RV的适配器
 
         topCityAdapter = TopCityAdapter(topCities) {
             viewModel.getCityInfo(it)
         }
-        val layoutManager = GridLayoutManager(context, 3)
-        mBinding.rvTopCity.adapter = topCityAdapter
+        val layoutManager = GridLayoutManager(context, 3)//显示3列
+        mBinding.rvTopCity.adapter = topCityAdapter//赋值(热门城市)RV的适配器
         mBinding.rvTopCity.layoutManager = layoutManager
 
-        mBinding.tvGetPos.expand(10, 10)
+        mBinding.tvGetPos.expand(10, 10)//响应区域扩大
         //编辑框输入监听
         mBinding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val keywords = mBinding.etSearch.text.toString()
                 if (!TextUtils.isEmpty(keywords)) {
-                    viewModel.searchCity(keywords)
+                    viewModel.searchCity(keywords)//搜索城市
                 } else {
-                    mBinding.rvSearch.visibility = View.GONE
+                    mBinding.rvSearch.visibility = View.GONE//隐藏搜索结果的RV
                 }
             }
 
             override fun afterTextChanged(s: Editable) {}
         })
 
-        mBinding.tvGetPos.setOnClickListener {
+        mBinding.tvGetPos.setOnClickListener {//定位按钮的监听器
             hideKeyboard()
             checkAndOpenGPS()
         }
     }
 
     override fun initEvent() {
+        //缓存定位发生变化
         viewModel.cacheLocation.observe(this) {
             mBinding.tvCurLocation.visibility = View.VISIBLE
-            mBinding.tvCurLocation.text = it
+            mBinding.tvCurLocation.text = it//it：viewModel.cacheLocation
         }
 
         // 定位获取的数据
@@ -126,25 +139,26 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         }
 
         viewModel.loadState.observe(this) {
-            when (it) {
+            when (it) {// it：viewModel.loadState
                 is LoadState.Start -> {
-                    showLoading(true, it.tip)
+                    showLoading(true, it.tip)//显示加载中提示框
                 }
                 is LoadState.Error -> {
-                    toast(it.msg)
+                    toast(it.msg)//吐司失败
                 }
                 is LoadState.Finish -> {
-                    if (viewModel.isStopped()) {
+                    if (viewModel.isStopped()) {//是否完成请求
                         showLoading(false)
                     }
                 }
             }
         }
 
+        //添加城市是否完成
         viewModel.addFinish.observe(this) {
-            if (it) {
-                if (fromSplash) {
-                    startActivity<HomeActivity>()
+            if (it) {//添加完成
+                if (fromSplash) {//闪屏页跳转过来
+                    startActivity<HomeActivity>()//跳转天气详情
                 }
                 ContentUtil.CITY_CHANGE = true
                 finish()
@@ -160,21 +174,31 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         }
     }
 
+    override fun initData() {
+        viewModel.getTopCity()//获取热点城市
+        viewModel.getCacheLocation()//获取缓存的位置
+    }
+
+    /**
+     * 检查并打开GPS。
+     */
     fun checkAndOpenGPS() {
-        if (checkGPSPermission()) {
-            if (checkGPSOpen()) {
-                viewModel.getLocation()
+        if (checkGPSPermission()) {//是否有定位权限
+            if (checkGPSOpen()) {//是否打开定位
+                viewModel.getLocation()//获取定位信息
             } else {
                 requestedGPS = true
-                openGPS()
+                openGPS()//打开定位
             }
         } else {
-            toast("没有权限")
+            toast("没有【定位】权限")
         }
     }
 
     /**
-     * 检查GPS权限
+     * 检查GPS权限。
+     *
+     * @return 是否有定位权限。
      */
     fun checkGPSPermission(): Boolean {
         val pm1 = PermissionUtil.hasPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -183,7 +207,9 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
     }
 
     /**
-     * 检查GPS状态
+     * 检查GPS状态。
+     *
+     * @return 是否打开GPS。
      */
     fun checkGPSOpen(): Boolean {
         val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
@@ -193,7 +219,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
     }
 
     /**
-     * 启动GPS
+     * 打开GPS。
      */
     private fun openGPS() {
         val beginTransaction = supportFragmentManager.beginTransaction()
@@ -202,7 +228,9 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
     }
 
     /**
-     * 展示热门城市
+     * 展示热门城市到 RV。
+     *
+     * @param locations 热门城市集合。
      */
     private fun showTopCity(locations: List<String>) {
         topCities.clear()
@@ -228,7 +256,9 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
     }
 
     /**
-     * 展示搜索结果
+     * 展示搜索(城市)结果到 RV。
+     *
+     * @param basic 城市(定位)集合。
      */
     private fun showSearchResult(basic: List<Location>) {
         mBinding.rvSearch.visibility = View.VISIBLE
@@ -242,7 +272,10 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
     }
 
     /**
-     * location转citybean
+     * 定位 转 城市对象。
+     *
+     * @param location 定位。
+     * @return 城市。
      */
     private fun location2CityBean(location: Location): CityBean {
         var parentCity = location.adm2
@@ -262,33 +295,31 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
         return cityBean
     }
 
-    override fun initData() {
-        viewModel.getTopCity()
-        viewModel.getCacheLocation()
-    }
-
     override fun onResume() {
         super.onResume()
-        if (requestedGPS) {
+        if (requestedGPS) {//是否需要请求定位
             requestedGPS = false
-            if (checkGPSOpen()) {
-                viewModel.getLocation()
+            if (checkGPSOpen()) {//是否打开GPS
+                viewModel.getLocation()//获取得信息
             } else {
                 toast("无法获取位置信息")
             }
         }
     }
 
-    private fun hideKeyboard() {
-        currentFocus?.let {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(it.windowToken, 0)
-        }
-    }
-
     override fun finish() {
         super.finish()
         hideKeyboard()
+    }
+
+    /**
+     * 隐藏输入法。
+     */
+    private fun hideKeyboard() {
+        currentFocus?.let {//当前activity获得焦点
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager//输入法管理器
+            imm.hideSoftInputFromWindow(it.windowToken, 0)//隐藏输入法
+        }
     }
 
     companion object {

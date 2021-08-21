@@ -17,23 +17,27 @@ import me.wsj.lib.net.LoadState
 import java.util.*
 import kotlin.collections.HashMap
 
+/** 最后定位(城市)。 */
 const val LAST_LOCATION = "LAST_LOCATION"
 
 class SearchViewModel(private val app: Application) : BaseViewModel(app) {
 
+    /** (和风天气)搜索结果(定位的城市)。 */
     val searchResult = MutableLiveData<List<Location>>()
-
+    /** 当前的城市。 */
     val curCity = MutableLiveData<Location>()
-
+    /** 选中的城市。 */
     val choosedCity = MutableLiveData<Location>()
-
+    /** 热门的城市。 */
     val topCity = MutableLiveData<List<String>>()
-
+    /** 是否添加(城市)完成(双向绑定)。 */
     val addFinish = MutableLiveData<Boolean>()
 
 
     /**
-     * 搜索城市
+     * 搜索城市(协程)。
+     *
+     * @param keywords 搜索关键字。
      */
     fun searchCity(keywords: String) {
         launchSilent {
@@ -50,13 +54,15 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
     }
 
     /**
-     * 获取城市数据
+     * 获取城市数据(协程)。
+     *
+     * @param cityName 城市名称。
+     * @param save 是否保存。
      */
     fun getCityInfo(cityName: String, save: Boolean = false) {
         launch {
             if (save) {
-                // 缓存定位城市
-                AppRepo.getInstance().saveCache(LAST_LOCATION, cityName)
+                AppRepo.getInstance().saveCache(LAST_LOCATION, cityName)// 缓存定位城市
             }
 
             val url = "https://geoapi.qweather.com/v2/city/lookup"
@@ -103,17 +109,23 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
     }
 
     /**
-     * 添加城市
+     * 添加城市(协程)。
+     *
+     * @param it 城市对象。
+     * @param isLocal 是否本地。
      */
     fun addCity(it: CityBean, isLocal: Boolean = false) {
         launch {
-            AppRepo.getInstance().addCity(CityEntity(it.cityId, it.cityName, isLocal))
+            AppRepo.getInstance().addCity(CityEntity(it.cityId, it.cityName, isLocal))//协程添加城市到数据库
             addFinish.postValue(true)
         }
     }
 
     val curLocation = MutableLiveData<String>()
 
+    /**
+     * 开始获取定位信息。
+     */
     fun getLocation() {
         loadState.postValue(LoadState.Start("正在获取位置信息..."))
         //初始化定位
@@ -143,8 +155,12 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
         mLocationClient.startLocation()
     }
 
+    /** 获取缓存的定位。 */
     val cacheLocation = MutableLiveData<String>()
 
+    /**
+     * 获取缓存的定位(协程)。
+     */
     fun getCacheLocation() {
         launch {
             (AppRepo.getInstance().getCache<String>(LAST_LOCATION))?.let {
