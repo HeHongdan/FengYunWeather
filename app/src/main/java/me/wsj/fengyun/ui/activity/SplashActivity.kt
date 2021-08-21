@@ -28,7 +28,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        Looper.myQueue().addIdleHandler {
+        Looper.myQueue().addIdleHandler {//主线程空闲时执行，onResume 方法之前执行
             PermissionUtil.with(this).permission(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -57,7 +57,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startIntent() {
-        lifecycleScope.launch {
+        lifecycleScope.launch {//lifecycle 被销毁时，操作也会被取消
             var citySize: Int
 
 //            DensityUtil.setDensity(application, 418f)
@@ -67,34 +67,37 @@ class SplashActivity : AppCompatActivity() {
                 startService(Intent(this@SplashActivity, WidgetService::class.java))
             }
 
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {//协程：不创建新的协程，指定(IO)协程上运行代码块
 //                val start = System.currentTimeMillis()
-                val cities = AppRepo.getInstance().getCities()
+                val cities = AppRepo.getInstance().getCities()//数据库中取出城市
 //                LogUtil.e("time use: " + (System.currentTimeMillis() - start))
                 citySize = cities.size
 
                 getScreenInfo()
 
-                delay(800L)
+                delay(800L)//协程：挂起当前协程
             }
             if (citySize == 0) {
-                AddCityActivity.startActivity(this@SplashActivity, true)
+                AddCityActivity.startActivity(this@SplashActivity, true)//跳转：选择城市
             } else {
-                startActivity<HomeActivity>()
+                startActivity<HomeActivity>()//跳转：首页
             }
             finish()
         }
     }
 
     private fun getScreenInfo() {
+        //屏幕的Y(高度)
         val screenRealSize = DisplayUtil.getScreenRealSize(this@SplashActivity).y
-//                val navHeight =
+        //导航栏高度
         val navHeight =
             if (DisplayUtil.isNavigationBarShowing(this@SplashActivity))
                 DisplayUtil.getNavigationBarHeight(this@SplashActivity) else 0
 
+        //状态栏高度
         val statusBarHeight = DisplayUtil.getStatusBarHeight2(this@SplashActivity)
-        val dp45 = DisplayUtil.dp2px(45f)
+        val dp45 = DisplayUtil.dp2px(45f)//可能底部作者
+        //可见(布局)高度
         ContentUtil.visibleHeight = screenRealSize - navHeight - statusBarHeight - dp45
 
     }
