@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Daily
+import me.wsj.fengyun.databinding.ItemForecastBinding
 import me.wsj.lib.utils.IconUtils
 
 class Forecast3dAdapter(val context: Context, val datas: List<Daily>) :
@@ -16,47 +17,42 @@ class Forecast3dAdapter(val context: Context, val datas: List<Daily>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_forecast, parent, false)
+            ItemForecastBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = datas[position]
-        holder.tvTemp.text = "${item.tempMin}~${item.tempMax}°C"
+        holder.binding.tvTemp.text = "${item.tempMin}~${item.tempMax}°C"
 
         var desc = item.textDay
         if (item.textDay != item.textNight) {
             desc += "转" + item.textNight
         }
-        holder.tvDesc.text = desc
+        holder.binding.tvDesc.text = desc
 
         when (position) {
             0 -> {
-                holder.tvWeek.text = context.getString(R.string.today)
+                holder.binding.tvWeek.text = context.getString(R.string.today)
                 if (IconUtils.isDay()) {
-                    holder.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
+                    holder.binding.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
                 } else {
-                    holder.ivDay.setImageResource(IconUtils.getNightIconDark(context, item.iconDay))
+                    holder.binding.ivDay.setImageResource(IconUtils.getNightIconDark(context, item.iconDay))
                 }
             }
             1 -> {
-                holder.tvWeek.text = context.getString(R.string.tomorrow)
-                holder.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
+                holder.binding.tvWeek.text = context.getString(R.string.tomorrow)
+                holder.binding.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
             }
             else -> {
-                holder.tvWeek.text = context.getString(R.string.after_t)
-                holder.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
+                holder.binding.tvWeek.text = context.getString(R.string.after_t)
+                holder.binding.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
             }
         }
     }
 
     override fun getItemCount(): Int = 3
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val ivDay = itemView.findViewById<ImageView?>(R.id.iv_day)
-
-        val tvWeek = itemView.findViewById<TextView?>(R.id.tv_week)
-        val tvTemp = itemView.findViewById<TextView?>(R.id.tvTemp)
-        val tvDesc = itemView.findViewById<TextView?>(R.id.tvDesc)
+    class ViewHolder(val binding: ItemForecastBinding) : RecyclerView.ViewHolder(binding.root) {
     }
 }

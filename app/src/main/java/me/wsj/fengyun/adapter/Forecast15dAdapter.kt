@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.Daily
+import me.wsj.fengyun.databinding.ItemForecast15Binding
 import me.wsj.fengyun.view.TempChart
 import me.wsj.lib.utils.IconUtils
 import java.util.*
@@ -21,23 +22,23 @@ class Forecast15dAdapter(val context: Context, val datas: List<Daily>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_forecast15, parent, false)
+            ItemForecast15Binding.inflate(LayoutInflater.from(context),parent,false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = datas[position]
-        holder.tvWeek.text = getWeekDay(position)
-        holder.tvDate.text = item.fxDate.removeRange(IntRange(0, 4))
-        holder.tvDayDesc.text = item.textDay
-        holder.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
+        holder.binding.tvWeek.text = getWeekDay(position)
+        holder.binding.tvDate.text = item.fxDate.removeRange(IntRange(0, 4))
+        holder.binding.tvDayDesc.text = item.textDay
+        holder.binding.ivDay.setImageResource(IconUtils.getDayIconDark(context, item.iconDay))
 
-        holder.ivNight.setImageResource(IconUtils.getNightIconDark(context, item.iconNight))
-        holder.tvNightDesc.text = item.textNight
-        holder.tvWind.text = item.windDirDay
-        holder.tvWindScale.text = item.windScaleDay + "级"
+        holder.binding.ivNight.setImageResource(IconUtils.getNightIconDark(context, item.iconNight))
+        holder.binding.tvNightDesc.text = item.textNight
+        holder.binding.tvWind.text = item.windDirDay
+        holder.binding.tvWindScale.text = item.windScaleDay + "级"
 
-        holder.tempChart.setData(
+        holder.binding.tempChart.setData(
             mMin,
             mMax,
             if (position == 0) null else datas[position - 1],
@@ -71,18 +72,6 @@ class Forecast15dAdapter(val context: Context, val datas: List<Daily>) :
         notifyDataSetChanged()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvWeek = itemView.findViewById<TextView?>(R.id.tv_week)
-        val tvDate = itemView.findViewById<TextView?>(R.id.tv_date)
-        val tvDayDesc = itemView.findViewById<TextView?>(R.id.tv_day_desc)
-        val ivDay = itemView.findViewById<ImageView?>(R.id.iv_day)
-
-        val tvNightDesc = itemView.findViewById<TextView?>(R.id.tv_night_desc)
-        val ivNight = itemView.findViewById<ImageView?>(R.id.iv_night)
-
-        val tvWind = itemView.findViewById<TextView?>(R.id.tv_wind)
-        val tvWindScale = itemView.findViewById<TextView?>(R.id.tv_wind_scale)
-
-        val tempChart = itemView.findViewById<TempChart?>(R.id.tempChart)
+    class ViewHolder(val binding: ItemForecast15Binding) : RecyclerView.ViewHolder(binding.root) {
     }
 }

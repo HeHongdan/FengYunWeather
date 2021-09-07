@@ -61,7 +61,7 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
         mBinding.ivAddCity.expand(10, 10)
 
-        mBinding.ivBg.setImageResource(IconUtils.getDefaultBg())
+        mBinding.ivBg.setImageResource(IconUtils.defaultBg)
     }
 
     override fun initEvent() {

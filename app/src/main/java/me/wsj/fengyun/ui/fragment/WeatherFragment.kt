@@ -26,7 +26,6 @@ import me.wsj.fengyun.ui.base.BaseVmFragment
 import me.wsj.fengyun.ui.fragment.vm.WeatherViewModel
 import me.wsj.fengyun.utils.ContentUtil
 import me.wsj.lib.extension.notEmpty
-import me.wsj.lib.extension.toastCenter
 import me.wsj.lib.net.LoadState
 import me.wsj.lib.utils.DateUtil
 import per.wsj.commonlib.utils.LogUtil
@@ -278,7 +277,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             textView.setOnClickListener {
 //                toastCenter(warning.text)
                 AlarmDialog(requireContext()).apply {
-                    setContent(warning.text)
+                    setContent(tip, warning.text)
                     show()
                 }
             }

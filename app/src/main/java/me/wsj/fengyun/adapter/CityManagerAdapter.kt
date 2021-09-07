@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
+import me.wsj.fengyun.databinding.ItemCityManagerBinding
 import me.wsj.fengyun.db.entity.CityEntity
 import per.wsj.commonlib.utils.LogUtil
 import java.util.*
@@ -25,15 +26,15 @@ class CityManagerAdapter(
         viewType: Int
     ): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_city_manager, parent, false)
+            ItemCityManagerBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mData[holder.adapterPosition]
-        holder.tvItemCity.text = item.cityName
+        holder.binding.tvItemCity.text = item.cityName
 
-        holder.tvDelete.setOnClickListener {
+        holder.binding.tvDelete.setOnClickListener {
             listener?.onCityRemove(holder.adapterPosition)
         }
 
@@ -44,9 +45,7 @@ class CityManagerAdapter(
 
     override fun getItemCount() = mData.size
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvItemCity = itemView.findViewById<TextView>(R.id.tvItemCity)
-        val tvDelete = itemView.findViewById<ImageView>(R.id.tvDelete)
+    class ViewHolder(val binding: ItemCityManagerBinding) : RecyclerView.ViewHolder(binding.root) {
     }
 
     public interface OnCityRemoveListener {

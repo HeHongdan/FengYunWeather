@@ -8,10 +8,10 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.wsj.fengyun.R
 import me.wsj.fengyun.bean.CityBean
+import me.wsj.fengyun.databinding.ItemSearchingBinding
 
 /**
  * 最近搜索城市(区，城市，省，国家)的适配器。
@@ -29,17 +29,17 @@ class SearchAdapter(
     private val onCityChecked: (CityBean) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.item_searching, viewGroup, false)
-        return MyViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, i: Int): RecyclerView.ViewHolder {
+        return ViewHolder(
+            ItemSearchingBinding.inflate(LayoutInflater.from(mContext), parent, false)
+        )
     }
 
     override fun onBindViewHolder(
         myViewHolder: RecyclerView.ViewHolder,
         position: Int
     ) {
-        val viewHolder = myViewHolder as MyViewHolder
+        val viewHolder = myViewHolder as ViewHolder
         val item = data[position]
         val name = item.cityName
         val x = name.indexOf("-")
@@ -50,7 +50,7 @@ class SearchAdapter(
             cityName = location + "，" + parentCity + "，" + item.cnty
         }
         if (!TextUtils.isEmpty(cityName)) {
-            viewHolder.tvCity.text = cityName
+            viewHolder.binding.tvCity.text = cityName
             if (cityName.contains(searchText)) {
                 val index = cityName.indexOf(searchText)
                 //创建一个 SpannableString对象
@@ -62,7 +62,7 @@ class SearchAdapter(
                     index + searchText.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-                viewHolder.tvCity.text = sp
+                viewHolder.binding.tvCity.text = sp
             }
         }
         viewHolder.itemView.setOnClickListener { view: View? ->
@@ -74,7 +74,6 @@ class SearchAdapter(
         return data.size
     }
 
-    internal inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvCity = itemView.findViewById<TextView>(R.id.tv_item_history_city)
+    internal inner class ViewHolder(val binding: ItemSearchingBinding) : RecyclerView.ViewHolder(binding.root) {
     }
 }

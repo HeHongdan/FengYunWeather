@@ -80,7 +80,8 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.activity.AddCityActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:theme="@style/Left2Right" />
     </application>
 
 </manifest>

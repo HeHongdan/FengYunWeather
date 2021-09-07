@@ -23,8 +23,8 @@ public abstract class BaseDialog<T extends ViewBinding> extends AppCompatDialog 
 
     private int mGravity = Gravity.CENTER;
 
-    private float widthBias = 0f;
-    private float heightBias = 0f;
+    private float widthWeight = 0f;
+    private float heightWeight = 0f;
 
     protected T mBinding;
 
@@ -46,7 +46,7 @@ public abstract class BaseDialog<T extends ViewBinding> extends AppCompatDialog 
 
     public BaseDialog(@NonNull Context context, int gravity, float widthBias, float heightBias) {
         super(context, R.style.BaseDialogTheme);
-        init(context, gravity, widthBias, heightBias);
+        init(gravity, widthWeight, heightWeight);
     }
 
 
@@ -64,27 +64,26 @@ public abstract class BaseDialog<T extends ViewBinding> extends AppCompatDialog 
     @Override
     protected void onStart() {
         super.onStart();
-        
+
     }
 
     /**
      * 初始化
      */
-    private void init(Context context, int gravity, float widthBias, float heightBias) {
+    private void init(int gravity, float widthWeight, float heightWeight) {
         mBinding = bindView();
 
 //        setContentView(LayoutInflater.from(getContext()).inflate(getLayout(), null));
         setContentView(mBinding.getRoot());
 
         mGravity = gravity;
-        if (widthBias <= 1f) {
-            this.widthBias = widthBias;
+        if (widthWeight <= 1f) {
+            this.widthWeight = widthWeight;
         }
 
-        if (heightBias <= 1f) {
-            this.heightBias = heightBias;
+        if (heightWeight <= 1f) {
+            this.heightWeight = heightWeight;
         }
-
     }
 
     /**
@@ -104,18 +103,20 @@ public abstract class BaseDialog<T extends ViewBinding> extends AppCompatDialog 
         Point displaySize = new Point();
         display.getSize(displaySize);
 
-        if (widthBias > 0f) {
-            wlp.width = (int) (displaySize.x * widthBias); //设置dialog宽度
+        if (widthWeight > 0f) {
+            wlp.width = (int) (displaySize.x * widthWeight); //设置dialog宽度
         } else {
             wlp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         }
 
-        if (heightBias > 0f) {
-            wlp.height = (int) (displaySize.y * heightBias); //设置dialog宽度
+        if (heightWeight > 0f) {
+            wlp.height = (int) (displaySize.y * heightWeight); //设置dialog宽度
         } else {
             wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         }
 
         window.setAttributes(wlp);
+
+        mBinding.getRoot().postInvalidate();
     }
 }

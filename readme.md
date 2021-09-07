@@ -53,7 +53,34 @@
 ## 下载体验
 
 
-点击[![](https://img.shields.io/badge/Download-apk-green.svg)](https://raw.githubusercontent.com/wsj1024/FengYunWeather/master/app/release/fengyun-weather-1.0.9.apk)
+点击下载[![](https://img.shields.io/badge/Download-apk-green.svg)](https://raw.githubusercontent.com/wdsqjq/FengYunWeather/master/app/release/fengyun-weather-1.1.1.apk)
+
+或扫描二维码下载：
+
+![qrcode](img/qrcode.png)
+
+##### 更新记录
+
+- 1.1.1
+
+  修复一些bug，优化交互
+
+- 1.1.0
+
+  预警信息以Dialog形式展示，帅得不要不要
+
+- 1.0.9
+
+  新的空气质量UI，漂亮得一塌糊涂
+
+- 1.0.8
+
+  优化SwipeRefreshLayout的动画效果，隔壁产品经理馋哭了
+
+- 1.0.7
+
+  连夜修复鸿洋大佬提出的小米11上Widget的UI问题
+
 
 ## License
 

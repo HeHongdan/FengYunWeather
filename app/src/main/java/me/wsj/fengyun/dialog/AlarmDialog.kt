@@ -12,7 +12,9 @@ class AlarmDialog(context: Context) : BaseDialog<DialogAlarmBinding>(context, 0.
         setCanceledOnTouchOutside(true)
     }
 
-    fun setContent(content: String) {
+    fun setContent(title: String, content: String) {
+        mBinding.tvTitle.text = title
+//        mBinding.tvTitle.setTextColor(titleColor)
         mBinding.tvContent.text = content
     }
 
