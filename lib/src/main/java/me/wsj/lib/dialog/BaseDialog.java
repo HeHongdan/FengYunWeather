@@ -5,7 +5,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -44,7 +43,7 @@ public abstract class BaseDialog<T extends ViewBinding> extends AppCompatDialog 
         this(context, Gravity.CENTER, widthWeight, heightWeight);
     }
 
-    public BaseDialog(@NonNull Context context, int gravity, float widthBias, float heightBias) {
+    public BaseDialog(@NonNull Context context, int gravity, float widthWeight, float heightWeight) {
         super(context, R.style.BaseDialogTheme);
         init(gravity, widthWeight, heightWeight);
     }
