@@ -16,9 +16,8 @@ import androidx.viewbinding.ViewBinding;
 import me.wsj.lib.R;
 
 /**
- * dialog
+ * 对话框基类。
  */
-
 public abstract class BaseDialog<T extends ViewBinding> extends AppCompatDialog implements DialogInit<T> {
 
     private int mGravity = Gravity.CENTER;

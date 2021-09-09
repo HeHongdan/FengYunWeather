@@ -7,7 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.ViewGroupUtils
 
-// 为 View 新增 expand 扩展方法
+/**
+ * (响应区域扩大)为 View 新增 expand 扩展方法。
+ *
+ * @receiver 响应区域扩大后的视图。
+ * @param dx 响应横轴区域扩大。
+ * @param dy 响应纵轴区域扩大。
+ */
 fun View.expand(dx: Int, dy: Int) {
     // 将刚才定义代理类放到方法内部，调用方不需要了解这些细节
     class MultiTouchDelegate(bound: Rect? = null, delegateView: View) : TouchDelegate(bound, delegateView) {

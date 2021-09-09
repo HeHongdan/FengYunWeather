@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 open class BaseViewModel(app: Application) : AndroidViewModel(app) {
 
-    // 加载状态
+    /** 加载状态。 */
     val loadState = MutableLiveData<LoadState>()
 
     /**
@@ -28,10 +28,12 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
     private var runningCount = AtomicInteger(0)
 
     /**
-     * 是否正在请求网络
+     * 是否正在请求网络。
+     *
+     * @return 是否正在请求网络。
      */
     fun isStopped(): Boolean {
-        return runningCount.get() == 0
+        return runningCount.get() == 0//请求数 == 0
     }
 
     /**
@@ -43,6 +45,8 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
 
     /**
      * 开始显示loading,结束关闭loading
+     *
+     * [block] 协程的作用域，可以管理其域内的所有协程。
      */
     fun launch(block: suspend CoroutineScope.() -> Unit) {
         launchRequest(block = block)

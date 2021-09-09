@@ -23,12 +23,13 @@ import me.wsj.lib.dialog.LoadingDialog;
 
 public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActivity implements CreateInit<T> {
 
-    private FrameLayout layout_content; // 子类view容器
-
+    /** 子类view容器。 */
+    private FrameLayout layout_content;
+    /** 上下文。 */
     protected Context context;
-
+    /** 加载中提示框。 */
     private LoadingDialog loadingDialog;
-
+    /** 视图绑定(FVBId)。 */
     protected T mBinding;
 
 
@@ -78,7 +79,11 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
         getSupportActionBar().hide();
     }
 
-    // 设置标题
+    /**
+     * 设置标题。
+     *
+     * @param title 标题。
+     */
     public void setTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
@@ -112,10 +117,21 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 是否显示(加载中)对话框。
+     *
+     * @param show 是否显示。
+     */
     protected void showLoading(boolean show) {
         showLoading(show, null);
     }
 
+    /**
+     * 显示(加载中)对话框。
+     *
+     * @param show 是否显示。
+     * @param tip 提示内容。
+     */
     protected void showLoading(boolean show, String tip) {
         if (loadingDialog == null) {
             loadingDialog = new LoadingDialog(this);

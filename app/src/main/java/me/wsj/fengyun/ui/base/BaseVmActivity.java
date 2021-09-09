@@ -14,6 +14,7 @@ import java.lang.reflect.ParameterizedType;
 
 public abstract class BaseVmActivity<T extends ViewBinding, V extends ViewModel> extends BaseActivity<T> {
 
+    /** 自动维护数据(Activity 重建不影响数据的值)。 */
     protected V viewModel;
 
     @Override
@@ -42,7 +43,13 @@ public abstract class BaseVmActivity<T extends ViewBinding, V extends ViewModel>
         }
     }
 
+    /**
+     * 获取 ViewModel 的类型。
+     *
+     * @return 类型。
+     */
     public Class<V> getViewModelClass() {
+        //getActualTypeArguments：从一个泛型类型中获取第2个泛型参数的类型类。
         Class<V> xClass = (Class<V>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
         return xClass;
     }

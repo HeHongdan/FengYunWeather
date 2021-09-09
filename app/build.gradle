@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
     buildToolsVersion "30.0.3"
 
     defaultConfig {
@@ -31,14 +31,13 @@ android {
     }
 
     signingConfigs {
-        debug {
-            if (configProperties != null && configProperties.get("filename") != null){
-                storeFile file(configProperties.get("filename"))
-                storePassword configProperties.get("storePassword")
-                keyAlias configProperties.get("keyAlias")
-                keyPassword configProperties.get("keyPassword")
-            }
-        }
+//        debug {
+////            storeFile file(localProperties.get())
+//            storeFile file("${rootDir.path}/key/keystore.properties")
+//            storePassword localProperties.get("storePassword")
+//            keyAlias localProperties.get("keyAlias")
+//            keyPassword localProperties.get("keyPassword")
+//        }
     }
 
     buildTypes {
@@ -95,11 +94,6 @@ android {
             }
         }
     }
-
-    /*gradle.buildFinished { var1 ->
-        println var1.getAction()
-        println '构建结束 buildFinished'
-    }*/
 }
 
 dependencies {

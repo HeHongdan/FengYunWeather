@@ -21,6 +21,11 @@ class AppRepo {
 
     private val cityDao: CityDao = AppDatabase.getInstance(MyApp.context).cityDao()
 
+    /**
+     * Dao数据库添加城市。
+     *
+     * @param city 城市。
+     */
     suspend fun addCity(city: CityEntity){
         cityDao.addCity(city)
     }
@@ -102,9 +107,7 @@ class AppRepo {
         @JvmStatic
         fun getInstance() =
             instance ?: synchronized(this) {
-                instance
-                    ?: AppRepo()
-                        .also { instance = it }
+                instance ?: AppRepo().also { instance = it }//also（it），而apply（this）
             }
     }
 }

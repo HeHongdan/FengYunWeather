@@ -77,7 +77,10 @@
                     android:visibility="gone"
                     app:drawableLeftCompat="@mipmap/icon_loc"
                     app:drawableTint="@color/colorPrimary"
-                    tools:text="上海市" />
+
+                    tools:text="上海市"
+                    tools:visibility="visible"
+                    />
 
                 <TextView
                     android:id="@+id/tvGetPos"
@@ -104,7 +107,10 @@
                 android:id="@+id/rv_top_city"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager">
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+
+                tools:listitem="@layout/item_top_city"
+                >
 
             </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
@@ -116,7 +122,12 @@
             android:layout_marginTop="8dp"
             android:background="@color/back_white"
             android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+            tools:layout_height="wrap_content"
+            tools:visibility="gone"
+            tools:listitem="@layout/item_searching"
+            />
 
     </FrameLayout>
 </LinearLayout>
