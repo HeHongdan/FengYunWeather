@@ -8,39 +8,44 @@ import me.wsj.fengyun.ui.activity.AboutActivity
 import me.wsj.fengyun.ui.activity.CityManagerActivity
 import me.wsj.fengyun.utils.ContentUtil
 
+/**
+ * 类描述：设置页面。
+ *
+ * @author HeHongdan
+ * @date 2021/9/25
+ * @since v2021/9/25
+ */
 class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        setPreferencesFromResource(R.xml.root_preferences, rootKey)//加载配置 xml 文件
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val cityManager = findPreference<Preference>("key_city_manager")
+        val cityManager = findPreference<Preference>("key_city_manager")//城市管理
         cityManager?.setOnPreferenceClickListener {
             startActivity(Intent(context, CityManagerActivity::class.java))
             true
         }
+        cityManager?.widgetLayoutResource = R.layout.layout_arrow_right//覆写城市管理的布局
 
-        cityManager?.widgetLayoutResource = R.layout.layout_arrow_right
-
-        val about = findPreference<Preference>("key_about")
+        val about = findPreference<Preference>("key_about")//关于
         about?.setOnPreferenceClickListener {
             startActivity(Intent(context, AboutActivity::class.java))
             true
         }
+        about?.widgetLayoutResource = R.layout.layout_arrow_right//覆写关于的布局
 
-        about?.widgetLayoutResource = R.layout.layout_arrow_right
-
-        val lanCategory = findPreference<PreferenceCategory>("key_lan_group")!!
-        val unitCategory = findPreference<PreferenceCategory>("key_unit_group")!!
+        val lanCategory = findPreference<PreferenceCategory>("key_lan_group")!!//语言选择(PreferenceCategory：选项组)
+        val unitCategory = findPreference<PreferenceCategory>("key_unit_group")!!//单位选择
 
         initState(lanCategory)
         initState(unitCategory)
 
-        val unitHua = findPreference<CheckBoxPreference>("key_unit_hua")!!
-        val unitShe = findPreference<CheckBoxPreference>("key_unit_she")!!
+        val unitHua = findPreference<CheckBoxPreference>("key_unit_hua")!!//华氏度
+        val unitShe = findPreference<CheckBoxPreference>("key_unit_she")!!//摄氏度
 
         unitHua.setOnPreferenceClickListener {
             changeState(unitCategory, it as CheckBoxPreference)
@@ -56,9 +61,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        val lanSys = findPreference<CheckBoxPreference>("key_lan_system")!!
-        val lanCn = findPreference<CheckBoxPreference>("key_lan_cn")!!
-        val lanEn = findPreference<CheckBoxPreference>("key_lan_en")!!
+        val lanSys = findPreference<CheckBoxPreference>("key_lan_system")!!//系统语言
+        val lanCn = findPreference<CheckBoxPreference>("key_lan_cn")!!//中文
+        val lanEn = findPreference<CheckBoxPreference>("key_lan_en")!!//英文
 
         lanSys.setOnPreferenceClickListener {
             changeState(lanCategory, it as CheckBoxPreference)
@@ -83,7 +88,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     /**
-     * 初始化可选状态
+     * 初始化可选状态。
+     *
+     * @param category 组。
      */
     fun initState(category: PreferenceCategory) {
         val childCount = category.preferenceCount
@@ -94,7 +101,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     /**
-     * 改变可选及选中状态
+     * 改变可选及选中状态。
+     *
+     * @param category 组。
+     * @param target 目标选项框。
      */
     fun changeState(category: PreferenceCategory, target: CheckBoxPreference) {
         val childCount = category.preferenceCount
@@ -109,7 +119,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     /**
-     * 修改单位
+     * 修改单位。
+     *
+     * @param unit 单位。
      */
     private fun changeUnit(unit: String) {
         ContentUtil.UNIT_CHANGE = true
@@ -122,7 +134,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     /**
-     * 修改语言
+     * 修改语言。
+     *
+     * @param lan 语言。
      */
     private fun changeLang(lan: String) {
 //        ContentUtil.APP_SETTING_LANG = lan

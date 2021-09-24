@@ -14,6 +14,13 @@ import me.wsj.fengyun.ui.base.BaseVmActivity
 import me.wsj.fengyun.utils.ContentUtil
 import javax.inject.Inject
 
+/**
+ * 类描述：城市管理。
+ *
+ * @author HeHongdan
+ * @date 2021/9/25
+ * @since v2021/9/25
+ */
 @AndroidEntryPoint
 class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManagerViewModel>() {
 

@@ -28,7 +28,7 @@ import per.wsj.commonlib.permission.PermissionUtil
 import java.util.*
 
 /**
- * 类描述：选择城市。
+ * 类描述：添加(选择)城市。
  *
  * @author HeHongdan
  * @date 2021/8/9
