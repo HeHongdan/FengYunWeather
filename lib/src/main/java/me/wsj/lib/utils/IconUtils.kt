@@ -46,6 +46,11 @@ object IconUtils {
     val defaultBg: Int
         get() = if (isDay()) R.drawable.bg_0_d else R.drawable.bg_0_n
 
+    /**
+     * 判断是否为白天。
+     *
+     * @return 是否白天。
+     */
     @JvmStatic
     fun isDay():Boolean{
         val now = getNowHour()
@@ -53,13 +58,15 @@ object IconUtils {
     }
 
     /**
-     * 获取白天背景
+     * 获取(白天/黑夜)背景。
+     *
+     * @param context 上下文。
+     * @param code 天气的代号。
+     * @return Int 背景的资源Id。
      */
     fun getBg(context: Context, code: Int): Int {
-        return if (isDay()) getDayBg(context, code) else getNightBg(
-            context,
-            code
-        )
+        return if (isDay()) getDayBg(context, code)
+        else getNightBg(context, code)
     }
 
     /**

@@ -25,24 +25,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FengYunWeather.NoActionBar">
 
-        <service
-            android:name=".service.WidgetService"
-            android:enabled="true"
-            android:exported="true" />
-
-        <receiver android:name=".widget.WeatherWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/weather_widget_info" />
-        </receiver>
-
-        <activity
-            android:name=".ui.activity.HomeActivity"
-            android:launchMode="singleTask" />
         <activity
             android:name=".ui.activity.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -56,16 +38,10 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <!-- todo 高德设置key -->
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="${amap_app_key}" />
-
-        <service android:name="com.amap.api.location.APSService" />
-
         <activity
-            android:name=".ui.activity.SettingsActivity"
-            android:launchMode="singleTask" />
+            android:name=".ui.activity.AddCityActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/Left2Right" />
         <activity
             android:name=".ui.activity.CityManagerActivity"
             android:launchMode="singleTask">
@@ -76,12 +52,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.AboutActivity"
+            android:name=".ui.activity.HomeActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".ui.activity.AddCityActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/Left2Right" />
+            android:name=".ui.activity.SettingsActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:launchMode="singleTask" />
+
+        <service
+            android:name=".service.WidgetService"
+            android:enabled="true"
+            android:exported="true" />
+        <service android:name="com.amap.api.location.APSService" />
+
+        <receiver android:name=".widget.WeatherWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/weather_widget_info" />
+        </receiver>
+
+        <!-- todo 高德设置key -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="${amap_app_key}" />
+
     </application>
 
 </manifest>

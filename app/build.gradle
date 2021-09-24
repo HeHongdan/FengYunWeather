@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
@@ -87,8 +87,8 @@ android {
                 file(manifestPath).write(serialize)
             }*/
             if (variant.buildType.name == 'release') {
-                def fileName = "fengyun-weather-" + defaultConfig.versionName + ".apk"
-                outputFileName = new File("", fileName)
+//                def fileName = "fengyun-weather-" + defaultConfig.versionName + ".apk"
+//                outputFileName = new File("", fileName)
             } else if (variant.buildType.name == 'debug') {
 //                fileName = "fengyun-weather-debug-" + ".apk"
             }

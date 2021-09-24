@@ -6,9 +6,23 @@ import me.wsj.lib.specialeffects.*
 import me.wsj.lib.utils.DateUtil
 import me.wsj.lib.utils.WeatherUtil
 
+/**
+ * 类描述：动画特效的工具。
+ *
+ * @author HeHongdan
+ * @date 2021/9/24
+ * @since v2021/9/24
+ */
 class EffectUtil {
 
     companion object {
+        /**
+         * 获取动画特效。
+         *
+         * @param context 上下文。
+         * @param code 天气的代号。
+         * @return 特效。
+         */
         fun getEffect(context: Context, code: Int): Drawable? {
             val isDay = DateUtil.getNowHour() in 7 until 18
             val type = WeatherUtil.convert(code)

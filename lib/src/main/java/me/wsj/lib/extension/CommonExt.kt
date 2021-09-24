@@ -44,7 +44,7 @@ private fun showToast(context: Context, content: String) {
 }
 
 /**
- * 跳转 Activity。
+ * 跳转 Activity (目标Activity为泛型)。
  *
  * @receiver 目标 Activity。
  */

@@ -17,10 +17,15 @@ import androidx.viewbinding.ViewBinding
  */
 interface CreateInit<T : ViewBinding?> {
 
+    /**
+     * 绑定视图。
+     *
+     * @return ViewBinding。
+     */
     fun bindView(): T
 
     /**
-     * 接收(准备好)数据。
+     * 准备好(接收)数据。
      *
      * @param intent 意图。
      */

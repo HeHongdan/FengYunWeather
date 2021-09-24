@@ -21,25 +21,47 @@ import me.wsj.lib.utils.IconUtils
 import per.wsj.commonlib.utils.DisplayUtil
 import java.util.*
 
+/**
+ * 类描述：天气详情。
+ *
+ * @author HeHongdan
+ * @date 2021/9/24
+ * @since v2021/9/24
+ */
 class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
+    /** 城市界面的集合。 */
     private val fragments: MutableList<Fragment> by lazy { ArrayList() }
+    /** 城市的集合。 */
     private val cityList = ArrayList<CityEntity>()
+    /** 当前查看城市下标。 */
     private var mCurIndex = 0
-
-    /**
-     * 当前的天气code
-     */
+    /** 当前的天气code。 */
     var currentCode = ""
+
+
+    override fun onResume() {
+        super.onResume()
+        if (ContentUtil.CITY_CHANGE) {//是否改变了城市
+            viewModel.getCities()
+            ContentUtil.CITY_CHANGE = false
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mBinding.ivEffect.drawable?.let {
+            (it as Animatable).stop()
+        }
+    }
 
     override fun bindView() = ActivityMainBinding.inflate(layoutInflater)
 
     override fun prepareData(intent: Intent?) {}
 
     override fun initView() {
-        hideTitleBar()
-        //透明状态栏
-        transparentStatusBar()
+        hideTitleBar()//隐藏顶部标题
+        transparentStatusBar()//透明状态栏
 
         mBinding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager, fragments)
         mBinding.viewPager.offscreenPageLimit = 5
@@ -89,11 +111,10 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun initData() {
         viewModel.getCities()
-
     }
 
     /**
-     * 显示城市
+     * 显示城市(处理小白点、VP+Fragment)。
      */
     private fun showCity() {
         if (mCurIndex > cityList.size - 1) {
@@ -138,15 +159,10 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         mBinding.viewPager.currentItem = mCurIndex
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        if (ContentUtil.CITY_CHANGE) {
-            viewModel.getCities()
-            ContentUtil.CITY_CHANGE = false
-        }
-    }
-
+    /**
+     * 改变背景。
+     * @param condCode 天气的代号。
+     */
     private fun changeBg(condCode: String) {
         if (currentCode == condCode) {
             return
@@ -161,10 +177,4 @@ class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         mBinding.ivEffect.setImageDrawable(effectDrawable)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mBinding.ivEffect.drawable?.let {
-            (it as Animatable).stop()
-        }
-    }
 }
