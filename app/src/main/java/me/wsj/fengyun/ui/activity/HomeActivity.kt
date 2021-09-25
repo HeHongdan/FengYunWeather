@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import dagger.hilt.android.AndroidEntryPoint
 import me.wsj.fengyun.R
 import me.wsj.fengyun.adapter.ViewPagerAdapter
 import me.wsj.fengyun.databinding.ActivityMainBinding
@@ -28,6 +29,7 @@ import java.util.*
  * @date 2021/9/24
  * @since v2021/9/24
  */
+@AndroidEntryPoint
 class HomeActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     /** 城市界面的集合。 */
